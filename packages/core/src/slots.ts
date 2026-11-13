@@ -1,4 +1,5 @@
 import { MS_PER_MINUTE, SLOT_CAP_FRACTION, SLOT_MINUTES } from './config.js';
+import type { OpenRange } from './engine/busyMinutes.js';
 
 export interface PickupSlot {
   slotStart: number;
@@ -29,4 +30,32 @@ export interface FireAtInput {
 
 export function fireAt(input: FireAtInput): number {
   return input.slotStart - (input.forecastQueueDelayMinutes + input.prepMinutes) * MS_PER_MINUTE;
+}
+
+export interface SlotGridInput {
+  ranges: readonly OpenRange[];
+  from: number;
+  horizonSlots: number;
+  cap: number;
+  bookedBySlotStart: ReadonlyMap<number, number>;
+}
+
+export function slotGrid(input: SlotGridInput): PickupSlot[] {
+  const slotMs = SLOT_MINUTES * MS_PER_MINUTE;
+  const first = Math.ceil(input.from / slotMs) * slotMs;
+  const slots: PickupSlot[] = [];
+  for (let index = 0; index < input.horizonSlots; index += 1) {
+    const slotStart = first + index * slotMs;
+    const open = input.ranges.some(
+      (range) => range.openAt <= slotStart && slotStart + slotMs <= range.closeAt,
+    );
+    if (open) {
+      slots.push({
+        slotStart,
+        cap: input.cap,
+        booked: input.bookedBySlotStart.get(slotStart) ?? 0,
+      });
+    }
+  }
+  return slots;
 }
