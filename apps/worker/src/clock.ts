@@ -1,17 +1,5 @@
-import { MS_PER_MINUTE, SLOT_MINUTES } from '@app/core';
+import { MS_PER_MINUTE, SLOT_MINUTES, clockNowMs } from '@app/core';
 import type { PrismaClient } from '@app/db';
-
-export interface ClockRow {
-  mode: 'real' | 'demo';
-  currentTime: Date;
-  speed: number;
-  updatedAt: Date;
-}
-
-export function clockNowMs(row: ClockRow, realNowMs: number): number {
-  if (row.mode === 'real') return realNowMs;
-  return row.currentTime.getTime() + (realNowMs - row.updatedAt.getTime()) * row.speed;
-}
 
 export interface ClockReading {
   nowMs: number;

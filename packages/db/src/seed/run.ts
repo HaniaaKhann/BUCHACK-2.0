@@ -4,6 +4,8 @@ import { PrismaClient } from '@prisma/client';
 import type { z } from 'zod';
 import { seedDemoAccounts } from './accounts.js';
 import { expandAcademicWeeks, expandHolidays } from './academicWeeks.js';
+import { verifyDemoMenus } from './demoVerification.js';
+import { withMeatTags } from './dietTags.js';
 import { GENERATED_DIR, seedHistory } from './history.js';
 import { mergeMenus } from './menus.js';
 import { expandOpeningHours } from './openingHours.js';
@@ -90,7 +92,7 @@ async function seedMenus(db: PrismaClient): Promise<void> {
     const fields = {
       priceHkd: item.priceHkd,
       category: item.category,
-      dietTags: item.dietTags,
+      dietTags: withMeatTags(item.name, item.dietTags),
       allergens: item.allergens,
       prepPriorMin: item.prepPriorMin,
       isSpecial: item.isSpecial,
@@ -154,6 +156,7 @@ async function main(): Promise<void> {
     await seedMenus(db);
     if (process.env['DEMO_MODE'] === 'true') {
       await seedDemoAccounts(db);
+      await verifyDemoMenus(db);
       await seedHistory(db, GENERATED_DIR);
     }
     await seedWalkTimes(db);

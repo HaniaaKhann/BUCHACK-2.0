@@ -1,5 +1,21 @@
-import { MS_PER_MINUTE, itemPrep, orderPrep, predictWait, type OpenRange } from '@app/core';
-import { ACTIVE_VENDOR_WHERE, SIM_EMAIL_DOMAIN, type PrismaClient } from '@app/db';
+import {
+  MS_PER_MINUTE,
+  computeLiveWait,
+  hktDate,
+  isOpenAt,
+  itemPrep,
+  openRangesOn,
+  orderPrep,
+} from '@app/core';
+import {
+  ACTIVE_VENDOR_WHERE,
+  SIM_EMAIL_DOMAIN,
+  openingHoursSchema,
+  readSnapshotPayload,
+  toWaitSnapshot,
+  type PrismaClient,
+  type StoredSnapshotPayload,
+} from '@app/db';
 import { DEMO_APP_ORDER_SHARE, DEMO_CATCH_UP_MINUTES } from '../config.js';
 import {
   drawItemCount,
@@ -11,10 +27,7 @@ import {
   slotStartOf,
   type Uniform,
 } from '../demoLoadPlan.js';
-import { hktDate } from '../hkt.js';
 import { notify } from '../notifier.js';
-import { openRangesOn, openingHoursSchema } from '../openRanges.js';
-import { snapshotPayloadSchema, type SnapshotPayload } from '../snapshotPayload.js';
 
 export interface DemoLoadState {
   lastMinute: number | null;
@@ -26,19 +39,17 @@ export function newDemoLoadState(): DemoLoadState {
   return { lastMinute: null, simStudentIds: null, holidays: null };
 }
 
-const OPEN_ORDER_STATUSES = ['placed', 'accepted', 'preparing'] as const;
-
 async function latestPayload(
   db: PrismaClient,
   vendorId: string,
   atMs: number,
-): Promise<SnapshotPayload | null> {
+): Promise<StoredSnapshotPayload | null> {
   const row = await db.engineSnapshot.findFirst({
     where: { vendorId, computedAt: { lte: new Date(atMs) } },
     orderBy: { computedAt: 'desc' },
     select: { payload: true },
   });
-  return row === null ? null : snapshotPayloadSchema.parse(row.payload);
+  return row === null ? null : readSnapshotPayload(row.payload);
 }
 
 async function simStudents(db: PrismaClient, state: DemoLoadState): Promise<string[]> {
@@ -60,10 +71,6 @@ async function holidayDates(db: PrismaClient, state: DemoLoadState): Promise<Set
   return state.holidays;
 }
 
-function isOpenAt(ranges: readonly OpenRange[], ms: number): boolean {
-  return ranges.some((range) => ms >= range.openAt && ms < range.closeAt);
-}
-
 function pickDistinct<T>(items: readonly T[], count: number, uniform: Uniform): T[] {
   const pool = [...items];
   const picked: T[] = [];
@@ -78,7 +85,7 @@ async function placeSimOrder(
   db: PrismaClient,
   vendorId: string,
   placedAt: number,
-  payload: SnapshotPayload,
+  payload: StoredSnapshotPayload,
   students: readonly string[],
   uniform: Uniform,
 ): Promise<void> {
@@ -90,13 +97,19 @@ async function placeSimOrder(
   if (studentId === undefined || menu.length === 0) return;
 
   const items = pickDistinct(menu, drawItemCount(uniform, menu.length), uniform);
-  const backlog = await db.order.count({
-    where: { vendorId, status: { in: [...OPEN_ORDER_STATUSES] } },
+  const sinceSnapshot = await db.order.findMany({
+    where: {
+      vendorId,
+      status: { not: 'cancelled' },
+      placedAt: { gte: new Date(payload.computedAt), lt: new Date(placedAt) },
+    },
+    select: { placedAt: true },
   });
-  const prediction = predictWait({
-    backlog,
-    muPerMinute: payload.mu.perMinute,
-    prep: orderPrep(
+  const { prediction, backlog } = computeLiveWait({
+    snapshot: toWaitSnapshot(payload),
+    now: placedAt,
+    appArrivalTimes: sinceSnapshot.map((row) => row.placedAt.getTime()),
+    prepMinutes: orderPrep(
       items.map((item) =>
         itemPrep({
           learned: payload.prep[item.name]?.minutes ?? null,
@@ -105,9 +118,6 @@ async function placeSimOrder(
         }),
       ),
     ),
-    bias: payload.bias.value ?? 0,
-    biasSamples: payload.bias.samples,
-    residuals: payload.residuals,
   });
   const at = (minutes: number): Date => new Date(placedAt + minutes * MS_PER_MINUTE);
   const order = await db.order.create({
@@ -229,7 +239,7 @@ async function progressSimOrders(db: PrismaClient, nowMs: number): Promise<void>
       items: { select: { prepPriorSnapshotMin: true } },
     },
   });
-  const payloads = new Map<string, SnapshotPayload | null>();
+  const payloads = new Map<string, StoredSnapshotPayload | null>();
   const now = new Date(nowMs);
 
   for (const order of active) {

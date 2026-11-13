@@ -1,29 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { boundaryAtOrBefore, clockNowMs, dueBoundaries, type ClockRow } from '../src/clock.js';
+import { boundaryAtOrBefore, dueBoundaries } from '../src/clock.js';
 
 const STEP = 15 * 60_000;
 const T0 = Date.UTC(2026, 10, 17, 4, 15);
-
-const demo: ClockRow = {
-  mode: 'demo',
-  currentTime: new Date(T0),
-  speed: 60,
-  updatedAt: new Date(1_000_000),
-};
-
-describe('clockNowMs', () => {
-  it('follows real time in real mode', () => {
-    expect(clockNowMs({ ...demo, mode: 'real' }, 5_000_000)).toBe(5_000_000);
-  });
-
-  it('advances demo time by elapsed real time times speed', () => {
-    expect(clockNowMs(demo, 1_010_000)).toBe(T0 + 600_000);
-  });
-
-  it('stands still when the speed is zero', () => {
-    expect(clockNowMs({ ...demo, speed: 0 }, 9_000_000)).toBe(T0);
-  });
-});
 
 describe('boundaryAtOrBefore', () => {
   it('rounds down to the step', () => {

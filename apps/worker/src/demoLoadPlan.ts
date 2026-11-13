@@ -5,7 +5,7 @@ import {
   DEMO_PICKUP_MEDIAN_MINUTES,
   DEMO_PICKUP_SIGMA,
 } from './config.js';
-import type { SnapshotPayload } from './snapshotPayload.js';
+import type { StoredSnapshotPayload } from '@app/db';
 
 const SLOT_MS = SLOT_MINUTES * MS_PER_MINUTE;
 
@@ -71,9 +71,9 @@ export function pickupDueAt(orderId: string, readyAt: number): number {
 }
 
 export function forecastSlotAt(
-  payload: SnapshotPayload,
+  payload: Pick<StoredSnapshotPayload, 'forecast'>,
   ms: number,
-): SnapshotPayload['forecast'][number] | null {
+): StoredSnapshotPayload['forecast'][number] | null {
   return (
     payload.forecast.find((slot) => {
       const start = Date.parse(slot.slotStart);

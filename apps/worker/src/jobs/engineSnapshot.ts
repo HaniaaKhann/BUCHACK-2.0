@@ -1,17 +1,21 @@
 import {
   MODEL_VERSION,
+  MS_PER_DAY,
   MS_PER_MINUTE,
   SLOT_MINUTES,
   busyMinuteRates,
+  hktDate,
+  hktMidnight,
+  openRangesOn,
   orderPrep,
+  weekTypeLookup,
   type BusyOrder,
+  type OpeningHours,
   type TicketSlot,
 } from '@app/core';
-import { ACTIVE_VENDOR_WHERE, type PrismaClient } from '@app/db';
+import { ACTIVE_VENDOR_WHERE, openingHoursSchema, type PrismaClient } from '@app/db';
 import { SNAPSHOT_HISTORY_DAYS } from '../config.js';
-import { MS_PER_DAY, hktDate, hktMidnight, weekTypeLookup } from '../hkt.js';
 import { notify } from '../notifier.js';
-import { openRangesOn, openingHoursSchema, type OpeningHours } from '../openRanges.js';
 import {
   buildSnapshotPayload,
   type DayBusyRates,
@@ -173,8 +177,9 @@ export async function runEngineSnapshots(
       slotStart: row.slotStart.getTime(),
       count: row.count,
     }));
+    const hours = openingHoursSchema.parse(vendor.openingHours);
     const dayBusyRates = completedDayBusyRates(
-      openingHoursSchema.parse(vendor.openingHours),
+      hours,
       holidays,
       orders,
       tickets,
@@ -198,6 +203,7 @@ export async function runEngineSnapshots(
           orders: snapshotOrders,
           appOrdersBySlot: slotCounts,
           dayBusyRates,
+          openRanges: openRangesOn(hours, hktDate(boundary), holidays),
           weekTypeOf,
         }),
       })),

@@ -7,21 +7,27 @@ import {
   SLOT_MINUTES,
   blendMu,
   detectBatchTaps,
+  hktDate,
+  hktMidnight,
+  hktSlotIndex,
+  hktWeekIndex,
+  hktWeekday,
   labelOrder,
   lambdaHist,
   latenessMinutes,
   latenessQuantiles,
   learnedPrep,
+  liveBacklog,
   median,
   muPrior,
   updateBias,
   walkIns,
+  type OpenRange,
   type PrepSample,
   type SlotObservation,
   type WeekType,
 } from '@app/core';
-import { z } from 'zod';
-import { hktSlotIndex, hktWeekIndex, hktWeekday } from './hkt.js';
+import type { SnapshotPayload } from '@app/db';
 
 const SLOT_MS = SLOT_MINUTES * MS_PER_MINUTE;
 
@@ -55,29 +61,9 @@ export interface SnapshotInput {
   orders: readonly SnapshotOrder[];
   appOrdersBySlot: ReadonlyMap<number, number>;
   dayBusyRates: readonly DayBusyRates[];
+  openRanges: readonly OpenRange[];
   weekTypeOf: (ms: number) => WeekType;
 }
-
-export const snapshotPayloadSchema = z.object({
-  computedAt: z.string(),
-  ingestedFrom: z.string(),
-  modelVersion: z.string(),
-  forecast: z.array(
-    z.object({
-      slotStart: z.string(),
-      lambdaPerMinute: z.number(),
-      lambdaSource: z.enum(['matching_weeks', 'all_weekdays', 'vendor_average']),
-      expectedWalkIns: z.number(),
-    }),
-  ),
-  mu: z.object({ prior: z.number(), perMinute: z.number(), busyMinutes: z.number() }),
-  bias: z.object({ value: z.number().nullable(), samples: z.number() }),
-  residuals: z.array(z.number()),
-  prep: z.record(z.object({ minutes: z.number(), samples: z.number() })),
-  lateness: z.object({ q50: z.number(), q90: z.number(), samples: z.number() }),
-});
-
-export type SnapshotPayload = z.infer<typeof snapshotPayloadSchema>;
 
 function labelAt(order: SnapshotOrder): number {
   return order.readyAt ?? order.pickedUpAt ?? Number.POSITIVE_INFINITY;
@@ -192,6 +178,38 @@ function scheduledLateness(
   );
 }
 
+function backlogAtBoundary(input: SnapshotInput, muPerMinute: number): number {
+  const range = input.openRanges.find(
+    (candidate) => candidate.openAt <= input.boundary && input.boundary < candidate.closeAt,
+  );
+  if (range === undefined) return 0;
+
+  const dayStart = hktMidnight(hktDate(input.boundary));
+  const before = observationsFor({ ...input, boundary: dayStart });
+  const rateBySlot = new Map<number, number>();
+  const lambdaAt = (minuteStart: number): number => {
+    const slotStart = Math.floor(minuteStart / SLOT_MS) * SLOT_MS;
+    const cached = rateBySlot.get(slotStart);
+    if (cached !== undefined) return cached;
+    const rate = lambdaHist(before, {
+      weekday: hktWeekday(slotStart),
+      slot: hktSlotIndex(slotStart),
+      weekType: input.weekTypeOf(slotStart),
+    }).perMinute;
+    rateBySlot.set(slotStart, rate);
+    return rate;
+  };
+
+  return liveBacklog({
+    backlogAtStart: 0,
+    startAt: range.openAt,
+    until: input.boundary,
+    muPerMinute,
+    lambdaAt,
+    appArrivalTimes: input.orders.map((order) => order.placedAt),
+  });
+}
+
 export function buildSnapshotPayload(input: SnapshotInput): SnapshotPayload {
   const observations = observationsFor(input);
   const busyRates = input.dayBusyRates
@@ -201,6 +219,7 @@ export function buildSnapshotPayload(input: SnapshotInput): SnapshotPayload {
     vendorSetting: input.capacityPriorPerMin,
     slotTicketRatesPerMinute: observations.map((o) => o.walkIns / SLOT_MINUTES),
   });
+  const perMinute = blendMu({ prior, readyTapsPerBusyMinute: busyRates });
   const learned = learnFromOrders(input.orders, input.ingestedFrom, input.boundary);
   const lateness = scheduledLateness(input.orders, input.ingestedFrom, input.boundary);
 
@@ -224,11 +243,8 @@ export function buildSnapshotPayload(input: SnapshotInput): SnapshotPayload {
     ingestedFrom: new Date(input.ingestedFrom).toISOString(),
     modelVersion: MODEL_VERSION,
     forecast,
-    mu: {
-      prior,
-      perMinute: blendMu({ prior, readyTapsPerBusyMinute: busyRates }),
-      busyMinutes: busyRates.length,
-    },
+    mu: { prior, perMinute, busyMinutes: busyRates.length },
+    backlog: backlogAtBoundary(input, perMinute),
     bias: { value: learned.bias, samples: learned.biasSamples },
     residuals: learned.residuals.slice(-RESIDUAL_WINDOW),
     prep: prepStats(learned.prepSamples),

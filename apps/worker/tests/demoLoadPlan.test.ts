@@ -10,7 +10,7 @@ import {
   readyDueAt,
   slotStartOf,
 } from '../src/demoLoadPlan.js';
-import type { SnapshotPayload } from '../src/snapshotPayload.js';
+import type { StoredSnapshotPayload } from '@app/db';
 
 const MINUTE = 60_000;
 const SLOT_START = Date.UTC(2026, 10, 17, 4, 15);
@@ -105,7 +105,7 @@ describe('slot helpers', () => {
         expectedWalkIns: 15,
       },
     ],
-  } as SnapshotPayload;
+  } as StoredSnapshotPayload;
 
   it('finds the forecast slot that contains a minute', () => {
     expect(forecastSlotAt(payload, SLOT_START + 14 * MINUTE)?.expectedWalkIns).toBe(15);

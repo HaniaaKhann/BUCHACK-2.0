@@ -1,3 +1,4 @@
+import { hktMidnight } from '@app/core';
 import { describe, expect, it } from 'vitest';
 import {
   buildSnapshotPayload,
@@ -19,6 +20,7 @@ function baseInput(overrides: Partial<SnapshotInput> = {}): SnapshotInput {
     orders: [],
     appOrdersBySlot: new Map(),
     dayBusyRates: [],
+    openRanges: [],
     weekTypeOf: () => 'teaching',
     ...overrides,
   };
@@ -186,5 +188,79 @@ describe('buildSnapshotPayload capacity', () => {
     );
     expect(payload.mu.busyMinutes).toBe(0);
     expect(payload.mu.perMinute).toBe(1);
+  });
+});
+
+describe('buildSnapshotPayload backlog', () => {
+  const TUESDAY = '2026-11-17';
+  const openAt = hktMidnight(TUESDAY) + 8 * 60 * MINUTE;
+  const at = (hours: number, minutes = 0): number =>
+    hktMidnight(TUESDAY) + (hours * 60 + minutes) * MINUTE;
+  const wholeDay = [{ openAt, closeAt: at(17, 30) }];
+
+  const pastTuesdays = ['2026-11-10', '2026-11-03'];
+  const busyTickets = pastTuesdays.flatMap((date) =>
+    Array.from({ length: 18 }, (_, index) => ({
+      slotStart: hktMidnight(date) + (32 + index) * 15 * MINUTE,
+      count: 30,
+    })),
+  );
+
+  const busy = (boundary: number, overrides: Partial<SnapshotInput> = {}) =>
+    buildSnapshotPayload(
+      baseInput({
+        boundary,
+        capacityPriorPerMin: 1,
+        tickets: busyTickets,
+        openRanges: wholeDay,
+        ...overrides,
+      }),
+    );
+
+  it('builds a busy outlet backlog from opening time when the clock jumps from 09:00 to 12:15', () => {
+    const morning = busy(at(9));
+    const lunch = busy(at(12, 15));
+    expect(morning.backlog).toBeCloseTo(60 * (2 - 1), 10);
+    expect(lunch.backlog).toBeGreaterThan(0);
+    expect(lunch.backlog).toBeCloseTo(255 * (2 - 1), 10);
+    expect(lunch.backlog - morning.backlog).toBeCloseTo(195, 10);
+  });
+
+  it('is zero at opening and for a closed outlet', () => {
+    expect(busy(openAt).backlog).toBe(0);
+    expect(busy(at(7)).backlog).toBe(0);
+    expect(busy(at(18)).backlog).toBe(0);
+    expect(busy(at(12, 15), { openRanges: [] }).backlog).toBe(0);
+  });
+
+  it('restarts from the second opening when an outlet closes in the middle of the day', () => {
+    const split = [
+      { openAt, closeAt: at(12) },
+      { openAt: at(13), closeAt: at(17, 30) },
+    ];
+    expect(busy(at(13, 30), { openRanges: split }).backlog).toBeCloseTo(30 * (2 - 1), 10);
+    expect(busy(at(12, 30), { openRanges: split }).backlog).toBe(0);
+  });
+
+  it('adds the app orders actually placed since opening', () => {
+    const quiet = buildSnapshotPayload(
+      baseInput({
+        capacityPriorPerMin: 0.05,
+        openRanges: [{ openAt: at(11), closeAt: at(17, 30) }],
+        orders: [at(12, 0) + 10_000, at(12, 0) + 20_000, at(12, 10)].map((placedAt) =>
+          order(0, { placedAt, readyAt: null, pickedUpAt: null }),
+        ),
+      }),
+    );
+    expect(quiet.backlog).toBeCloseTo(2.25, 10);
+  });
+
+  it('uses the forecast rate for earlier slots of the same day, not the day own tickets', () => {
+    const today = Array.from({ length: 18 }, (_, index) => ({
+      slotStart: openAt + index * 15 * MINUTE,
+      count: 300,
+    }));
+    const withToday = busy(at(12, 15), { tickets: [...busyTickets, ...today] });
+    expect(withToday.backlog).toBeCloseTo(255, 10);
   });
 });
