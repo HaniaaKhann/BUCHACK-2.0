@@ -1,0 +1,16 @@
+**/node_modules
+**/.next
+**/dist
+**/build
+**/coverage
+**/playwright-report
+**/test-results
+**/.turbo
+**/.cache
+.*
+*.md
+data/raw
+*.log
+.env
+.env.*
+!.env.example

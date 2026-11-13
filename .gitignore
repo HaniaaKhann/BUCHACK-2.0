@@ -5,9 +5,14 @@ build/
 coverage/
 playwright-report/
 test-results/
+.turbo/
+.cache/
+*.tsbuildinfo
 .env
 .env.*
 !.env.example
 data/raw/
 *.log
 .DS_Store
+Thumbs.db
+
