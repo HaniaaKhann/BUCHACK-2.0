@@ -17,9 +17,12 @@
     "test": "vitest run",
     "data:inspect": "tsx src/kaggle/inspect.ts",
     "data:map": "tsx src/kaggle/map.ts",
-    "data:import": "tsx src/kaggle/import.ts"
+    "data:import": "tsx src/kaggle/import.ts",
+    "history:generate": "tsx src/history/cli.ts",
+    "backtest": "tsx src/backtest/cli.ts && prettier --write ../../apps/web/public/accuracy.json"
   },
   "dependencies": {
+    "@app/core": "workspace:*",
     "csv-parse": "5.6.0",
     "zod": "3.24.1"
   },
