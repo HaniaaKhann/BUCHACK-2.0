@@ -2,12 +2,14 @@ import { isDemoEmail } from '@app/db';
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { APIError } from 'better-auth/api';
+import { rateLimitOptions } from './authRateLimit';
 import { prisma } from './db';
 
 function createAuth() {
   return betterAuth({
     database: prismaAdapter(prisma, { provider: 'postgresql' }),
     emailAndPassword: { enabled: true },
+    ...rateLimitOptions(process.env['DEMO_MODE']),
     user: {
       additionalFields: {
         role: { type: 'string', required: false, defaultValue: 'student', input: false },
