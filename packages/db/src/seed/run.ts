@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { PrismaClient } from '@prisma/client';
 import type { z } from 'zod';
+import { seedDemoAccounts } from './accounts.js';
 import { expandAcademicWeeks, expandHolidays } from './academicWeeks.js';
 import { expandOpeningHours } from './openingHours.js';
 import {
@@ -107,6 +108,7 @@ async function main(): Promise<void> {
   try {
     await seedBuildings(db);
     await seedVendors(db);
+    if (process.env['DEMO_MODE'] === 'true') await seedDemoAccounts(db);
     await seedWalkTimes(db);
     await seedAcademicCalendar(db);
     await seedClock(db);

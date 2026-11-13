@@ -6,6 +6,12 @@ const config: NextConfig = {
   experimental: {
     typedRoutes: true,
   },
+  webpack: (webpackConfig) => {
+    webpackConfig.resolve.extensionAlias = {
+      '.js': ['.ts', '.tsx', '.js'],
+    };
+    return webpackConfig;
+  },
 };
 
 export default config;
