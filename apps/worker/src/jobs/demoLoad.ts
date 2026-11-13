@@ -1,5 +1,5 @@
 import { MS_PER_MINUTE, itemPrep, orderPrep, predictWait, type OpenRange } from '@app/core';
-import { SIM_EMAIL_DOMAIN, type PrismaClient } from '@app/db';
+import { ACTIVE_VENDOR_WHERE, SIM_EMAIL_DOMAIN, type PrismaClient } from '@app/db';
 import { DEMO_APP_ORDER_SHARE, DEMO_CATCH_UP_MINUTES } from '../config.js';
 import {
   drawItemCount,
@@ -150,7 +150,7 @@ async function generateMinute(
 ): Promise<void> {
   const [vendors, holidays, students] = await Promise.all([
     db.vendor.findMany({
-      where: { status: 'open' },
+      where: ACTIVE_VENDOR_WHERE,
       select: { id: true, openingHours: true, pickupEnabled: true, paused: true },
     }),
     holidayDates(db, state),

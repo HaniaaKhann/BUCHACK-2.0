@@ -7,7 +7,7 @@ import {
   type BusyOrder,
   type TicketSlot,
 } from '@app/core';
-import type { PrismaClient } from '@app/db';
+import { ACTIVE_VENDOR_WHERE, type PrismaClient } from '@app/db';
 import { SNAPSHOT_HISTORY_DAYS } from '../config.js';
 import { MS_PER_DAY, hktDate, hktMidnight, weekTypeLookup } from '../hkt.js';
 import { notify } from '../notifier.js';
@@ -121,7 +121,7 @@ export async function runEngineSnapshots(
 
   const [vendors, weeks, holidayRows, existing] = await Promise.all([
     db.vendor.findMany({
-      where: { status: 'open' },
+      where: ACTIVE_VENDOR_WHERE,
       select: {
         id: true,
         openingHours: true,

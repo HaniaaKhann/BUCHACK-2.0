@@ -2,6 +2,7 @@ import type { PrismaClient, Role } from '@prisma/client';
 import { hashPassword } from 'better-auth/crypto';
 
 export const DEMO_PASSWORD = 'demo-password-1';
+export const DEMO_VENDOR_NAME = 'Bistro NTT';
 
 export interface DemoAccount {
   id: string;
@@ -49,7 +50,10 @@ export function isDemoEmail(email: string): boolean {
 
 export async function seedDemoAccounts(db: PrismaClient): Promise<void> {
   const passwordHash = await hashPassword(DEMO_PASSWORD);
-  const vendor = await db.vendor.findFirst({ orderBy: { name: 'asc' }, select: { id: true } });
+  const vendor = await db.vendor.findUnique({
+    where: { name: DEMO_VENDOR_NAME },
+    select: { id: true },
+  });
 
   for (const account of DEMO_ACCOUNTS) {
     const user = await db.user.upsert({
@@ -77,6 +81,9 @@ export async function seedDemoAccounts(db: PrismaClient): Promise<void> {
     });
 
     if (account.vendorMemberRole && vendor) {
+      await db.vendorMember.deleteMany({
+        where: { userId: user.id, vendorId: { not: vendor.id } },
+      });
       await db.vendorMember.upsert({
         where: { userId_vendorId: { userId: user.id, vendorId: vendor.id } },
         create: { userId: user.id, vendorId: vendor.id, role: account.vendorMemberRole },
