@@ -1,0 +1,9 @@
+export const TICK_MS = 1000;
+export const MAX_REPLAYED_BOUNDARIES = 8;
+export const SNAPSHOT_HISTORY_DAYS = 56;
+export const DEMO_APP_ORDER_SHARE = 0.15;
+export const DEMO_CATCH_UP_MINUTES = 15;
+export const DEMO_ITEM_COUNT_WEIGHTS: readonly number[] = [0.7, 0.25, 0.05];
+export const DEMO_COOK_SIGMA = 0.35;
+export const DEMO_PICKUP_MEDIAN_MINUTES = 3;
+export const DEMO_PICKUP_SIGMA = 0.6;

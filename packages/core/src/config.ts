@@ -42,6 +42,9 @@ export const BUFFER_MINUTES = 2;
 
 export const SLOT_CAP_FRACTION = 0.5;
 
+export const ORDER_GRACE_SECONDS = 60;
+export const FORECAST_SLOTS = 8;
+
 export const RANKING_WEIGHT_GOAL = 0.3;
 export const RANKING_WEIGHT_WAIT = 0.3;
 export const RANKING_WEIGHT_PRICE = 0.2;
