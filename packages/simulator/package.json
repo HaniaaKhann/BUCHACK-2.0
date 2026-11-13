@@ -13,10 +13,21 @@
   },
   "scripts": {
     "build": "tsc",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit -p tsconfig.check.json",
+    "test": "vitest run",
+    "data:inspect": "tsx src/kaggle/inspect.ts",
+    "data:map": "tsx src/kaggle/map.ts",
+    "data:import": "tsx src/kaggle/import.ts"
+  },
+  "dependencies": {
+    "csv-parse": "5.6.0",
+    "zod": "3.24.1"
   },
   "devDependencies": {
+    "@app/db": "workspace:*",
     "@types/node": "22.10.2",
-    "typescript": "5.7.2"
+    "tsx": "4.19.2",
+    "typescript": "5.7.2",
+    "vitest": "2.1.8"
   }
 }

@@ -12,6 +12,9 @@
     "typecheck": "pnpm -r --parallel --if-present typecheck",
     "test": "pnpm -r --parallel --if-present test",
     "build": "pnpm -r --if-present build",
+    "data:inspect": "pnpm --filter @app/simulator data:inspect",
+    "data:map": "pnpm --filter @app/simulator data:map",
+    "data:import": "pnpm --filter @app/simulator data:import",
     "docker:up": "docker compose up",
     "docker:down": "docker compose down -v"
   },

@@ -9,6 +9,10 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./seed-schemas": {
+      "types": "./src/seed/schemas.ts",
+      "default": "./src/seed/schemas.ts"
     }
   },
   "scripts": {
