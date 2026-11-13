@@ -294,6 +294,7 @@ model MenuItem {
   isSpecial      Boolean     @default(false)
   externalId     String?
   source         MenuSource  @default(generic)
+  isDemo         Boolean     @default(true)
   deletedAt      DateTime?
 
   vendor     Vendor      @relation(fields: [vendorId], references: [id], onDelete: Cascade)

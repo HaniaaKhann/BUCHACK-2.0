@@ -1,0 +1,2011 @@
+{
+  "isDemoData": true,
+  "source": "generic",
+  "description": "Hand-written demo menu. Dishes, prices and preparation times are invented for the demo and are not the real offerings of any HKBU outlet. Diet and allergen tags are suggestions and stay unverified until a vendor owner verifies them.",
+  "outlets": [
+    {
+      "outletName": "Main Canteen",
+      "items": [
+        {
+          "name": "BBQ Pork Rice",
+          "priceHkd": 45,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Roast Duck Rice",
+          "priceHkd": 52,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Soy Sauce Chicken Rice",
+          "priceHkd": 46,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Char Siu and Egg Rice",
+          "priceHkd": 44,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["egg", "soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Sweet and Sour Pork Rice",
+          "priceHkd": 46,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "soy"],
+          "prepPriorMin": 7,
+          "isSpecial": false
+        },
+        {
+          "name": "Curry Beef Brisket Rice",
+          "priceHkd": 52,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["gluten"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Braised Tofu Rice",
+          "priceHkd": 38,
+          "category": "Rice",
+          "dietTags": ["vegetarian"],
+          "allergens": ["soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Vegetable Fried Rice",
+          "priceHkd": 38,
+          "category": "Rice",
+          "dietTags": ["vegetarian"],
+          "allergens": ["egg", "soy"],
+          "prepPriorMin": 7,
+          "isSpecial": false
+        },
+        {
+          "name": "Yangzhou Fried Rice",
+          "priceHkd": 44,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["egg", "shellfish", "soy"],
+          "prepPriorMin": 7,
+          "isSpecial": false
+        },
+        {
+          "name": "Wonton Noodle Soup",
+          "priceHkd": 42,
+          "category": "Noodles",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "shellfish", "soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Beef Brisket Noodle Soup",
+          "priceHkd": 48,
+          "category": "Noodles",
+          "dietTags": [],
+          "allergens": ["gluten", "soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Dan Dan Noodles",
+          "priceHkd": 40,
+          "category": "Noodles",
+          "dietTags": [],
+          "allergens": ["gluten", "peanut", "sesame", "soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Singapore Style Vermicelli",
+          "priceHkd": 44,
+          "category": "Noodles",
+          "dietTags": [],
+          "allergens": ["egg", "shellfish", "soy"],
+          "prepPriorMin": 7,
+          "isSpecial": false
+        },
+        {
+          "name": "Stir-fried Beef Ho Fun",
+          "priceHkd": 50,
+          "category": "Noodles",
+          "dietTags": [],
+          "allergens": ["egg", "soy"],
+          "prepPriorMin": 8,
+          "isSpecial": false
+        },
+        {
+          "name": "Luncheon Meat and Egg Instant Noodles",
+          "priceHkd": 36,
+          "category": "Noodles",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "soy"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Vegetable Udon",
+          "priceHkd": 38,
+          "category": "Noodles",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": ["gluten", "soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Fried Chicken Cutlet Set",
+          "priceHkd": 48,
+          "category": "Set meals",
+          "dietTags": [],
+          "allergens": ["gluten", "egg"],
+          "prepPriorMin": 9,
+          "isSpecial": false
+        },
+        {
+          "name": "Pork Chop Set",
+          "priceHkd": 50,
+          "category": "Set meals",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "soy"],
+          "prepPriorMin": 9,
+          "isSpecial": false
+        },
+        {
+          "name": "Steamed Fish Fillet Set",
+          "priceHkd": 54,
+          "category": "Set meals",
+          "dietTags": [],
+          "allergens": ["fish", "soy"],
+          "prepPriorMin": 9,
+          "isSpecial": false
+        },
+        {
+          "name": "Daily Soup",
+          "priceHkd": 12,
+          "category": "Sides",
+          "dietTags": [],
+          "allergens": [],
+          "prepPriorMin": 1,
+          "isSpecial": false
+        },
+        {
+          "name": "Blanched Choy Sum with Oyster Sauce",
+          "priceHkd": 22,
+          "category": "Sides",
+          "dietTags": [],
+          "allergens": ["shellfish"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "HK Milk Tea",
+          "priceHkd": 16,
+          "category": "Drinks",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Lemon Tea",
+          "priceHkd": 15,
+          "category": "Drinks",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Daily Special Set",
+          "priceHkd": 58,
+          "category": "Set meals",
+          "dietTags": [],
+          "allergens": ["gluten", "soy"],
+          "prepPriorMin": 9,
+          "isSpecial": true
+        }
+      ]
+    },
+    {
+      "outletName": "Harmony Cafeteria",
+      "items": [
+        {
+          "name": "Roast Pork Rice",
+          "priceHkd": 46,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Honey BBQ Pork Rice",
+          "priceHkd": 45,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Chicken Drumstick Rice",
+          "priceHkd": 44,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["soy"],
+          "prepPriorMin": 7,
+          "isSpecial": false
+        },
+        {
+          "name": "Black Pepper Beef Rice",
+          "priceHkd": 52,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["soy"],
+          "prepPriorMin": 8,
+          "isSpecial": false
+        },
+        {
+          "name": "Scrambled Egg and Tomato Rice",
+          "priceHkd": 36,
+          "category": "Rice",
+          "dietTags": ["vegetarian"],
+          "allergens": ["egg"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Mapo Tofu Rice",
+          "priceHkd": 40,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Mushroom and Vegetable Rice",
+          "priceHkd": 38,
+          "category": "Rice",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": ["soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Curry Fish Ball Noodles",
+          "priceHkd": 40,
+          "category": "Noodles",
+          "dietTags": [],
+          "allergens": ["fish", "gluten"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Pork Dumpling Noodle Soup",
+          "priceHkd": 42,
+          "category": "Noodles",
+          "dietTags": [],
+          "allergens": ["gluten", "soy", "egg"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Spicy Beef Noodle Soup",
+          "priceHkd": 50,
+          "category": "Noodles",
+          "dietTags": [],
+          "allergens": ["gluten", "soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Tomato Egg Noodle Soup",
+          "priceHkd": 38,
+          "category": "Noodles",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Cold Sesame Noodles",
+          "priceHkd": 38,
+          "category": "Noodles",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "sesame", "peanut", "soy"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Chicken Wing Set",
+          "priceHkd": 46,
+          "category": "Set meals",
+          "dietTags": [],
+          "allergens": ["gluten", "soy"],
+          "prepPriorMin": 10,
+          "isSpecial": false
+        },
+        {
+          "name": "Pan-fried Pork Chop Bun",
+          "priceHkd": 32,
+          "category": "Snacks",
+          "dietTags": [],
+          "allergens": ["gluten", "egg"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Ham and Egg Sandwich",
+          "priceHkd": 28,
+          "category": "Snacks",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Pineapple Bun with Butter",
+          "priceHkd": 18,
+          "category": "Snacks",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Egg Tart",
+          "priceHkd": 12,
+          "category": "Snacks",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Congee with Preserved Egg and Pork",
+          "priceHkd": 30,
+          "category": "Congee",
+          "dietTags": [],
+          "allergens": ["egg"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Plain Congee with Youtiao",
+          "priceHkd": 24,
+          "category": "Congee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Seasonal Fruit Cup",
+          "priceHkd": 20,
+          "category": "Sides",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "HK Milk Tea",
+          "priceHkd": 16,
+          "category": "Drinks",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Iced Lemon Tea",
+          "priceHkd": 16,
+          "category": "Drinks",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Soy Milk",
+          "priceHkd": 12,
+          "category": "Drinks",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": ["soy"],
+          "prepPriorMin": 1,
+          "isSpecial": false
+        },
+        {
+          "name": "Lunch Special Set",
+          "priceHkd": 55,
+          "category": "Set meals",
+          "dietTags": [],
+          "allergens": ["gluten", "soy"],
+          "prepPriorMin": 9,
+          "isSpecial": true
+        }
+      ]
+    },
+    {
+      "outletName": "Harmony Lounge",
+      "items": [
+        {
+          "name": "Americano",
+          "priceHkd": 28,
+          "category": "Coffee",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Latte",
+          "priceHkd": 34,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Cappuccino",
+          "priceHkd": 34,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Flat White",
+          "priceHkd": 36,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Mocha",
+          "priceHkd": 38,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Oat Milk Latte",
+          "priceHkd": 38,
+          "category": "Coffee",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": ["gluten"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Iced Coffee",
+          "priceHkd": 30,
+          "category": "Coffee",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Hot Chocolate",
+          "priceHkd": 32,
+          "category": "Drinks",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Matcha Latte",
+          "priceHkd": 36,
+          "category": "Drinks",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Jasmine Green Tea",
+          "priceHkd": 22,
+          "category": "Tea",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "English Breakfast Tea",
+          "priceHkd": 22,
+          "category": "Tea",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Lemon Honey Tea",
+          "priceHkd": 26,
+          "category": "Tea",
+          "dietTags": ["vegetarian"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Plain Croissant",
+          "priceHkd": 24,
+          "category": "Pastries",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Almond Croissant",
+          "priceHkd": 30,
+          "category": "Pastries",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy", "tree_nut"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Blueberry Muffin",
+          "priceHkd": 26,
+          "category": "Pastries",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Banana Walnut Loaf",
+          "priceHkd": 28,
+          "category": "Pastries",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy", "tree_nut"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Cheesecake Slice",
+          "priceHkd": 36,
+          "category": "Cakes",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Chocolate Brownie",
+          "priceHkd": 28,
+          "category": "Cakes",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Garden Salad Bowl",
+          "priceHkd": 42,
+          "category": "Salads",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Chickpea and Quinoa Salad",
+          "priceHkd": 48,
+          "category": "Salads",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": ["sesame"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Caprese Panini",
+          "priceHkd": 44,
+          "category": "Sandwiches",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "dairy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Hummus and Grilled Vegetable Wrap",
+          "priceHkd": 42,
+          "category": "Sandwiches",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": ["gluten", "sesame"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Tuna Sandwich",
+          "priceHkd": 40,
+          "category": "Sandwiches",
+          "dietTags": [],
+          "allergens": ["gluten", "fish", "egg"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Barista Special",
+          "priceHkd": 40,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 4,
+          "isSpecial": true
+        }
+      ]
+    },
+    {
+      "outletName": "iCafe",
+      "items": [
+        {
+          "name": "Americano",
+          "priceHkd": 26,
+          "category": "Coffee",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Latte",
+          "priceHkd": 32,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Cappuccino",
+          "priceHkd": 32,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Espresso",
+          "priceHkd": 22,
+          "category": "Coffee",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 1,
+          "isSpecial": false
+        },
+        {
+          "name": "Caramel Macchiato",
+          "priceHkd": 38,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Iced Latte",
+          "priceHkd": 34,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Cold Brew",
+          "priceHkd": 34,
+          "category": "Coffee",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Hong Kong Style Coffee Tea Mix",
+          "priceHkd": 20,
+          "category": "Drinks",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Fresh Orange Juice",
+          "priceHkd": 30,
+          "category": "Drinks",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Mango Smoothie",
+          "priceHkd": 36,
+          "category": "Drinks",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Chicken Caesar Salad",
+          "priceHkd": 52,
+          "category": "Salads",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "dairy", "fish"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Roasted Pumpkin Salad",
+          "priceHkd": 46,
+          "category": "Salads",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": ["tree_nut"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Tuna Pasta Salad",
+          "priceHkd": 48,
+          "category": "Salads",
+          "dietTags": [],
+          "allergens": ["gluten", "fish", "egg"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Greek Salad",
+          "priceHkd": 46,
+          "category": "Salads",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Egg Salad Sandwich",
+          "priceHkd": 34,
+          "category": "Sandwiches",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Turkey and Cheese Sandwich",
+          "priceHkd": 40,
+          "category": "Sandwiches",
+          "dietTags": [],
+          "allergens": ["gluten", "dairy"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Club Sandwich",
+          "priceHkd": 46,
+          "category": "Sandwiches",
+          "dietTags": [],
+          "allergens": ["gluten", "egg"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Chocolate Cake Slice",
+          "priceHkd": 34,
+          "category": "Cakes",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Carrot Cake Slice",
+          "priceHkd": 34,
+          "category": "Cakes",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy", "tree_nut"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Tiramisu Cup",
+          "priceHkd": 38,
+          "category": "Cakes",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Lemon Tart",
+          "priceHkd": 32,
+          "category": "Cakes",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Butter Croissant",
+          "priceHkd": 22,
+          "category": "Pastries",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Cinnamon Roll",
+          "priceHkd": 26,
+          "category": "Pastries",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Student Combo Sandwich and Coffee",
+          "priceHkd": 58,
+          "category": "Combos",
+          "dietTags": [],
+          "allergens": ["gluten", "dairy"],
+          "prepPriorMin": 6,
+          "isSpecial": true
+        }
+      ]
+    },
+    {
+      "outletName": "Bistro NTT",
+      "items": [
+        {
+          "name": "Classic Beef Burger",
+          "priceHkd": 68,
+          "category": "Burgers",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 12,
+          "isSpecial": false
+        },
+        {
+          "name": "Cheeseburger",
+          "priceHkd": 72,
+          "category": "Burgers",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 12,
+          "isSpecial": false
+        },
+        {
+          "name": "Crispy Chicken Burger",
+          "priceHkd": 66,
+          "category": "Burgers",
+          "dietTags": [],
+          "allergens": ["gluten", "egg"],
+          "prepPriorMin": 12,
+          "isSpecial": false
+        },
+        {
+          "name": "Bacon Double Burger",
+          "priceHkd": 82,
+          "category": "Burgers",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 14,
+          "isSpecial": false
+        },
+        {
+          "name": "Veggie Burger",
+          "priceHkd": 62,
+          "category": "Burgers",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "soy"],
+          "prepPriorMin": 11,
+          "isSpecial": false
+        },
+        {
+          "name": "Fish Fillet Burger",
+          "priceHkd": 64,
+          "category": "Burgers",
+          "dietTags": [],
+          "allergens": ["gluten", "fish", "egg"],
+          "prepPriorMin": 11,
+          "isSpecial": false
+        },
+        {
+          "name": "Grilled Ribeye Steak",
+          "priceHkd": 128,
+          "category": "Steak",
+          "dietTags": [],
+          "allergens": ["dairy"],
+          "prepPriorMin": 18,
+          "isSpecial": false
+        },
+        {
+          "name": "Sirloin Steak",
+          "priceHkd": 108,
+          "category": "Steak",
+          "dietTags": [],
+          "allergens": ["dairy"],
+          "prepPriorMin": 16,
+          "isSpecial": false
+        },
+        {
+          "name": "Pan-seared Salmon",
+          "priceHkd": 98,
+          "category": "Steak",
+          "dietTags": [],
+          "allergens": ["fish", "dairy"],
+          "prepPriorMin": 15,
+          "isSpecial": false
+        },
+        {
+          "name": "Grilled Chicken Chop",
+          "priceHkd": 78,
+          "category": "Steak",
+          "dietTags": [],
+          "allergens": ["dairy"],
+          "prepPriorMin": 14,
+          "isSpecial": false
+        },
+        {
+          "name": "Spaghetti Bolognese",
+          "priceHkd": 62,
+          "category": "Pasta",
+          "dietTags": [],
+          "allergens": ["gluten", "egg"],
+          "prepPriorMin": 11,
+          "isSpecial": false
+        },
+        {
+          "name": "Spaghetti Carbonara",
+          "priceHkd": 64,
+          "category": "Pasta",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 11,
+          "isSpecial": false
+        },
+        {
+          "name": "Penne Arrabbiata",
+          "priceHkd": 56,
+          "category": "Pasta",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": ["gluten"],
+          "prepPriorMin": 10,
+          "isSpecial": false
+        },
+        {
+          "name": "Seafood Linguine",
+          "priceHkd": 76,
+          "category": "Pasta",
+          "dietTags": [],
+          "allergens": ["gluten", "shellfish", "fish"],
+          "prepPriorMin": 12,
+          "isSpecial": false
+        },
+        {
+          "name": "Creamy Mushroom Pasta",
+          "priceHkd": 60,
+          "category": "Pasta",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "dairy"],
+          "prepPriorMin": 10,
+          "isSpecial": false
+        },
+        {
+          "name": "Baked Cheese Rice",
+          "priceHkd": 66,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["dairy", "egg"],
+          "prepPriorMin": 13,
+          "isSpecial": false
+        },
+        {
+          "name": "French Fries",
+          "priceHkd": 28,
+          "category": "Sides",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Onion Rings",
+          "priceHkd": 30,
+          "category": "Sides",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Chicken Nuggets",
+          "priceHkd": 34,
+          "category": "Sides",
+          "dietTags": [],
+          "allergens": ["gluten", "egg"],
+          "prepPriorMin": 7,
+          "isSpecial": false
+        },
+        {
+          "name": "Garden Salad",
+          "priceHkd": 32,
+          "category": "Sides",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Soup of the Day",
+          "priceHkd": 24,
+          "category": "Sides",
+          "dietTags": [],
+          "allergens": ["dairy", "gluten"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Coleslaw",
+          "priceHkd": 22,
+          "category": "Sides",
+          "dietTags": ["vegetarian"],
+          "allergens": ["egg"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Iced Lemon Tea",
+          "priceHkd": 22,
+          "category": "Drinks",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Cola",
+          "priceHkd": 18,
+          "category": "Drinks",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 1,
+          "isSpecial": false
+        },
+        {
+          "name": "Burger and Fries Set",
+          "priceHkd": 78,
+          "category": "Combos",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 13,
+          "isSpecial": true
+        }
+      ]
+    },
+    {
+      "outletName": "Deli",
+      "items": [
+        {
+          "name": "Pork Siu Mai (4 pcs)",
+          "priceHkd": 24,
+          "category": "Dim sum",
+          "dietTags": [],
+          "allergens": ["gluten", "shellfish", "soy"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Beef Siu Mai (4 pcs)",
+          "priceHkd": 24,
+          "category": "Dim sum",
+          "dietTags": [],
+          "allergens": ["gluten", "soy"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Shrimp Dumplings (3 pcs)",
+          "priceHkd": 28,
+          "category": "Dim sum",
+          "dietTags": [],
+          "allergens": ["gluten", "shellfish"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Vegetable Dumplings (4 pcs)",
+          "priceHkd": 24,
+          "category": "Dim sum",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "soy"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Steamed BBQ Pork Bun",
+          "priceHkd": 16,
+          "category": "Dim sum",
+          "dietTags": [],
+          "allergens": ["gluten", "soy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Custard Bun",
+          "priceHkd": 16,
+          "category": "Dim sum",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Rice Noodle Roll with Sweet Sauce",
+          "priceHkd": 22,
+          "category": "Dim sum",
+          "dietTags": ["vegetarian"],
+          "allergens": ["sesame", "soy"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Curry Fish Balls",
+          "priceHkd": 22,
+          "category": "Street snacks",
+          "dietTags": [],
+          "allergens": ["fish", "gluten"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Fried Beancurd Sheet Roll",
+          "priceHkd": 26,
+          "category": "Street snacks",
+          "dietTags": [],
+          "allergens": ["gluten", "soy", "shellfish"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Fried Spring Rolls (3 pcs)",
+          "priceHkd": 24,
+          "category": "Street snacks",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Egg Waffle",
+          "priceHkd": 28,
+          "category": "Street snacks",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Pork Chop Bun",
+          "priceHkd": 30,
+          "category": "Street snacks",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "soy"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Luncheon Meat and Egg Sandwich",
+          "priceHkd": 26,
+          "category": "Sandwiches",
+          "dietTags": [],
+          "allergens": ["gluten", "egg"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Chicken Ham Macaroni Soup",
+          "priceHkd": 34,
+          "category": "Soups",
+          "dietTags": [],
+          "allergens": ["gluten", "dairy"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Tomato Beef Macaroni Soup",
+          "priceHkd": 36,
+          "category": "Soups",
+          "dietTags": [],
+          "allergens": ["gluten", "soy"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Siu Mai Rice Box",
+          "priceHkd": 36,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["gluten", "shellfish", "soy"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Braised Chicken Wing Rice Box",
+          "priceHkd": 40,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Tofu Pudding",
+          "priceHkd": 16,
+          "category": "Desserts",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": ["soy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Mango Pudding",
+          "priceHkd": 20,
+          "category": "Desserts",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Red Bean Soup",
+          "priceHkd": 18,
+          "category": "Desserts",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "HK Milk Tea",
+          "priceHkd": 16,
+          "category": "Drinks",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Lemon Tea",
+          "priceHkd": 15,
+          "category": "Drinks",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Soy Milk",
+          "priceHkd": 12,
+          "category": "Drinks",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": ["soy"],
+          "prepPriorMin": 1,
+          "isSpecial": false
+        },
+        {
+          "name": "Deli Combo Siu Mai and Milk Tea",
+          "priceHkd": 36,
+          "category": "Combos",
+          "dietTags": [],
+          "allergens": ["gluten", "shellfish", "soy", "dairy"],
+          "prepPriorMin": 5,
+          "isSpecial": true
+        }
+      ]
+    },
+    {
+      "outletName": "Books 'n Bites",
+      "items": [
+        {
+          "name": "Ham and Cheese Toastie",
+          "priceHkd": 28,
+          "category": "Sandwiches",
+          "dietTags": [],
+          "allergens": ["gluten", "dairy"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Egg Mayo Sandwich",
+          "priceHkd": 24,
+          "category": "Sandwiches",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Chicken Salad Sandwich",
+          "priceHkd": 30,
+          "category": "Sandwiches",
+          "dietTags": [],
+          "allergens": ["gluten", "egg"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Tuna Sandwich",
+          "priceHkd": 28,
+          "category": "Sandwiches",
+          "dietTags": [],
+          "allergens": ["gluten", "fish", "egg"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Pork Siu Mai (4 pcs)",
+          "priceHkd": 24,
+          "category": "Snacks",
+          "dietTags": [],
+          "allergens": ["gluten", "shellfish", "soy"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Curry Fish Balls",
+          "priceHkd": 22,
+          "category": "Snacks",
+          "dietTags": [],
+          "allergens": ["fish", "gluten"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Egg Tart",
+          "priceHkd": 12,
+          "category": "Bakery",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Pineapple Bun",
+          "priceHkd": 14,
+          "category": "Bakery",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Instant Noodles with Egg",
+          "priceHkd": 26,
+          "category": "Noodles",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "soy"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "HK Milk Tea",
+          "priceHkd": 16,
+          "category": "Drinks",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Lemon Tea",
+          "priceHkd": 15,
+          "category": "Drinks",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Americano",
+          "priceHkd": 24,
+          "category": "Drinks",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        }
+      ]
+    },
+    {
+      "outletName": "Café@CVA Commons",
+      "items": [
+        {
+          "name": "Americano",
+          "priceHkd": 26,
+          "category": "Coffee",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Latte",
+          "priceHkd": 32,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Cappuccino",
+          "priceHkd": 32,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Mocha",
+          "priceHkd": 36,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Brown Sugar Bubble Milk Tea",
+          "priceHkd": 30,
+          "category": "Bubble tea",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Taro Bubble Milk Tea",
+          "priceHkd": 32,
+          "category": "Bubble tea",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Peach Oolong Tea",
+          "priceHkd": 26,
+          "category": "Bubble tea",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Butter Croissant",
+          "priceHkd": 22,
+          "category": "Pastries",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Chocolate Croissant",
+          "priceHkd": 26,
+          "category": "Pastries",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Ham and Cheese Croissant",
+          "priceHkd": 32,
+          "category": "Pastries",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 4,
+          "isSpecial": false
+        },
+        {
+          "name": "Cheese Danish",
+          "priceHkd": 26,
+          "category": "Pastries",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Matcha Latte",
+          "priceHkd": 34,
+          "category": "Drinks",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        }
+      ]
+    },
+    {
+      "outletName": "H.F.C. (Hot Food Counter) @ Scholars Court",
+      "items": [
+        {
+          "name": "Roast Pork Rice",
+          "priceHkd": 44,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Chicken Curry Rice",
+          "priceHkd": 42,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["gluten"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Sweet and Sour Fish Rice",
+          "priceHkd": 46,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["fish", "gluten", "egg"],
+          "prepPriorMin": 7,
+          "isSpecial": false
+        },
+        {
+          "name": "Stir-fried Beef and Pepper Rice",
+          "priceHkd": 48,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["soy"],
+          "prepPriorMin": 7,
+          "isSpecial": false
+        },
+        {
+          "name": "Steamed Egg with Minced Pork Rice",
+          "priceHkd": 40,
+          "category": "Rice",
+          "dietTags": [],
+          "allergens": ["egg", "soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Vegetable Tofu Rice",
+          "priceHkd": 38,
+          "category": "Rice",
+          "dietTags": ["vegetarian"],
+          "allergens": ["soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Beef Brisket Noodles",
+          "priceHkd": 46,
+          "category": "Noodles",
+          "dietTags": [],
+          "allergens": ["gluten", "soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Wonton Noodles",
+          "priceHkd": 42,
+          "category": "Noodles",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "shellfish", "soy"],
+          "prepPriorMin": 6,
+          "isSpecial": false
+        },
+        {
+          "name": "Fried Noodles with Chicken",
+          "priceHkd": 42,
+          "category": "Noodles",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "soy"],
+          "prepPriorMin": 7,
+          "isSpecial": false
+        },
+        {
+          "name": "Daily Soup",
+          "priceHkd": 12,
+          "category": "Sides",
+          "dietTags": [],
+          "allergens": [],
+          "prepPriorMin": 1,
+          "isSpecial": false
+        },
+        {
+          "name": "HK Milk Tea",
+          "priceHkd": 16,
+          "category": "Drinks",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Iced Lemon Tea",
+          "priceHkd": 16,
+          "category": "Drinks",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        }
+      ]
+    },
+    {
+      "outletName": "Nan Yuan",
+      "items": [
+        {
+          "name": "Pork Siu Mai (4 pcs)",
+          "priceHkd": 36,
+          "category": "Dim sum",
+          "dietTags": [],
+          "allergens": ["gluten", "shellfish", "soy"],
+          "prepPriorMin": 8,
+          "isSpecial": false
+        },
+        {
+          "name": "Shrimp Dumplings (3 pcs)",
+          "priceHkd": 42,
+          "category": "Dim sum",
+          "dietTags": [],
+          "allergens": ["gluten", "shellfish"],
+          "prepPriorMin": 8,
+          "isSpecial": false
+        },
+        {
+          "name": "BBQ Pork Bun (3 pcs)",
+          "priceHkd": 34,
+          "category": "Dim sum",
+          "dietTags": [],
+          "allergens": ["gluten", "soy"],
+          "prepPriorMin": 8,
+          "isSpecial": false
+        },
+        {
+          "name": "Rice Noodle Roll with Shrimp",
+          "priceHkd": 44,
+          "category": "Dim sum",
+          "dietTags": [],
+          "allergens": ["shellfish", "soy", "sesame"],
+          "prepPriorMin": 8,
+          "isSpecial": false
+        },
+        {
+          "name": "Chicken Feet in Black Bean Sauce",
+          "priceHkd": 36,
+          "category": "Dim sum",
+          "dietTags": [],
+          "allergens": ["soy"],
+          "prepPriorMin": 10,
+          "isSpecial": false
+        },
+        {
+          "name": "Steamed Spare Ribs",
+          "priceHkd": 38,
+          "category": "Dim sum",
+          "dietTags": [],
+          "allergens": ["soy"],
+          "prepPriorMin": 10,
+          "isSpecial": false
+        },
+        {
+          "name": "Vegetable Dumplings (3 pcs)",
+          "priceHkd": 34,
+          "category": "Dim sum",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "soy"],
+          "prepPriorMin": 8,
+          "isSpecial": false
+        },
+        {
+          "name": "Egg Tart (3 pcs)",
+          "priceHkd": 30,
+          "category": "Dim sum",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 8,
+          "isSpecial": false
+        },
+        {
+          "name": "Fried Taro Dumpling",
+          "priceHkd": 34,
+          "category": "Dim sum",
+          "dietTags": [],
+          "allergens": ["gluten"],
+          "prepPriorMin": 10,
+          "isSpecial": false
+        },
+        {
+          "name": "Congee with Century Egg and Pork",
+          "priceHkd": 32,
+          "category": "Congee",
+          "dietTags": [],
+          "allergens": ["egg"],
+          "prepPriorMin": 8,
+          "isSpecial": false
+        },
+        {
+          "name": "Dim Sum Sampler",
+          "priceHkd": 88,
+          "category": "Sampler",
+          "dietTags": [],
+          "allergens": ["gluten", "shellfish", "soy", "egg"],
+          "prepPriorMin": 12,
+          "isSpecial": true
+        }
+      ]
+    },
+    {
+      "outletName": "JCCC UG/F Cafe",
+      "items": [
+        {
+          "name": "Americano",
+          "priceHkd": 26,
+          "category": "Coffee",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Latte",
+          "priceHkd": 32,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Cappuccino",
+          "priceHkd": 32,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Iced Mocha",
+          "priceHkd": 36,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Green Salad with Chicken",
+          "priceHkd": 48,
+          "category": "Salads",
+          "dietTags": [],
+          "allergens": [],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Quinoa Veggie Salad",
+          "priceHkd": 46,
+          "category": "Salads",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": ["sesame"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Chocolate Muffin",
+          "priceHkd": 24,
+          "category": "Pastries",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Butter Croissant",
+          "priceHkd": 22,
+          "category": "Pastries",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Apple Pie Slice",
+          "priceHkd": 30,
+          "category": "Cakes",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Red Velvet Cake Slice",
+          "priceHkd": 34,
+          "category": "Cakes",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Fresh Orange Juice",
+          "priceHkd": 28,
+          "category": "Drinks",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Jasmine Green Tea",
+          "priceHkd": 20,
+          "category": "Drinks",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        }
+      ]
+    },
+    {
+      "outletName": "JCCC G/F Cafe",
+      "items": [
+        {
+          "name": "Americano",
+          "priceHkd": 26,
+          "category": "Coffee",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Latte",
+          "priceHkd": 32,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Flat White",
+          "priceHkd": 34,
+          "category": "Coffee",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Iced Americano",
+          "priceHkd": 28,
+          "category": "Coffee",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Caesar Salad",
+          "priceHkd": 48,
+          "category": "Salads",
+          "dietTags": [],
+          "allergens": ["gluten", "egg", "dairy", "fish"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Pasta Salad",
+          "priceHkd": 44,
+          "category": "Salads",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg"],
+          "prepPriorMin": 5,
+          "isSpecial": false
+        },
+        {
+          "name": "Cheese Scone",
+          "priceHkd": 22,
+          "category": "Pastries",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Almond Croissant",
+          "priceHkd": 28,
+          "category": "Pastries",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy", "tree_nut"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        },
+        {
+          "name": "Lemon Drizzle Cake Slice",
+          "priceHkd": 30,
+          "category": "Cakes",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Cheesecake Slice",
+          "priceHkd": 34,
+          "category": "Cakes",
+          "dietTags": ["vegetarian"],
+          "allergens": ["gluten", "egg", "dairy"],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Peach Iced Tea",
+          "priceHkd": 24,
+          "category": "Drinks",
+          "dietTags": ["vegetarian", "vegan"],
+          "allergens": [],
+          "prepPriorMin": 2,
+          "isSpecial": false
+        },
+        {
+          "name": "Hot Chocolate",
+          "priceHkd": 30,
+          "category": "Drinks",
+          "dietTags": ["vegetarian"],
+          "allergens": ["dairy"],
+          "prepPriorMin": 3,
+          "isSpecial": false
+        }
+      ]
+    }
+  ]
+}

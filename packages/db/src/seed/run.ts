@@ -4,10 +4,12 @@ import { PrismaClient } from '@prisma/client';
 import type { z } from 'zod';
 import { seedDemoAccounts } from './accounts.js';
 import { expandAcademicWeeks, expandHolidays } from './academicWeeks.js';
+import { mergeMenus } from './menus.js';
 import { expandOpeningHours } from './openingHours.js';
 import {
   academicFileSchema,
   buildingsFileSchema,
+  menuFileSchema,
   outletsFileSchema,
   walkTimeDefaultsSchema,
 } from './schemas.js';
@@ -15,7 +17,7 @@ import { buildWalkTimeRows } from './walkTimes.js';
 
 const DEMO_CLOCK_START = '2026-11-17T12:15:00+08:00';
 
-async function loadJson<T>(name: string, schema: z.ZodType<T>): Promise<T> {
+async function loadJson<T>(name: string, schema: z.ZodType<T, z.ZodTypeDef, unknown>): Promise<T> {
   const url = new URL(`../../seed-data/${name}`, import.meta.url);
   return schema.parse(JSON.parse(await readFile(fileURLToPath(url), 'utf8')));
 }
@@ -58,6 +60,46 @@ async function seedVendors(db: PrismaClient): Promise<void> {
     await db.vendor.upsert({
       where: { name: o.name },
       create: { name: o.name, ...fields },
+      update: fields,
+    });
+  }
+}
+
+async function loadOptionalJson<T>(
+  name: string,
+  schema: z.ZodType<T, z.ZodTypeDef, unknown>,
+): Promise<T | null> {
+  try {
+    return await loadJson(name, schema);
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') return null;
+    throw error;
+  }
+}
+
+async function seedMenus(db: PrismaClient): Promise<void> {
+  const generic = await loadJson('menus_generic.json', menuFileSchema);
+  const kaggle = await loadOptionalJson('menus.json', menuFileSchema);
+  const vendors = await db.vendor.findMany({ select: { id: true, name: true } });
+  const vendorId = new Map(vendors.map((v) => [v.name, v.id]));
+
+  for (const item of mergeMenus(generic, kaggle)) {
+    const id = vendorId.get(item.outletName);
+    if (!id) throw new Error(`Unknown outlet "${item.outletName}" in menu file`);
+    const fields = {
+      priceHkd: item.priceHkd,
+      category: item.category,
+      dietTags: item.dietTags,
+      allergens: item.allergens,
+      prepPriorMin: item.prepPriorMin,
+      isSpecial: item.isSpecial,
+      externalId: item.externalId ?? null,
+      source: item.source,
+      isDemo: item.isDemo,
+    };
+    await db.menuItem.upsert({
+      where: { vendorId_name: { vendorId: id, name: item.name } },
+      create: { vendorId: id, name: item.name, ...fields },
       update: fields,
     });
   }
@@ -108,6 +150,7 @@ async function main(): Promise<void> {
   try {
     await seedBuildings(db);
     await seedVendors(db);
+    await seedMenus(db);
     if (process.env['DEMO_MODE'] === 'true') await seedDemoAccounts(db);
     await seedWalkTimes(db);
     await seedAcademicCalendar(db);
