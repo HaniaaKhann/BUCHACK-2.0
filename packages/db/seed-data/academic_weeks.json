@@ -1,0 +1,30 @@
+{
+  "source": "https://ar.hkbu.edu.hk/f/upload/6370/Academic_Calendar_2026-27__2026.07.08_.pdf",
+  "retrievedAt": "2026-11-13",
+  "periods": [
+    { "type": "teaching", "from": "2026-09-01", "to": "2026-11-28" },
+    { "type": "exam", "from": "2026-12-07", "to": "2026-12-19" },
+    { "type": "exam", "from": "2027-01-15", "to": "2027-01-21" },
+    { "type": "teaching", "from": "2027-01-11", "to": "2027-04-24" },
+    { "type": "exam", "from": "2027-05-03", "to": "2027-05-17" },
+    { "type": "exam", "from": "2027-06-11", "to": "2027-06-17" }
+  ],
+  "publicHolidays": [
+    {
+      "from": "2026-09-26",
+      "to": "2026-09-26",
+      "name": "Day following Chinese Mid-Autumn Festival"
+    },
+    { "from": "2026-10-01", "to": "2026-10-01", "name": "National Day" },
+    { "from": "2026-10-19", "to": "2026-10-19", "name": "Day following Chung Yeung Festival" },
+    { "from": "2026-12-25", "to": "2026-12-26", "name": "Christmas" },
+    { "from": "2027-01-01", "to": "2027-01-01", "name": "First day of January" },
+    { "from": "2027-02-06", "to": "2027-02-09", "name": "Lunar New Year" },
+    { "from": "2027-03-26", "to": "2027-03-29", "name": "Easter" },
+    { "from": "2027-04-05", "to": "2027-04-05", "name": "Ching Ming" },
+    { "from": "2027-05-01", "to": "2027-05-01", "name": "Labour Day" },
+    { "from": "2027-05-13", "to": "2027-05-13", "name": "Buddha's Birthday" },
+    { "from": "2027-06-09", "to": "2027-06-09", "name": "Tuen Ng (Dragon Boat)" },
+    { "from": "2027-07-01", "to": "2027-07-01", "name": "HKSAR Establishment Day" }
+  ]
+}

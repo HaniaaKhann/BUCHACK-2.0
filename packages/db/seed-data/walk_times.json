@@ -1,0 +1,8 @@
+{
+  "source": "estimate",
+  "sameBuildingMinutes": 2,
+  "sameCampusMinutes": 5,
+  "betweenMainCampusesMinutes": 10,
+  "jc3Minutes": 15,
+  "jc3Campus": "JC3"
+}

@@ -37,6 +37,12 @@ Primary source would be the HKBU Glossary of Campuses and Buildings PDF
 
 Per the project rule "use a building code only where an official HKBU source shows it", buildings without a current verifiable code are seeded with the name and an empty `code`. Buildings confirmed via outlet detail pages (section 14B.2) or the Estates Office "Contact Us" page (which locates the Estates Office in Oen Hall Building West Wing) are seeded with their verified names.
 
+Seed behaviour:
+
+- Every building is seeded with an empty `code`. No current official source for codes was reachable.
+- `source` on each building records where the name came from: `outlet_page` (named on an outlet detail page), `estates_office_contact` (Estates Office contact page) or `glossary_2020` (the withdrawn glossary, name only, not re-verified).
+- Deli's page says "Communication and Visual Arts Building"; it is seeded in the same building row as Café@CVA Commons.
+
 ## Walk times
 
 HKBU does not publish walking times between buildings. All walk times at seed time have `source: "estimate"`. The team swaps measured values with `source: "measured"` before the demo video. The UI shows "est." next to any estimated walk time.

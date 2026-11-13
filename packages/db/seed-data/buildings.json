@@ -1,0 +1,68 @@
+[
+  { "campus": "HSHC", "name": "Academic Community Hall", "code": null, "source": "glossary_2020" },
+  { "campus": "HSHC", "name": "Au Shue Hung Building", "code": null, "source": "glossary_2020" },
+  {
+    "campus": "HSHC",
+    "name": "Cha Chi-ming Science Tower",
+    "code": null,
+    "source": "glossary_2020"
+  },
+  {
+    "campus": "HSHC",
+    "name": "Christian Education Centre",
+    "code": null,
+    "source": "glossary_2020"
+  },
+  { "campus": "HSHC", "name": "Fong Shu Chuen Library", "code": null, "source": "glossary_2020" },
+  { "campus": "HSHC", "name": "Lui Ming Choi Centre", "code": null, "source": "glossary_2020" },
+  {
+    "campus": "HSHC",
+    "name": "Oen Hall Building",
+    "code": null,
+    "source": "estates_office_contact"
+  },
+  { "campus": "HSHC", "name": "Sing Tao Building", "code": null, "source": "glossary_2020" },
+  { "campus": "HSHC", "name": "Sir Run Run Shaw Building", "code": null, "source": "outlet_page" },
+  { "campus": "HSHC", "name": "Wai Hang Sports Centre", "code": null, "source": "glossary_2020" },
+  { "campus": "HSHC", "name": "Yeung Shui Sang Building", "code": null, "source": "glossary_2020" },
+  { "campus": "SHAW", "name": "David C. Lam Building", "code": null, "source": "outlet_page" },
+  {
+    "campus": "SHAW",
+    "name": "The Wing Lung Bank Building for Business Studies",
+    "code": null,
+    "source": "outlet_page"
+  },
+  { "campus": "SHAW", "name": "Shaw Tower", "code": null, "source": "glossary_2020" },
+  {
+    "campus": "SHAW",
+    "name": "Au Shue Hung Memorial Library",
+    "code": null,
+    "source": "glossary_2020"
+  },
+  { "campus": "BURC", "name": "Dr. Wu Yee Sun Building", "code": null, "source": "outlet_page" },
+  {
+    "campus": "BURC",
+    "name": "Lee Shau Kee Communication and Visual Arts Building",
+    "code": null,
+    "source": "outlet_page"
+  },
+  {
+    "campus": "BURC",
+    "name": "Jockey Club Academic Community Centre",
+    "code": null,
+    "source": "outlet_page"
+  },
+  {
+    "campus": "BURC",
+    "name": "Dr. Ng Tor Tai International House",
+    "code": null,
+    "source": "outlet_page"
+  },
+  { "campus": "BURC", "name": "Undergraduate Halls", "code": null, "source": "outlet_page" },
+  {
+    "campus": "JC3",
+    "name": "Jockey Club Campus of Creativity",
+    "code": null,
+    "source": "outlet_page"
+  }
+]

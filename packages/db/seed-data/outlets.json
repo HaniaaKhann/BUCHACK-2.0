@@ -1,0 +1,227 @@
+{
+  "retrievedAt": "2026-11-13T00:00:00+08:00",
+  "sourceBaseUrl": "https://eo.hkbu.edu.hk/eo-services/services-facilities/Catering-Services/",
+  "outlets": [
+    {
+      "name": "Main Canteen",
+      "campus": "BURC",
+      "buildingName": "Dr. Wu Yee Sun Building",
+      "floor": "Level 5",
+      "foodType": "Hong Kong style, fast food",
+      "officialDietaryOptions": ["Vegetarian", "Halal"],
+      "hours": {
+        "monFri": [{ "open": "07:30", "close": "20:00" }],
+        "sat": [{ "open": "08:30", "close": "17:00" }],
+        "sun": [],
+        "publicHoliday": []
+      },
+      "pickupEnabled": true,
+      "status": "open",
+      "page": "Main-Canteen.html"
+    },
+    {
+      "name": "Books 'n Bites",
+      "campus": "BURC",
+      "buildingName": "Jockey Club Academic Community Centre",
+      "floor": "G/F",
+      "foodType": "Hong Kong style, snack, deli",
+      "officialDietaryOptions": ["Vegetarian"],
+      "hours": {
+        "monFri": [{ "open": "09:00", "close": "19:00" }],
+        "sat": [],
+        "sun": [],
+        "publicHoliday": []
+      },
+      "pickupEnabled": true,
+      "status": "open",
+      "page": "Books-n--Bites.html"
+    },
+    {
+      "name": "Café@CVA Commons",
+      "campus": "BURC",
+      "buildingName": "Lee Shau Kee Communication and Visual Arts Building",
+      "floor": "G/F",
+      "foodType": "Café: croissants, bubble tea, coffee",
+      "officialDietaryOptions": ["Vegetarian"],
+      "hours": {
+        "monFri": [{ "open": "09:00", "close": "19:00" }],
+        "sat": [],
+        "sun": [],
+        "publicHoliday": []
+      },
+      "pickupEnabled": true,
+      "status": "open",
+      "page": "Cafe-CVA-Commons.html"
+    },
+    {
+      "name": "Deli",
+      "campus": "BURC",
+      "buildingName": "Lee Shau Kee Communication and Visual Arts Building",
+      "floor": "Level 1",
+      "foodType": "Hong Kong style, snack, deli, shumai",
+      "officialDietaryOptions": ["Vegetarian"],
+      "hours": {
+        "monFri": [{ "open": "09:00", "close": "19:00" }],
+        "sat": [],
+        "sun": [],
+        "publicHoliday": []
+      },
+      "pickupEnabled": true,
+      "status": "open",
+      "page": "Deli.html"
+    },
+    {
+      "name": "Bistro NTT",
+      "campus": "BURC",
+      "buildingName": "Dr. Ng Tor Tai International House",
+      "floor": "G/F",
+      "foodType": "Burger, steak, pasta",
+      "officialDietaryOptions": ["Vegetarian"],
+      "hours": {
+        "monFri": [{ "open": "08:00", "close": "22:00" }],
+        "sat": [{ "open": "12:00", "close": "22:00" }],
+        "sun": [{ "open": "12:00", "close": "22:00" }],
+        "publicHoliday": [{ "open": "12:00", "close": "22:00" }]
+      },
+      "pickupEnabled": true,
+      "status": "open",
+      "page": "Bistro-NTT.html"
+    },
+    {
+      "name": "BU Fiesta",
+      "campus": "BURC",
+      "buildingName": "Undergraduate Halls",
+      "floor": "G/F",
+      "foodType": "Not stated",
+      "officialDietaryOptions": [],
+      "hours": {
+        "monFri": [],
+        "sat": [],
+        "sun": [],
+        "publicHoliday": []
+      },
+      "pickupEnabled": false,
+      "status": "closed_for_renovation",
+      "page": "BU-Fiesta.html"
+    },
+    {
+      "name": "Harmony Cafeteria",
+      "campus": "HSHC",
+      "buildingName": "Sir Run Run Shaw Building",
+      "floor": "Level 4",
+      "foodType": "Hong Kong style, fast food",
+      "officialDietaryOptions": ["Vegetarian"],
+      "hours": {
+        "monFri": [{ "open": "07:30", "close": "19:30" }],
+        "sat": [{ "open": "08:00", "close": "17:00" }],
+        "sun": [],
+        "publicHoliday": []
+      },
+      "pickupEnabled": true,
+      "status": "open",
+      "page": "Harmony-Cafeteria.html"
+    },
+    {
+      "name": "Harmony Lounge",
+      "campus": "HSHC",
+      "buildingName": "Sir Run Run Shaw Building",
+      "floor": "Level 4",
+      "foodType": "Café",
+      "officialDietaryOptions": ["Halal", "Vegetarian", "Vegan"],
+      "hours": {
+        "monFri": [{ "open": "08:00", "close": "18:00" }],
+        "sat": [],
+        "sun": [],
+        "publicHoliday": []
+      },
+      "pickupEnabled": true,
+      "status": "open",
+      "page": "Harmony-Lounge.html"
+    },
+    {
+      "name": "iCafe",
+      "campus": "SHAW",
+      "buildingName": "The Wing Lung Bank Building for Business Studies",
+      "floor": "Level 3",
+      "foodType": "Coffee, salad, cake",
+      "officialDietaryOptions": ["Vegetarian", "Halal"],
+      "hours": {
+        "monFri": [{ "open": "08:00", "close": "20:00" }],
+        "sat": [{ "open": "08:00", "close": "18:00" }],
+        "sun": [{ "open": "08:00", "close": "17:00" }],
+        "publicHoliday": []
+      },
+      "pickupEnabled": true,
+      "status": "open",
+      "page": "iCafe.html"
+    },
+    {
+      "name": "H.F.C. (Hot Food Counter) @ Scholars Court",
+      "campus": "SHAW",
+      "buildingName": "David C. Lam Building",
+      "floor": "Level 2",
+      "foodType": "Hot food",
+      "officialDietaryOptions": [],
+      "hours": {
+        "monFri": [{ "open": "08:00", "close": "18:00" }],
+        "sat": [],
+        "sun": [],
+        "publicHoliday": []
+      },
+      "pickupEnabled": true,
+      "status": "open",
+      "page": "HFC-Scholars-Court.html"
+    },
+    {
+      "name": "Nan Yuan",
+      "campus": "SHAW",
+      "buildingName": "David C. Lam Building",
+      "floor": "Level 2",
+      "foodType": "Chinese restaurant, dim sum",
+      "officialDietaryOptions": [],
+      "hours": {
+        "monFri": [{ "open": "11:00", "close": "21:00" }],
+        "sat": [{ "open": "10:00", "close": "21:00" }],
+        "sun": [{ "open": "10:00", "close": "21:00" }],
+        "publicHoliday": [{ "open": "10:00", "close": "21:00" }]
+      },
+      "pickupEnabled": false,
+      "status": "open",
+      "page": "Nan-Yuan.html"
+    },
+    {
+      "name": "JCCC UG/F Cafe",
+      "campus": "JC3",
+      "buildingName": "Jockey Club Campus of Creativity",
+      "floor": "UG/F",
+      "foodType": "Coffee, salad, cake, pastries",
+      "officialDietaryOptions": ["Vegetarian"],
+      "hours": {
+        "monFri": [{ "open": "08:00", "close": "20:00" }],
+        "sat": [{ "open": "09:00", "close": "17:00" }],
+        "sun": [{ "open": "09:00", "close": "17:00" }],
+        "publicHoliday": []
+      },
+      "pickupEnabled": true,
+      "status": "open",
+      "page": "JCCC-UG-Cafe.html"
+    },
+    {
+      "name": "JCCC G/F Cafe",
+      "campus": "JC3",
+      "buildingName": "Jockey Club Campus of Creativity",
+      "floor": "G/F",
+      "foodType": "Coffee, salad, cake, pastries",
+      "officialDietaryOptions": ["Vegetarian"],
+      "hours": {
+        "monFri": [{ "open": "08:00", "close": "21:30" }],
+        "sat": [{ "open": "08:00", "close": "20:00" }],
+        "sun": [{ "open": "08:00", "close": "20:00" }],
+        "publicHoliday": []
+      },
+      "pickupEnabled": true,
+      "status": "open",
+      "page": "JCCC-G-Cafe.html"
+    }
+  ]
+}
