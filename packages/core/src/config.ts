@@ -36,3 +36,15 @@ export const RANGE_HIGH_QUANTILE = 0.9;
 export const LATENESS_MIN_SAMPLES = 10;
 export const LATENESS_COLD_START_Q50_MINUTES = 0;
 export const LATENESS_COLD_START_Q90_MINUTES = 3;
+
+export const BUFFER_MINUTES = 2;
+
+export const SLOT_CAP_FRACTION = 0.5;
+
+export const RANKING_WEIGHT_GOAL = 0.3;
+export const RANKING_WEIGHT_WAIT = 0.3;
+export const RANKING_WEIGHT_PRICE = 0.2;
+export const RANKING_WEIGHT_PAST_ORDERS = 0.2;
+export const RANKING_WAIT_REFERENCE_MINUTES = 30;
+export const RANKING_PRICE_REFERENCE_HKD = 100;
+export const RANKING_PAST_ORDERS_CAP = 5;
