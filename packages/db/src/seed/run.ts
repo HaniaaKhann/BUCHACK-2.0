@@ -1,0 +1,118 @@
+import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { PrismaClient } from '@prisma/client';
+import type { z } from 'zod';
+import { expandAcademicWeeks, expandHolidays } from './academicWeeks.js';
+import { expandOpeningHours } from './openingHours.js';
+import {
+  academicFileSchema,
+  buildingsFileSchema,
+  outletsFileSchema,
+  walkTimeDefaultsSchema,
+} from './schemas.js';
+import { buildWalkTimeRows } from './walkTimes.js';
+
+const DEMO_CLOCK_START = '2026-11-17T12:15:00+08:00';
+
+async function loadJson<T>(name: string, schema: z.ZodType<T>): Promise<T> {
+  const url = new URL(`../../seed-data/${name}`, import.meta.url);
+  return schema.parse(JSON.parse(await readFile(fileURLToPath(url), 'utf8')));
+}
+
+function toDate(date: string): Date {
+  return new Date(`${date}T00:00:00Z`);
+}
+
+async function seedBuildings(db: PrismaClient): Promise<void> {
+  const buildings = await loadJson('buildings.json', buildingsFileSchema);
+  for (const b of buildings) {
+    await db.building.upsert({
+      where: { campus_name: { campus: b.campus, name: b.name } },
+      create: b,
+      update: { code: b.code, source: b.source },
+    });
+  }
+}
+
+async function seedVendors(db: PrismaClient): Promise<void> {
+  const file = await loadJson('outlets.json', outletsFileSchema);
+  const buildings = await db.building.findMany();
+  const buildingId = new Map(buildings.map((b) => [`${b.campus}|${b.name}`, b.id]));
+
+  for (const o of file.outlets) {
+    const id = buildingId.get(`${o.campus}|${o.buildingName}`);
+    if (!id) throw new Error(`Unknown building "${o.buildingName}" for outlet "${o.name}"`);
+    const fields = {
+      campus: o.campus,
+      buildingId: id,
+      floor: o.floor,
+      foodType: o.foodType,
+      officialDietaryOptions: o.officialDietaryOptions,
+      openingHours: expandOpeningHours(o.hours),
+      pickupEnabled: o.pickupEnabled,
+      status: o.status,
+      sourceUrl: `${file.sourceBaseUrl}${o.page}`,
+      retrievedAt: new Date(file.retrievedAt),
+    };
+    await db.vendor.upsert({
+      where: { name: o.name },
+      create: { name: o.name, ...fields },
+      update: fields,
+    });
+  }
+}
+
+async function seedWalkTimes(db: PrismaClient): Promise<void> {
+  const defaults = await loadJson('walk_times.json', walkTimeDefaultsSchema);
+  const buildings = await db.building.findMany({ select: { id: true, campus: true } });
+  const vendors = await db.vendor.findMany({ select: { id: true, buildingId: true } });
+  const rows = buildWalkTimeRows(buildings, vendors, defaults);
+  await db.walkTime.createMany({ data: rows, skipDuplicates: true });
+}
+
+async function seedAcademicCalendar(db: PrismaClient): Promise<void> {
+  const file = await loadJson('academic_weeks.json', academicFileSchema);
+  for (const week of expandAcademicWeeks(file.periods)) {
+    await db.academicWeek.upsert({
+      where: { weekStart: toDate(week.weekStart) },
+      create: { weekStart: toDate(week.weekStart), type: week.type },
+      update: { type: week.type },
+    });
+  }
+  for (const holiday of expandHolidays(file.publicHolidays)) {
+    await db.publicHoliday.upsert({
+      where: { date: toDate(holiday.date) },
+      create: { date: toDate(holiday.date), name: holiday.name },
+      update: { name: holiday.name },
+    });
+  }
+}
+
+async function seedClock(db: PrismaClient): Promise<void> {
+  const demo = process.env['DEMO_MODE'] === 'true';
+  await db.systemClock.upsert({
+    where: { id: 1 },
+    create: {
+      id: 1,
+      mode: demo ? 'demo' : 'real',
+      currentTime: demo ? new Date(DEMO_CLOCK_START) : new Date(),
+      speed: 1,
+    },
+    update: {},
+  });
+}
+
+async function main(): Promise<void> {
+  const db = new PrismaClient();
+  try {
+    await seedBuildings(db);
+    await seedVendors(db);
+    await seedWalkTimes(db);
+    await seedAcademicCalendar(db);
+    await seedClock(db);
+  } finally {
+    await db.$disconnect();
+  }
+}
+
+await main();

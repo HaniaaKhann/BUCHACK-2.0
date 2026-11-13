@@ -12,16 +12,22 @@
     }
   },
   "scripts": {
-    "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "prisma:validate": "prisma validate"
+    "test": "vitest run",
+    "prisma:validate": "prisma validate",
+    "prisma:generate": "prisma generate",
+    "migrate:deploy": "prisma migrate deploy",
+    "seed": "tsx src/seed/run.ts"
   },
   "dependencies": {
-    "@prisma/client": "6.1.0"
+    "@prisma/client": "6.1.0",
+    "zod": "3.24.1"
   },
   "devDependencies": {
     "@types/node": "22.10.2",
     "prisma": "6.1.0",
-    "typescript": "5.7.2"
+    "tsx": "4.19.2",
+    "typescript": "5.7.2",
+    "vitest": "2.1.8"
   }
 }
