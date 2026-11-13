@@ -19,7 +19,7 @@ describe('predictWait', () => {
       prepMinutes: 5,
       baseMinutes: 7,
       pointMinutes: 8,
-      lowMinutes: 5,
+      lowMinutes: 2.5,
       highMinutes: 16,
       modelVersion: MODEL_VERSION,
     });
@@ -71,7 +71,7 @@ describe('predictWait', () => {
       residuals: [],
     });
     expect(result.pointMinutes).toBe(5);
-    expect(result.lowMinutes).toBe(5);
+    expect(result.lowMinutes).toBeCloseTo(3.5, 10);
     expect(result.highMinutes).toBeCloseTo(6.5, 10);
   });
 });

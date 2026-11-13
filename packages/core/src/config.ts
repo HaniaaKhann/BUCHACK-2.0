@@ -1,4 +1,4 @@
-export const MODEL_VERSION = 'v1';
+export const MODEL_VERSION = 'v2';
 
 export const SLOT_MINUTES = 15;
 export const MS_PER_MINUTE = 60_000;
@@ -30,6 +30,7 @@ export const BIAS_BLEND_CONSTANT = 30;
 export const RESIDUAL_WINDOW = 200;
 export const RESIDUAL_MIN_SAMPLES = 20;
 export const COLD_START_RANGE_RATIO = 0.3;
+export const RANGE_LOW_PREP_FLOOR_RATIO = 0.5;
 export const RANGE_LOW_QUANTILE = 0.1;
 export const RANGE_HIGH_QUANTILE = 0.9;
 
