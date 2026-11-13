@@ -14,7 +14,9 @@ COPY packages/integrations/package.json packages/integrations/
 COPY packages/simulator/package.json packages/simulator/
 RUN pnpm install --frozen-lockfile --prod=false
 
+COPY packages/core packages/core
 COPY packages/db packages/db
+COPY packages/simulator packages/simulator
 RUN pnpm --filter @app/db prisma:generate
 
-CMD ["sh", "-c", "pnpm --filter @app/db migrate:deploy && pnpm --filter @app/db seed"]
+CMD ["sh", "-c", "pnpm --filter @app/db migrate:deploy && if [ \"$DEMO_MODE\" = \"true\" ]; then pnpm --filter @app/simulator history:build; fi && pnpm --filter @app/db seed"]

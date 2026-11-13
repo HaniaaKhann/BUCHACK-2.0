@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import type { z } from 'zod';
 import { seedDemoAccounts } from './accounts.js';
 import { expandAcademicWeeks, expandHolidays } from './academicWeeks.js';
+import { GENERATED_DIR, seedHistory } from './history.js';
 import { mergeMenus } from './menus.js';
 import { expandOpeningHours } from './openingHours.js';
 import {
@@ -151,7 +152,10 @@ async function main(): Promise<void> {
     await seedBuildings(db);
     await seedVendors(db);
     await seedMenus(db);
-    if (process.env['DEMO_MODE'] === 'true') await seedDemoAccounts(db);
+    if (process.env['DEMO_MODE'] === 'true') {
+      await seedDemoAccounts(db);
+      await seedHistory(db, GENERATED_DIR);
+    }
     await seedWalkTimes(db);
     await seedAcademicCalendar(db);
     await seedClock(db);

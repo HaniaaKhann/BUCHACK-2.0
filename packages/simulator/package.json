@@ -19,6 +19,7 @@
     "data:map": "tsx src/kaggle/map.ts",
     "data:import": "tsx src/kaggle/import.ts",
     "history:generate": "tsx src/history/cli.ts",
+    "history:build": "tsx src/history/cli.ts && tsx src/backtest/cli.ts",
     "backtest": "tsx src/backtest/cli.ts && prettier --write ../../apps/web/public/accuracy.json"
   },
   "dependencies": {
