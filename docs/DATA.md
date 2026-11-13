@@ -82,28 +82,44 @@ Public holidays inside the academic year (all from the same PDF):
 
 ## Menus (demo)
 
-Every menu item, price, order, ticket count and wait time is simulated. Item-level diet and allergen tags are suggested by keyword rules; vendor owners verify them in-app before they ever appear as "Verified".
+**All menus are demo data.** Every menu item, price, preparation time, order, ticket count and wait time is simulated. None of it is the real offering of any HKBU outlet. Outlet names, locations, hours and official dietary options are the only real menu-adjacent facts (see the outlet section above).
 
-### Kaggle dataset — "Uber Eats USA Restaurants and Menus"
+Each menu file carries `isDemoData: true`. The seed stores it on every `menu_items` row as `isDemo` (default `true`), and the app reads that flag to show the demo-data banner. Seed validation rejects a menu file where the flag is missing or false.
 
-Status: not yet downloaded (download runs out-of-band, estimated 4 hours).
+Item-level diet and allergen tags are suggestions only. Every seeded item has `tags_status = unverified`; vendor owners verify tags in-app before they ever appear as "Verified". Tags use a fixed vocabulary: diet `vegetarian`, `vegan`; allergens `gluten`, `egg`, `dairy`, `soy`, `peanut`, `tree_nut`, `sesame`, `fish`, `shellfish`.
 
-Rules for import (land in M3):
+### Menu source
 
-1. First command, `data:inspect`, streams every CSV in `data/raw/`, prints headers, row counts and the license text. User reviews before import runs.
-2. `data:map` generates `mapping.proposed.json` which the user edits and saves as `mapping.confirmed.json`.
-3. `data:import` refuses to run without `mapping.confirmed.json`. Streams the CSVs, strips restaurant names and brand mentions, converts USD to HKD at a fixed rate recorded here (set at import time), outputs `packages/db/seed-data/menus.json`.
-4. Whether `menus.json` is committed is decided by the license text reported in step 1; if unclear, the generic fallback stands alone.
+| Source    | File                                       | `source` value | Used for                                                                         | Committed                             |
+| --------- | ------------------------------------------ | -------------- | -------------------------------------------------------------------------------- | ------------------------------------- |
+| `generic` | `packages/db/seed-data/menus_generic.json` | `generic`      | Every open outlet. Hand-written, invented dishes and prices.                     | Yes                                   |
+| `kaggle`  | `packages/db/seed-data/menus.json`         | `kaggle`       | Optional overlay for Bistro NTT and the five café outlets (not Hong Kong style). | Undecided, see "Kaggle dataset" below |
 
-### Generic fallback menu
+The seed loads the generic menu first, then merges `menus.json` on top when the file exists. A Kaggle item with the same name as a generic item in the same outlet replaces it; other Kaggle items are added. A Kaggle menu that targets any other outlet is rejected. Without `menus.json` the generic menu stands alone and is enough for the full demo. The seed is idempotent (upsert on outlet and item name).
 
-Hand-written in `packages/db/seed-data/menus_generic.json` (lands in M3). Enough for a full P0 demo without Kaggle data:
+### Generic menu
 
-- Main Canteen, Harmony Cafeteria, H.F.C., Deli, Books 'n Bites — Hong Kong-style dishes.
-- Bistro NTT — burger, steak, pasta.
-- iCafe, Café@CVA Commons, Harmony Lounge, JCCC cafes — coffee, salad, cake, pastries.
-- Nan Yuan — dim sum sampler (pickup disabled per the Estates Office listing).
+Hand-written. Item counts: at least 20 for each focus outlet and at least 10 for every other open outlet. BU Fiesta (closed for renovation) has no menu.
+
+- Focus outlets: Main Canteen, Harmony Cafeteria, Harmony Lounge, iCafe, Bistro NTT, Deli.
+- Main Canteen, Harmony Cafeteria, H.F.C., Deli, Books 'n Bites: Hong Kong-style dishes.
+- Bistro NTT: burger, steak, pasta.
+- iCafe, Café@CVA Commons, Harmony Lounge, JCCC cafes: coffee, salad, cake, pastries.
+- Nan Yuan: dim sum sampler (pickup disabled per the Estates Office listing).
+
+### Kaggle dataset: "Uber Eats USA Restaurants and Menus"
+
+Status: not yet downloaded; `data/raw/` does not exist. The importer is built and unit tested against synthetic fixtures only. It has not been run against the real files, and the default column names in `KAGGLE_COLUMNS` (`packages/simulator/src/kaggle/config.ts`) are expectations until `data:inspect` reports the real headers.
+
+Rules for import:
+
+1. `pnpm data:inspect` streams every CSV in `data/raw/`, prints file size, row count, headers, inferred types, sample rows and any license or readme text, and writes `data/raw/inspection.json`. The user reviews it before anything else runs.
+2. `pnpm data:map` proposes `mapping.proposed.json` from the headers. The user edits it and saves it as `mapping.confirmed.json`. All Kaggle column names live in the single `KAGGLE_COLUMNS` object, so adapting to the real files is a one-place change.
+3. `pnpm data:import` refuses to run without `mapping.confirmed.json` and `inspection.json`, and refuses a mapping whose columns are not in the file headers. It strips restaurant names and brand mentions (small blocklist in `config.ts`), converts prices, drops items outside the price bounds, dedupes names, keeps up to 40 items per outlet with a fixed random seed, and writes `menus.json`. If any outlet would get fewer than 25 items it writes nothing and reports the shortfall.
+4. Whether `menus.json` is committed depends on the license text reported in step 1. If the license is unclear, it is not committed and the generic menu stands alone. Raw files in `data/raw/` are never committed.
+
+Kaggle data is used only for menus. It is never used to train or test the wait-time engine. Restaurant names are removed from every imported item. Imported diet and allergen tags come from keyword rules and are always unverified.
 
 ## USD→HKD rate
 
-Set at Kaggle import time. Current placeholder: not yet set.
+Fixed assumption: **1 USD = 7.80 HKD**, set on **2026-11-13** (the Hong Kong dollar trades in a narrow band around this level). It is one constant in `packages/simulator/src/kaggle/config.ts`, applied to every imported price and rounded to whole HKD. It is not a live rate.
