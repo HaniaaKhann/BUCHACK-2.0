@@ -308,22 +308,24 @@ model MenuItem {
 }
 
 model Order {
-  id             String      @id @default(uuid())
-  studentId      String
-  vendorId       String
-  status         OrderStatus
-  totalHkd       Int
-  placedAt       DateTime
-  acceptedAt     DateTime?
-  fireAt         DateTime?
-  slotStart      DateTime?
-  readyAt        DateTime?
-  pickedUpAt     DateTime?
-  cancelledAt    DateTime?
-  predictedPoint DateTime
-  predictedLow   DateTime
-  predictedHigh  DateTime
-  modelVersion   String
+  id                 String      @id @default(uuid())
+  studentId          String
+  vendorId           String
+  status             OrderStatus
+  totalHkd           Int
+  placedAt           DateTime
+  acceptedAt         DateTime?
+  fireAt             DateTime?
+  slotStart          DateTime?
+  readyAt            DateTime?
+  pickedUpAt         DateTime?
+  cancelledAt        DateTime?
+  predictedPoint     DateTime
+  predictedLow       DateTime
+  predictedHigh      DateTime
+  predictedBase      DateTime
+  backlogAtPlacement Float
+  modelVersion       String
 
   student      User           @relation(fields: [studentId], references: [id], onDelete: Cascade)
   vendor       Vendor         @relation(fields: [vendorId], references: [id])

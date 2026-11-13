@@ -16,6 +16,8 @@ async function main(): Promise<void> {
     pointMinutes: row.predictions.full.point,
     lowMinutes: row.predictions.full.low,
     highMinutes: row.predictions.full.high,
+    baseMinutes: row.fullBaseMinutes,
+    backlogAtPlacement: row.fullBacklogAtPlacement,
     modelVersion: MODEL_VERSION,
   }));
   await writeFile(`${GENERATED_DIR}/predictions.json`, `${JSON.stringify(predictions, null, 2)}\n`);
