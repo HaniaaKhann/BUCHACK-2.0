@@ -43,7 +43,6 @@ services:
       BETTER_AUTH_URL: http://localhost:3000
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       DEMO_MODE: 'true'
-      APP_NAME: '[APP_NAME]'
       NODE_ENV: production
 
   worker:
