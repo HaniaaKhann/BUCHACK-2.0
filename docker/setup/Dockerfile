@@ -1,4 +1,5 @@
 FROM node:22-alpine
+RUN apk add --no-cache openssl
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
@@ -13,6 +14,7 @@ COPY packages/integrations/package.json packages/integrations/
 COPY packages/simulator/package.json packages/simulator/
 RUN pnpm install --frozen-lockfile --prod=false
 
-COPY . .
+COPY packages/db packages/db
+RUN pnpm --filter @app/db prisma:generate
 
-CMD ["sh", "-c", "echo '[setup] M0 placeholder — database migrations and seed land in M1'"]
+CMD ["sh", "-c", "pnpm --filter @app/db migrate:deploy && pnpm --filter @app/db seed"]
