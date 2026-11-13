@@ -1,0 +1,851 @@
+{
+  "label": "Simulated data",
+  "seed": 20261005,
+  "modelVersion": "v2",
+  "historyStart": "2026-10-05",
+  "weekLayout": ["teaching", "teaching", "holiday", "teaching", "exam", "teaching"],
+  "trainWeeks": [1, 2, 3, 4],
+  "testWeeks": [5, 6],
+  "models": [
+    {
+      "id": "historical",
+      "name": "Historical only"
+    },
+    {
+      "id": "backlog",
+      "name": "Historical + backlog walk-in model"
+    },
+    {
+      "id": "full",
+      "name": "Full model with in-app learning"
+    }
+  ],
+  "overall": {
+    "trueReady": {
+      "historical": {
+        "n": 1785,
+        "maeMinutes": 4.86,
+        "onTimeRate": 0.615
+      },
+      "backlog": {
+        "n": 1785,
+        "maeMinutes": 7.59,
+        "onTimeRate": 0.391
+      },
+      "full": {
+        "n": 1785,
+        "maeMinutes": 3.91,
+        "onTimeRate": 0.734
+      }
+    },
+    "tap": {
+      "historical": {
+        "n": 1609,
+        "maeMinutes": 4.75,
+        "onTimeRate": 0.672
+      },
+      "backlog": {
+        "n": 1609,
+        "maeMinutes": 7.77,
+        "onTimeRate": 0.334
+      },
+      "full": {
+        "n": 1609,
+        "maeMinutes": 3.84,
+        "onTimeRate": 0.772
+      }
+    }
+  },
+  "byWeekType": [
+    {
+      "weekType": "exam",
+      "trueReady": {
+        "historical": {
+          "n": 723,
+          "maeMinutes": 3.69,
+          "onTimeRate": 0.663
+        },
+        "backlog": {
+          "n": 723,
+          "maeMinutes": 4.57,
+          "onTimeRate": 0.444
+        },
+        "full": {
+          "n": 723,
+          "maeMinutes": 3.04,
+          "onTimeRate": 0.775
+        }
+      },
+      "tap": {
+        "historical": {
+          "n": 646,
+          "maeMinutes": 3.48,
+          "onTimeRate": 0.734
+        },
+        "backlog": {
+          "n": 646,
+          "maeMinutes": 4.77,
+          "onTimeRate": 0.367
+        },
+        "full": {
+          "n": 646,
+          "maeMinutes": 2.85,
+          "onTimeRate": 0.828
+        }
+      }
+    },
+    {
+      "weekType": "teaching",
+      "trueReady": {
+        "historical": {
+          "n": 1062,
+          "maeMinutes": 5.65,
+          "onTimeRate": 0.582
+        },
+        "backlog": {
+          "n": 1062,
+          "maeMinutes": 9.65,
+          "onTimeRate": 0.355
+        },
+        "full": {
+          "n": 1062,
+          "maeMinutes": 4.5,
+          "onTimeRate": 0.707
+        }
+      },
+      "tap": {
+        "historical": {
+          "n": 963,
+          "maeMinutes": 5.61,
+          "onTimeRate": 0.631
+        },
+        "backlog": {
+          "n": 963,
+          "maeMinutes": 9.78,
+          "onTimeRate": 0.312
+        },
+        "full": {
+          "n": 963,
+          "maeMinutes": 4.5,
+          "onTimeRate": 0.734
+        }
+      }
+    }
+  ],
+  "byDay": [
+    {
+      "date": "2026-11-02",
+      "weekType": "exam",
+      "trueReady": {
+        "historical": {
+          "n": 164,
+          "maeMinutes": 4.51,
+          "onTimeRate": 0.585
+        },
+        "backlog": {
+          "n": 164,
+          "maeMinutes": 2.94,
+          "onTimeRate": 0.506
+        },
+        "full": {
+          "n": 164,
+          "maeMinutes": 2.87,
+          "onTimeRate": 0.811
+        }
+      }
+    },
+    {
+      "date": "2026-11-03",
+      "weekType": "exam",
+      "trueReady": {
+        "historical": {
+          "n": 122,
+          "maeMinutes": 3.48,
+          "onTimeRate": 0.689
+        },
+        "backlog": {
+          "n": 122,
+          "maeMinutes": 7,
+          "onTimeRate": 0.443
+        },
+        "full": {
+          "n": 122,
+          "maeMinutes": 4.43,
+          "onTimeRate": 0.68
+        }
+      }
+    },
+    {
+      "date": "2026-11-04",
+      "weekType": "exam",
+      "trueReady": {
+        "historical": {
+          "n": 118,
+          "maeMinutes": 3.37,
+          "onTimeRate": 0.712
+        },
+        "backlog": {
+          "n": 118,
+          "maeMinutes": 4.24,
+          "onTimeRate": 0.441
+        },
+        "full": {
+          "n": 118,
+          "maeMinutes": 2.75,
+          "onTimeRate": 0.89
+        }
+      }
+    },
+    {
+      "date": "2026-11-05",
+      "weekType": "exam",
+      "trueReady": {
+        "historical": {
+          "n": 151,
+          "maeMinutes": 3.42,
+          "onTimeRate": 0.675
+        },
+        "backlog": {
+          "n": 151,
+          "maeMinutes": 5.29,
+          "onTimeRate": 0.377
+        },
+        "full": {
+          "n": 151,
+          "maeMinutes": 2.6,
+          "onTimeRate": 0.755
+        }
+      }
+    },
+    {
+      "date": "2026-11-06",
+      "weekType": "exam",
+      "trueReady": {
+        "historical": {
+          "n": 126,
+          "maeMinutes": 3.59,
+          "onTimeRate": 0.667
+        },
+        "backlog": {
+          "n": 126,
+          "maeMinutes": 4.31,
+          "onTimeRate": 0.484
+        },
+        "full": {
+          "n": 126,
+          "maeMinutes": 3.03,
+          "onTimeRate": 0.714
+        }
+      }
+    },
+    {
+      "date": "2026-11-07",
+      "weekType": "exam",
+      "trueReady": {
+        "historical": {
+          "n": 26,
+          "maeMinutes": 3.73,
+          "onTimeRate": 0.654
+        },
+        "backlog": {
+          "n": 26,
+          "maeMinutes": 3.74,
+          "onTimeRate": 0.231
+        },
+        "full": {
+          "n": 26,
+          "maeMinutes": 2.28,
+          "onTimeRate": 0.885
+        }
+      }
+    },
+    {
+      "date": "2026-11-08",
+      "weekType": "exam",
+      "trueReady": {
+        "historical": {
+          "n": 16,
+          "maeMinutes": 2.59,
+          "onTimeRate": 0.75
+        },
+        "backlog": {
+          "n": 16,
+          "maeMinutes": 1.68,
+          "onTimeRate": 0.5
+        },
+        "full": {
+          "n": 16,
+          "maeMinutes": 1.78,
+          "onTimeRate": 0.75
+        }
+      }
+    },
+    {
+      "date": "2026-11-09",
+      "weekType": "teaching",
+      "trueReady": {
+        "historical": {
+          "n": 190,
+          "maeMinutes": 6.7,
+          "onTimeRate": 0.611
+        },
+        "backlog": {
+          "n": 190,
+          "maeMinutes": 12.41,
+          "onTimeRate": 0.347
+        },
+        "full": {
+          "n": 190,
+          "maeMinutes": 5.93,
+          "onTimeRate": 0.647
+        }
+      }
+    },
+    {
+      "date": "2026-11-10",
+      "weekType": "teaching",
+      "trueReady": {
+        "historical": {
+          "n": 200,
+          "maeMinutes": 4.75,
+          "onTimeRate": 0.635
+        },
+        "backlog": {
+          "n": 200,
+          "maeMinutes": 9.84,
+          "onTimeRate": 0.31
+        },
+        "full": {
+          "n": 200,
+          "maeMinutes": 3.58,
+          "onTimeRate": 0.755
+        }
+      }
+    },
+    {
+      "date": "2026-11-11",
+      "weekType": "teaching",
+      "trueReady": {
+        "historical": {
+          "n": 215,
+          "maeMinutes": 5.59,
+          "onTimeRate": 0.535
+        },
+        "backlog": {
+          "n": 215,
+          "maeMinutes": 8.34,
+          "onTimeRate": 0.363
+        },
+        "full": {
+          "n": 215,
+          "maeMinutes": 4.43,
+          "onTimeRate": 0.698
+        }
+      }
+    },
+    {
+      "date": "2026-11-12",
+      "weekType": "teaching",
+      "trueReady": {
+        "historical": {
+          "n": 215,
+          "maeMinutes": 5.57,
+          "onTimeRate": 0.586
+        },
+        "backlog": {
+          "n": 215,
+          "maeMinutes": 12,
+          "onTimeRate": 0.326
+        },
+        "full": {
+          "n": 215,
+          "maeMinutes": 5.12,
+          "onTimeRate": 0.707
+        }
+      }
+    },
+    {
+      "date": "2026-11-13",
+      "weekType": "teaching",
+      "trueReady": {
+        "historical": {
+          "n": 192,
+          "maeMinutes": 5.7,
+          "onTimeRate": 0.536
+        },
+        "backlog": {
+          "n": 192,
+          "maeMinutes": 7.41,
+          "onTimeRate": 0.406
+        },
+        "full": {
+          "n": 192,
+          "maeMinutes": 3.81,
+          "onTimeRate": 0.708
+        }
+      }
+    },
+    {
+      "date": "2026-11-14",
+      "weekType": "teaching",
+      "trueReady": {
+        "historical": {
+          "n": 37,
+          "maeMinutes": 5.79,
+          "onTimeRate": 0.649
+        },
+        "backlog": {
+          "n": 37,
+          "maeMinutes": 3.15,
+          "onTimeRate": 0.486
+        },
+        "full": {
+          "n": 37,
+          "maeMinutes": 3.36,
+          "onTimeRate": 0.757
+        }
+      }
+    },
+    {
+      "date": "2026-11-15",
+      "weekType": "teaching",
+      "trueReady": {
+        "historical": {
+          "n": 13,
+          "maeMinutes": 5.61,
+          "onTimeRate": 0.538
+        },
+        "backlog": {
+          "n": 13,
+          "maeMinutes": 1.29,
+          "onTimeRate": 0.385
+        },
+        "full": {
+          "n": 13,
+          "maeMinutes": 1.89,
+          "onTimeRate": 0.846
+        }
+      }
+    }
+  ],
+  "byVendor": [
+    {
+      "vendorName": "Main Canteen",
+      "isFocus": true,
+      "trueReady": {
+        "historical": {
+          "n": 503,
+          "maeMinutes": 5.95,
+          "onTimeRate": 0.61
+        },
+        "backlog": {
+          "n": 503,
+          "maeMinutes": 10.06,
+          "onTimeRate": 0.394
+        },
+        "full": {
+          "n": 503,
+          "maeMinutes": 4.5,
+          "onTimeRate": 0.73
+        }
+      },
+      "tap": {
+        "historical": {
+          "n": 459,
+          "maeMinutes": 5.85,
+          "onTimeRate": 0.654
+        },
+        "backlog": {
+          "n": 459,
+          "maeMinutes": 10.13,
+          "onTimeRate": 0.364
+        },
+        "full": {
+          "n": 459,
+          "maeMinutes": 4.49,
+          "onTimeRate": 0.745
+        }
+      }
+    },
+    {
+      "vendorName": "Books 'n Bites",
+      "isFocus": false,
+      "trueReady": {
+        "historical": {
+          "n": 50,
+          "maeMinutes": 2.19,
+          "onTimeRate": 0.54
+        },
+        "backlog": {
+          "n": 50,
+          "maeMinutes": 1.89,
+          "onTimeRate": 0.48
+        },
+        "full": {
+          "n": 50,
+          "maeMinutes": 2.05,
+          "onTimeRate": 0.58
+        }
+      },
+      "tap": {
+        "historical": {
+          "n": 42,
+          "maeMinutes": 2.06,
+          "onTimeRate": 0.643
+        },
+        "backlog": {
+          "n": 42,
+          "maeMinutes": 1.96,
+          "onTimeRate": 0.476
+        },
+        "full": {
+          "n": 42,
+          "maeMinutes": 1.89,
+          "onTimeRate": 0.714
+        }
+      }
+    },
+    {
+      "vendorName": "Café@CVA Commons",
+      "isFocus": false,
+      "trueReady": {
+        "historical": {
+          "n": 48,
+          "maeMinutes": 2.5,
+          "onTimeRate": 0.542
+        },
+        "backlog": {
+          "n": 48,
+          "maeMinutes": 5.54,
+          "onTimeRate": 0.375
+        },
+        "full": {
+          "n": 48,
+          "maeMinutes": 2.27,
+          "onTimeRate": 0.833
+        }
+      },
+      "tap": {
+        "historical": {
+          "n": 42,
+          "maeMinutes": 2.25,
+          "onTimeRate": 0.738
+        },
+        "backlog": {
+          "n": 42,
+          "maeMinutes": 6.22,
+          "onTimeRate": 0.31
+        },
+        "full": {
+          "n": 42,
+          "maeMinutes": 2.13,
+          "onTimeRate": 0.857
+        }
+      }
+    },
+    {
+      "vendorName": "Deli",
+      "isFocus": true,
+      "trueReady": {
+        "historical": {
+          "n": 177,
+          "maeMinutes": 6.95,
+          "onTimeRate": 0.554
+        },
+        "backlog": {
+          "n": 177,
+          "maeMinutes": 6.88,
+          "onTimeRate": 0.339
+        },
+        "full": {
+          "n": 177,
+          "maeMinutes": 6.53,
+          "onTimeRate": 0.701
+        }
+      },
+      "tap": {
+        "historical": {
+          "n": 162,
+          "maeMinutes": 6.96,
+          "onTimeRate": 0.636
+        },
+        "backlog": {
+          "n": 162,
+          "maeMinutes": 7.32,
+          "onTimeRate": 0.278
+        },
+        "full": {
+          "n": 162,
+          "maeMinutes": 6.51,
+          "onTimeRate": 0.747
+        }
+      }
+    },
+    {
+      "vendorName": "Bistro NTT",
+      "isFocus": true,
+      "trueReady": {
+        "historical": {
+          "n": 149,
+          "maeMinutes": 7.77,
+          "onTimeRate": 0.651
+        },
+        "backlog": {
+          "n": 149,
+          "maeMinutes": 8.49,
+          "onTimeRate": 0.49
+        },
+        "full": {
+          "n": 149,
+          "maeMinutes": 5.01,
+          "onTimeRate": 0.785
+        }
+      },
+      "tap": {
+        "historical": {
+          "n": 138,
+          "maeMinutes": 7.44,
+          "onTimeRate": 0.688
+        },
+        "backlog": {
+          "n": 138,
+          "maeMinutes": 8.13,
+          "onTimeRate": 0.471
+        },
+        "full": {
+          "n": 138,
+          "maeMinutes": 4.82,
+          "onTimeRate": 0.812
+        }
+      }
+    },
+    {
+      "vendorName": "Harmony Cafeteria",
+      "isFocus": true,
+      "trueReady": {
+        "historical": {
+          "n": 328,
+          "maeMinutes": 3.55,
+          "onTimeRate": 0.631
+        },
+        "backlog": {
+          "n": 328,
+          "maeMinutes": 7.56,
+          "onTimeRate": 0.418
+        },
+        "full": {
+          "n": 328,
+          "maeMinutes": 3.01,
+          "onTimeRate": 0.753
+        }
+      },
+      "tap": {
+        "historical": {
+          "n": 286,
+          "maeMinutes": 3.4,
+          "onTimeRate": 0.678
+        },
+        "backlog": {
+          "n": 286,
+          "maeMinutes": 7.36,
+          "onTimeRate": 0.353
+        },
+        "full": {
+          "n": 286,
+          "maeMinutes": 2.79,
+          "onTimeRate": 0.787
+        }
+      }
+    },
+    {
+      "vendorName": "Harmony Lounge",
+      "isFocus": true,
+      "trueReady": {
+        "historical": {
+          "n": 143,
+          "maeMinutes": 2.84,
+          "onTimeRate": 0.629
+        },
+        "backlog": {
+          "n": 143,
+          "maeMinutes": 4.01,
+          "onTimeRate": 0.35
+        },
+        "full": {
+          "n": 143,
+          "maeMinutes": 2.61,
+          "onTimeRate": 0.608
+        }
+      },
+      "tap": {
+        "historical": {
+          "n": 129,
+          "maeMinutes": 2.9,
+          "onTimeRate": 0.62
+        },
+        "backlog": {
+          "n": 129,
+          "maeMinutes": 4.49,
+          "onTimeRate": 0.264
+        },
+        "full": {
+          "n": 129,
+          "maeMinutes": 2.59,
+          "onTimeRate": 0.705
+        }
+      }
+    },
+    {
+      "vendorName": "iCafe",
+      "isFocus": true,
+      "trueReady": {
+        "historical": {
+          "n": 202,
+          "maeMinutes": 3.79,
+          "onTimeRate": 0.663
+        },
+        "backlog": {
+          "n": 202,
+          "maeMinutes": 9.24,
+          "onTimeRate": 0.322
+        },
+        "full": {
+          "n": 202,
+          "maeMinutes": 2.98,
+          "onTimeRate": 0.792
+        }
+      },
+      "tap": {
+        "historical": {
+          "n": 185,
+          "maeMinutes": 3.52,
+          "onTimeRate": 0.697
+        },
+        "backlog": {
+          "n": 185,
+          "maeMinutes": 9.51,
+          "onTimeRate": 0.27
+        },
+        "full": {
+          "n": 185,
+          "maeMinutes": 2.89,
+          "onTimeRate": 0.811
+        }
+      }
+    },
+    {
+      "vendorName": "H.F.C. (Hot Food Counter) @ Scholars Court",
+      "isFocus": false,
+      "trueReady": {
+        "historical": {
+          "n": 48,
+          "maeMinutes": 6.58,
+          "onTimeRate": 0.667
+        },
+        "backlog": {
+          "n": 48,
+          "maeMinutes": 7.36,
+          "onTimeRate": 0.375
+        },
+        "full": {
+          "n": 48,
+          "maeMinutes": 7.23,
+          "onTimeRate": 0.688
+        }
+      },
+      "tap": {
+        "historical": {
+          "n": 46,
+          "maeMinutes": 6.38,
+          "onTimeRate": 0.696
+        },
+        "backlog": {
+          "n": 46,
+          "maeMinutes": 7.52,
+          "onTimeRate": 0.326
+        },
+        "full": {
+          "n": 46,
+          "maeMinutes": 7.26,
+          "onTimeRate": 0.696
+        }
+      }
+    },
+    {
+      "vendorName": "JCCC UG/F Cafe",
+      "isFocus": false,
+      "trueReady": {
+        "historical": {
+          "n": 70,
+          "maeMinutes": 3.13,
+          "onTimeRate": 0.629
+        },
+        "backlog": {
+          "n": 70,
+          "maeMinutes": 3.52,
+          "onTimeRate": 0.343
+        },
+        "full": {
+          "n": 70,
+          "maeMinutes": 2.01,
+          "onTimeRate": 0.843
+        }
+      },
+      "tap": {
+        "historical": {
+          "n": 61,
+          "maeMinutes": 3.11,
+          "onTimeRate": 0.77
+        },
+        "backlog": {
+          "n": 61,
+          "maeMinutes": 4.32,
+          "onTimeRate": 0.197
+        },
+        "full": {
+          "n": 61,
+          "maeMinutes": 1.97,
+          "onTimeRate": 0.869
+        }
+      }
+    },
+    {
+      "vendorName": "JCCC G/F Cafe",
+      "isFocus": false,
+      "trueReady": {
+        "historical": {
+          "n": 67,
+          "maeMinutes": 2.87,
+          "onTimeRate": 0.522
+        },
+        "backlog": {
+          "n": 67,
+          "maeMinutes": 1.97,
+          "onTimeRate": 0.463
+        },
+        "full": {
+          "n": 67,
+          "maeMinutes": 2.16,
+          "onTimeRate": 0.716
+        }
+      },
+      "tap": {
+        "historical": {
+          "n": 59,
+          "maeMinutes": 2.53,
+          "onTimeRate": 0.746
+        },
+        "backlog": {
+          "n": 59,
+          "maeMinutes": 2.52,
+          "onTimeRate": 0.254
+        },
+        "full": {
+          "n": 59,
+          "maeMinutes": 1.8,
+          "onTimeRate": 0.847
+        }
+      }
+    }
+  ]
+}
