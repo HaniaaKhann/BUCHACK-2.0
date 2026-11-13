@@ -5,6 +5,7 @@ export * from './engine/walkIns.js';
 export * from './engine/lambda.js';
 export * from './engine/mu.js';
 export * from './engine/backlog.js';
+export * from './engine/busyMinutes.js';
 export * from './engine/prep.js';
 export * from './engine/label.js';
 export * from './engine/bias.js';

@@ -1,6 +1,7 @@
 import {
   SLOT_MINUTES,
   blendMu,
+  busyMinuteRates,
   detectBatchTaps,
   itemPrep,
   labelOrder,
@@ -37,6 +38,8 @@ export interface OrderPredictions {
   order: SimOrder;
   day: SimDay;
   predictions: Record<ModelId, RangePrediction>;
+  fullBaseMinutes: number;
+  fullBacklogAtPlacement: number;
 }
 
 interface FullPrediction {
@@ -102,41 +105,25 @@ function slotObservations(
   });
 }
 
-export function busyMinuteRates(
+function dayBusyRates(
   day: SimDay,
   ranges: readonly MinuteRange[],
   appOrders: readonly SimOrder[],
   tickets: readonly TicketCountRow[],
 ): number[] {
-  const ticketsBySlot = new Map(
-    tickets.map((row) => [slotOf(day, Date.parse(row.slotStart)), row.count]),
-  );
-  const rates: number[] = [];
-  for (const range of ranges) {
-    const first = Math.floor(range.openMinute / SLOT_MINUTES) * SLOT_MINUTES;
-    for (let slotMinute = first; slotMinute < range.closeMinute; slotMinute += SLOT_MINUTES) {
-      let busyMinutes = 0;
-      let taps = 0;
-      for (let minute = slotMinute; minute < slotMinute + SLOT_MINUTES; minute += 1) {
-        const start = minuteToMs(day, minute);
-        const waiting = appOrders.some(
-          (o) =>
-            o.placedAt + priorOrderPrep(o) * MS_PER_MINUTE < start + MS_PER_MINUTE &&
-            labelAvailableAt(o) > start,
-        );
-        if (!waiting) continue;
-        busyMinutes += 1;
-        taps += appOrders.filter((o) => inMinute(o.tapAt, start)).length;
-      }
-      const slot = slotMinute / SLOT_MINUTES;
-      const apps = appOrders.filter((o) => slotOf(day, o.placedAt) === slot).length;
-      const share = apps / (apps + (ticketsBySlot.get(slot) ?? 0));
-      if (busyMinutes === 0 || apps === 0) continue;
-      const rate = taps / busyMinutes / share;
-      for (let n = 0; n < busyMinutes; n += 1) rates.push(rate);
-    }
-  }
-  return rates;
+  return busyMinuteRates({
+    ranges: ranges.map((range) => ({
+      openAt: minuteToMs(day, range.openMinute),
+      closeAt: minuteToMs(day, range.closeMinute),
+    })),
+    orders: appOrders.map((order) => ({
+      placedAt: order.placedAt,
+      priorPrepMinutes: priorOrderPrep(order),
+      tapAt: order.tapAt,
+      pickedUpAt: order.pickedUpAt,
+    })),
+    tickets: tickets.map((row) => ({ slotStart: Date.parse(row.slotStart), count: row.count })),
+  });
 }
 
 function priorOrderPrep(order: SimOrder): number {
@@ -294,6 +281,8 @@ export function runWalkForward(vendor: VendorHistory, days: readonly SimDay[]): 
               },
               full: { point: full.pointMinutes, low: full.lowMinutes, high: full.highMinutes },
             },
+            fullBaseMinutes: full.baseMinutes,
+            fullBacklogAtPlacement: backlogFull,
           });
         }
         const lambda = lambdaLive({
@@ -307,7 +296,7 @@ export function runWalkForward(vendor: VendorHistory, days: readonly SimDay[]): 
     }
 
     pastObservations.push(...slotObservations(day, dayTickets, dayApps));
-    state.busyRates.push(...busyMinuteRates(day, ranges, dayApps, dayTickets));
+    state.busyRates.push(...dayBusyRates(day, ranges, dayApps, dayTickets));
   }
   return results;
 }
