@@ -1,9 +1,483 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum Role {
+  student
+  vendor_staff
+  vendor_owner
+  admin
+}
+
+enum MemberRole {
+  owner
+  staff
+}
+
+enum ChatLanguage {
+  en
+  zh_HK
+  zh_CN
+}
+
+enum VendorStatus {
+  open
+  closed_for_renovation
+}
+
+enum BusyState {
+  quiet
+  normal
+  rush
+}
+
+enum WalkTimeType {
+  b2v
+  b2b
+}
+
+enum WalkTimeSource {
+  estimate
+  measured
+}
+
+enum TagsStatus {
+  verified
+  unverified
+}
+
+enum StockStatus {
+  in_stock
+  out_of_stock
+}
+
+enum MenuSource {
+  generic
+  kaggle
+}
+
+enum OrderStatus {
+  placed
+  accepted
+  preparing
+  ready
+  picked_up
+  cancelled
+}
+
+enum TicketSource {
+  sim
+  csv
+  adapter
+}
+
+enum LedgerReason {
+  seed
+  pay
+  refund
+}
+
+enum AcademicWeekType {
+  teaching
+  reading
+  exam
+  holiday
+}
+
+enum ClockMode {
+  real
+  demo
+}
+
+model User {
+  id            String   @id
+  name          String
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  image         String?
+  role          Role     @default(student)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  sessions      Session[]
+  accounts      Account[]
+  profile       StudentProfile?
+  freeWindows   FreeWindow[]
+  memberships   VendorMember[]
+  orders        Order[]
+  notifications Notification[]
+  walletLedger  WalletLedger[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verifications")
+}
+
+model StudentProfile {
+  userId            String       @id
+  dietTags          String[]
+  allergens         String[]
+  goal              String?
+  eatMinutes        Int
+  chatLanguage      ChatLanguage @default(en)
+  currentBuildingId String?
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentBuilding Building? @relation(fields: [currentBuildingId], references: [id], onDelete: SetNull)
+
+  @@map("student_profiles")
+}
+
+model FreeWindow {
+  id             String  @id @default(uuid())
+  userId         String
+  weekday        Int
+  startMinute    Int
+  endMinute      Int
+  prevBuildingId String?
+  nextBuildingId String?
+
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prevBuilding Building? @relation("FreeWindowPrev", fields: [prevBuildingId], references: [id], onDelete: SetNull)
+  nextBuilding Building? @relation("FreeWindowNext", fields: [nextBuildingId], references: [id], onDelete: SetNull)
+
+  @@index([userId, weekday])
+  @@map("free_windows")
+}
+
+model Building {
+  id     String  @id @default(uuid())
+  campus String
+  name   String
+  code   String?
+  source String
+
+  vendors         Vendor[]
+  profiles        StudentProfile[]
+  windowsAsPrev   FreeWindow[]     @relation("FreeWindowPrev")
+  windowsAsNext   FreeWindow[]     @relation("FreeWindowNext")
+  walkTimesFrom   WalkTime[]       @relation("WalkTimeFrom")
+  walkTimesToThis WalkTime[]       @relation("WalkTimeToBuilding")
+
+  @@unique([campus, name])
+  @@map("buildings")
+}
+
+model WalkTime {
+  id             String         @id @default(uuid())
+  fromBuildingId String
+  toBuildingId   String?
+  toVendorId     String?
+  type           WalkTimeType
+  minutes        Int
+  source         WalkTimeSource @default(estimate)
+
+  fromBuilding Building  @relation("WalkTimeFrom", fields: [fromBuildingId], references: [id], onDelete: Cascade)
+  toBuilding   Building? @relation("WalkTimeToBuilding", fields: [toBuildingId], references: [id], onDelete: Cascade)
+  toVendor     Vendor?   @relation(fields: [toVendorId], references: [id], onDelete: Cascade)
+
+  @@unique([fromBuildingId, toBuildingId])
+  @@unique([fromBuildingId, toVendorId])
+  @@map("walk_times")
+}
+
+model Vendor {
+  id                      String       @id @default(uuid())
+  name                    String       @unique
+  campus                  String
+  buildingId              String
+  floor                   String
+  foodType                String
+  officialDietaryOptions  String[]
+  openingHours            Json
+  pickupEnabled           Boolean
+  status                  VendorStatus @default(open)
+  sourceUrl               String
+  retrievedAt             DateTime
+  ticketsIncludeAppOrders Boolean      @default(false)
+  capacityPriorPerMin     Float?
+  paused                  Boolean      @default(false)
+  busyState               BusyState    @default(normal)
+  busyUntil               DateTime?
+
+  building         Building          @relation(fields: [buildingId], references: [id])
+  members          VendorMember[]
+  menuItems        MenuItem[]
+  orders           Order[]
+  pickupSlots      PickupSlot[]
+  busyEvents       BusyEvent[]
+  ticketCounts     TicketCount[]
+  engineSnapshots  EngineSnapshot[]
+  realObservations RealObservation[]
+  walkTimes        WalkTime[]
+
+  @@map("vendors")
+}
+
+model VendorMember {
+  id       String     @id @default(uuid())
+  userId   String
+  vendorId String
+  role     MemberRole
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, vendorId])
+  @@map("vendor_members")
+}
+
+model MenuItem {
+  id             String      @id @default(uuid())
+  vendorId       String
+  name           String
+  priceHkd       Int
+  category       String
+  dietTags       String[]
+  allergens      String[]
+  tagsStatus     TagsStatus  @default(unverified)
+  tagsVerifiedBy String?
+  tagsVerifiedAt DateTime?
+  prepPriorMin   Float
+  stockStatus    StockStatus @default(in_stock)
+  isSpecial      Boolean     @default(false)
+  externalId     String?
+  source         MenuSource  @default(generic)
+  deletedAt      DateTime?
+
+  vendor     Vendor      @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+
+  @@unique([vendorId, name])
+  @@index([vendorId, stockStatus])
+  @@index([dietTags], type: Gin)
+  @@index([allergens], type: Gin)
+  @@map("menu_items")
+}
+
+model Order {
+  id             String      @id @default(uuid())
+  studentId      String
+  vendorId       String
+  status         OrderStatus
+  totalHkd       Int
+  placedAt       DateTime
+  acceptedAt     DateTime?
+  fireAt         DateTime?
+  slotStart      DateTime?
+  readyAt        DateTime?
+  pickedUpAt     DateTime?
+  cancelledAt    DateTime?
+  predictedPoint DateTime
+  predictedLow   DateTime
+  predictedHigh  DateTime
+  modelVersion   String
+
+  student      User           @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  vendor       Vendor         @relation(fields: [vendorId], references: [id])
+  items        OrderItem[]
+  walletLedger WalletLedger[]
+
+  @@index([vendorId, status])
+  @@index([vendorId, placedAt])
+  @@index([studentId, placedAt(sort: Desc)])
+  @@map("orders")
+}
+
+model OrderItem {
+  id                   String @id @default(uuid())
+  orderId              String
+  menuItemId           String
+  qty                  Int
+  priceHkdSnapshot     Int
+  prepPriorSnapshotMin Float
+
+  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItem MenuItem @relation(fields: [menuItemId], references: [id])
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+model PickupSlot {
+  id          String   @id @default(uuid())
+  vendorId    String
+  slotStart   DateTime
+  cap         Int
+  bookedCount Int      @default(0)
+
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@unique([vendorId, slotStart])
+  @@map("pickup_slots")
+}
+
+model BusyEvent {
+  id        String    @id @default(uuid())
+  vendorId  String
+  state     BusyState
+  setAt     DateTime
+  expiresAt DateTime?
+
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@index([vendorId, setAt])
+  @@map("busy_events")
+}
+
+model TicketCount {
+  id        String       @id @default(uuid())
+  vendorId  String
+  slotStart DateTime
+  count     Int
+  source    TicketSource
+
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@unique([vendorId, slotStart])
+  @@map("ticket_counts")
+}
+
+model EngineSnapshot {
+  id           String   @id @default(uuid())
+  vendorId     String
+  computedAt   DateTime
+  modelVersion String
+  payload      Json
+
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@index([vendorId, computedAt(sort: Desc)])
+  @@map("engine_snapshots")
+}
+
+model Notification {
+  id        String    @id @default(uuid())
+  userId    String
+  kind      String
+  title     String
+  body      String
+  link      String?
+  createdAt DateTime
+  readAt    DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("notifications")
+}
+
+model WalletLedger {
+  id         String       @id @default(uuid())
+  userId     String
+  deltaHkd   Int
+  reason     LedgerReason
+  refOrderId String?
+  createdAt  DateTime
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order Order? @relation(fields: [refOrderId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@map("wallet_ledger")
+}
+
+model SearchEvent {
+  id             String   @id @default(uuid())
+  anonymousId    String
+  appliedFilters Json
+  resultCount    Int
+  createdAt      DateTime
+
+  @@map("search_events")
+}
+
+model AcademicWeek {
+  id        String           @id @default(uuid())
+  weekStart DateTime         @unique @db.Date
+  type      AcademicWeekType
+
+  @@map("academic_weeks")
+}
+
+model PublicHoliday {
+  id   String   @id @default(uuid())
+  date DateTime @unique @db.Date
+  name String
+
+  @@map("public_holidays")
+}
+
+model SystemClock {
+  id          Int       @id @default(1)
+  mode        ClockMode
+  currentTime DateTime
+  speed       Float
+  updatedAt   DateTime  @updatedAt
+
+  @@map("system_clock")
+}
+
+model RealObservation {
+  id       String   @id @default(uuid())
+  vendorId String
+  placedAt DateTime
+  readyAt  DateTime
+  note     String?
+
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@index([vendorId, placedAt])
+  @@map("real_observations")
 }
