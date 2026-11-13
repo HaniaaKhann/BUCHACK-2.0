@@ -11,3 +11,7 @@ export * from './engine/bias.js';
 export * from './engine/quantiles.js';
 export * from './engine/lateness.js';
 export * from './engine/predict.js';
+export * from './fit.js';
+export * from './leaveAt.js';
+export * from './slots.js';
+export * from './ranking.js';
