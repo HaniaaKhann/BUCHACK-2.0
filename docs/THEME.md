@@ -35,7 +35,30 @@ Small text needs 4.5:1 and large text 3:1 (WCAG AA). `apps/web/tests/theme.test.
 
 White and cream small text is never placed on `sky` (2.43 and 2.12), and `sky` is never used for text or a border on cream or white. Control borders are navy at 60%, which is at least 3:1 against white and cream.
 
+## Photos and the logo
+
+The photos and the logo are our own, taken on campus. Nothing is downloaded, and no caterer's brand, logo or photo is reused.
+
+- **Logo:** put `apps/web/public/logo.svg` in place. Every header has a fixed-size slot that shows it when the file exists and stays empty when it does not.
+- **Outlet photos:** put one JPEG per outlet in `apps/web/public/outlets/`, named from the outlet name in lower case with every run of other characters turned into one hyphen. Any outlet without a file keeps a navy, raspberry, brown or blue tile with the outlet's initial. The card reserves a 48 by 48 pixel box either way, so adding a photo moves nothing, and the photo's alt text is the outlet name.
+- **Rebuild:** the files are read when the page is served, so with Docker rebuild the web image after adding them.
+
+| Outlet                                        | File                                                                |
+| --------------------------------------------- | ------------------------------------------------------------------- |
+| Main Canteen                                  | `apps/web/public/outlets/main-canteen.jpg`                          |
+| Books 'n Bites                                | `apps/web/public/outlets/books-n-bites.jpg`                         |
+| Café@CVA Commons                              | `apps/web/public/outlets/cafe-cva-commons.jpg`                      |
+| Deli                                          | `apps/web/public/outlets/deli.jpg`                                  |
+| Bistro NTT                                    | `apps/web/public/outlets/bistro-ntt.jpg`                            |
+| BU Fiesta (closed for renovation, not listed) | `apps/web/public/outlets/bu-fiesta.jpg`                             |
+| Harmony Cafeteria                             | `apps/web/public/outlets/harmony-cafeteria.jpg`                     |
+| Harmony Lounge                                | `apps/web/public/outlets/harmony-lounge.jpg`                        |
+| iCafe                                         | `apps/web/public/outlets/icafe.jpg`                                 |
+| H.F.C. (Hot Food Counter) @ Scholars Court    | `apps/web/public/outlets/h-f-c-hot-food-counter-scholars-court.jpg` |
+| Nan Yuan                                      | `apps/web/public/outlets/nan-yuan.jpg`                              |
+| JCCC UG/F Cafe                                | `apps/web/public/outlets/jccc-ug-f-cafe.jpg`                        |
+| JCCC G/F Cafe                                 | `apps/web/public/outlets/jccc-g-f-cafe.jpg`                         |
+
 ## Layout spaces kept free
 
-- Every header has an empty, fixed-size slot (`data-logo-slot`) for a logo, so adding one later moves nothing.
-- Every outlet card has an image slot (`data-image-slot`). With no image it shows a tile in navy, berry, cocoa or sky with the outlet's initial.
+- Every header has a fixed-size slot (`data-logo-slot`) and every outlet card a 48 pixel image slot (`data-image-slot`), so adding a logo or a photo moves nothing.

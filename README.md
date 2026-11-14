@@ -189,7 +189,7 @@ pnpm --filter @app/worker test:db
 - **Estimated:** walking times between buildings. The app marks them "est.".
 - **Simulated:** every menu and price, ticket count, order and wait time, and the six weeks of history the engine learns from. Menus are hand-written for the demo. An importer for the Kaggle dataset "Uber Eats USA Restaurants and Menus" exists, but it has not been run on the real files, so no Kaggle data is in the demo.
 - **Demo shortcut:** in demo mode the seed marks the menus of three outlets (Bistro NTT, Main Canteen, Harmony Cafeteria) as confirmed by the demo owner, so the tick and the filters can be shown. All other outlets stay Not verified, and halal is never seeded.
-- HKBU's caterer brand names, logos and photos are not used.
+- HKBU's caterer brand names, logos and photos are not used. The outlet photos and the logo are our own, taken on campus (see [`docs/THEME.md`](docs/THEME.md) for the file names).
 
 ## Privacy
 
