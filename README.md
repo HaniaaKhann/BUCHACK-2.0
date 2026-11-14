@@ -26,11 +26,15 @@ The database is not published on the host, so it never clashes with a local Post
 
 Demo admin login: `admin@demo.example` with password `demo-password-1`. After signing in you land on `/admin`, which has the demo clock (speed, jump forward, set a time) and the accuracy page. Other demo accounts are listed in `docs/AUTH.md`. These are demo logins only, with no real credentials.
 
+The bell in the student header shows an unread count and lists order updates (accepted, preparing, ready, picked up) and a leave-now reminder that fires when the demo clock reaches the predicted ready time minus the walk. Notifications are stamped with the demo clock.
+
 The student dashboard has a chat assistant in English, Traditional Chinese and Simplified Chinese. It is rules only: it matches the question in the browser, reads the student's own data from the existing endpoints, and answers from that data. There is no external service, no API key, no chat route, and nothing is stored or sent; the history lives in the page and disappears on reload. It cannot filter by spice and it never calls a dish halal unless the vendor owner confirmed it.
 
 To return a running demo to its starting state (fixed clock, no orders, seeded stock and tags), run `pnpm demo:reset` with `DEMO_MODE=true` and `DATABASE_URL` set.
 
-Before recording the video, run `pnpm demo:reset`. With the Docker stack that is `docker compose exec worker ./node_modules/.bin/tsx src/demoResetCli.ts`.
+Before recording the video, run `pnpm demo:reset`. With the Docker stack that is `docker compose exec worker ./node_modules/.bin/tsx src/demoResetCli.ts`. It leaves the demo student not onboarded, so the first sign-in shows onboarding.
+
+For quick retakes, run `pnpm demo:reset:ready` instead (`... src/demoResetCli.ts --ready` in the Docker stack). It does the same reset and also leaves the demo student onboarded with a profile: English chat, standing at the Bistro NTT building, no diet or allergen filters. The waits are identical in both modes; each run prints the same wait fingerprint and a state fingerprint that also covers the student.
 
 ## Local development
 
