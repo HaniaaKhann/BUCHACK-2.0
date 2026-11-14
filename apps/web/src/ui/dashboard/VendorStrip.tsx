@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { VendorListItem } from '@/server/menuService';
+import { staggerDelay } from '../motion';
 import { outletPhotoPath, outletSlug } from '../outletSlug';
 import { BUSY_LABELS, formatWaitRange, waitNote } from './viewModel';
 
@@ -32,15 +33,15 @@ function OutletImageSlot({
   const [failed, setFailed] = useState(false);
   if (hasPhoto && !failed) {
     return (
-      <span data-image-slot="photo" className="block h-12 w-12 shrink-0 overflow-hidden rounded-lg">
+      <span data-image-slot="photo" className="block aspect-video w-full overflow-hidden bg-cream">
         <img
           src={outletPhotoPath(vendor.name)}
           alt={vendor.name}
-          width={48}
-          height={48}
+          width={320}
+          height={180}
           loading="lazy"
           onError={() => setFailed(true)}
-          className="h-12 w-12 object-cover"
+          className="h-full w-full object-cover"
         />
       </span>
     );
@@ -49,7 +50,7 @@ function OutletImageSlot({
     <span
       data-image-slot="tile"
       aria-hidden="true"
-      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg text-xl font-bold ${tileClass(vendor.id)}`}
+      className={`flex aspect-video w-full items-center justify-center text-5xl font-bold ${tileClass(vendor.id)}`}
     >
       {vendor.name.trim().charAt(0).toUpperCase()}
     </span>
@@ -74,17 +75,21 @@ export function VendorStrip({
         <span className="ml-2 font-normal normal-case text-muted">tap to filter</span>
       </h2>
       <ul className="-mx-4 flex snap-x scroll-pl-4 gap-3 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:scroll-pl-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 lg:pb-0 xl:grid-cols-4">
-        {vendors.map((vendor) => {
+        {vendors.map((vendor, index) => {
           const note = waitNote(vendor.wait.source);
           const isSelected = selected.includes(vendor.id);
           return (
-            <li key={vendor.id} className="w-60 shrink-0 snap-start lg:w-auto">
+            <li
+              key={vendor.id}
+              className="w-60 shrink-0 animate-fade-up snap-start lg:w-auto"
+              style={{ animationDelay: staggerDelay(index) }}
+            >
               <button
                 type="button"
                 aria-pressed={isSelected}
                 data-vendor={vendor.id}
                 onClick={() => onToggle(vendor.id)}
-                className={`flex h-full w-full gap-3 rounded-xl border p-3 text-left transition-shadow hover:shadow-md ${
+                className={`flex h-full w-full flex-col overflow-hidden rounded-xl border text-left transition-[transform,box-shadow] duration-150 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.99] ${
                   isSelected
                     ? 'border-navy bg-white ring-2 ring-navy'
                     : 'border-navy/15 bg-white hover:border-navy/60'
@@ -94,7 +99,7 @@ export function VendorStrip({
                   vendor={vendor}
                   hasPhoto={photos.includes(outletSlug(vendor.name))}
                 />
-                <span className="flex min-w-0 flex-1 flex-col gap-1.5">
+                <span className="flex min-w-0 flex-1 flex-col gap-1.5 p-3">
                   <span className="flex items-start justify-between gap-2">
                     <span className="text-sm font-semibold leading-snug">{vendor.name}</span>
                     <span

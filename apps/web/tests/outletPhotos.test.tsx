@@ -94,12 +94,12 @@ describe('outlet card image slot', () => {
     expect(html).not.toContain('data-image-slot="tile"');
   });
 
-  it('keeps the same 48 pixel box either way, so nothing shifts', () => {
+  it('reserves the same 16 to 9 banner either way, so nothing shifts', () => {
     for (const html of [strip([]), strip(['deli'])]) {
-      expect(html).toContain('h-12 w-12');
+      expect(html).toContain('aspect-video w-full');
     }
-    expect(strip(['deli'])).toContain('width="48"');
-    expect(strip(['deli'])).toContain('height="48"');
+    expect(strip(['deli'])).toContain('width="320"');
+    expect(strip(['deli'])).toContain('height="180"');
   });
 
   it('shows the tile for an outlet whose photo is not in the list', () => {
