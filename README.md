@@ -30,16 +30,17 @@ We have not run a student survey yet, so no student numbers are claimed.
 - Sign up with nothing required. Diet and allergen filters, a health goal and the chat language are optional. Adding classes is optional too: the day, start, end and building of each class stay on the profile until the student edits or deletes them, and never the course name. Choosing where you are ("From") is a selector in the filter panel; without it the list still shows, with the class start time and a hint instead of a leave time.
 - One ranked list of dishes from all HKBU outlets, with a wait **range**, whether it fits before the next class, and when to leave. Filters for price, wait, "fits before my next class", open now, outlet and sort order.
 - Diet and allergen filters use only tags an outlet owner has confirmed, so with a filter on, unconfirmed dishes are left out, and halal is never assumed. Tiles show ticks and **Not verified** only while a diet or allergen filter is active.
-- Order as soon as ready or for a 15-minute pickup slot, pay from a demo wallet (the checkout shows the credit before and after the order), follow the order live, cancel while the order is still waiting to be accepted (at most the first minute), and mark it picked up.
+- Order as soon as ready or for a 15-minute pickup slot, pay from a demo wallet (the checkout shows the credit before and after the order), follow the order live, cancel while the order is still waiting to be accepted (at most the first minute), and tap **I picked it up** when they have it. An order nobody taps completes by itself 30 minutes after it was ready, on the demo clock.
 - A bell with an unread count for order updates and a leave-now reminder, and a short "Added to cart" message with a View cart button when a dish is added.
 - A chat assistant in English, Traditional Chinese and Simplified Chinese. It answers only from the app's own data (open outlets, waits, what fits before class, diet and allergen filters, order status, wallet, when to leave, how to order). It cannot filter by spice, it never calls a dish halal unless an owner confirmed it, and nothing a student types is stored or sent anywhere.
 - Delete their own account, with a confirm step.
 
 **Vendors**
 
-- A live order board (New, Accepted, Preparing, Ready) with one button per step, including Picked up for students who forget to tap it, and a sound alert for new orders.
+- A live order board (New, Accepted, Preparing) with one button per step. **Mark ready** is the last step: the order leaves the board and shows under **Done today** as waiting for pickup, then completed once the student taps or 30 demo minutes pass. A sound alert plays for new orders.
 - Busy level, pause orders, and a stock switch per dish.
 - The owner can add a dish, edit its name, price and category, and confirm its diet and allergen tags. Staff cannot.
+- The owner has a sales page for their own outlet: order history (today or the last 7 days), revenue, orders and average order value for today, the top 5 dishes and orders per hour as bars with a text table. Staff see the order board and Done today only. In the demo the page also shows clearly labelled **Sample data for the demo** for the last 7 days, stored apart from real orders and never used by the wait-time engine.
 
 **Admin and demo tools**
 
@@ -179,7 +180,7 @@ pnpm test:e2e
 pnpm --filter @app/worker test:db
 ```
 
-`pnpm test:e2e` runs the Playwright specs in `tests/e2e`: the student happy path (filter, add to cart, order, then the vendor moves it through Accepted, Preparing, Ready and Picked up, and the bell fills), account deletion and the owner's menu editing at 1280 and 390 pixels, and an overflow sweep of every page at 1280, 768 and 390 pixels using the longest outlet name. It resets the demo before it starts and again when it ends, even if a test fails, so the stack is left in the demo state. It reaches the database through `docker compose exec`; set `E2E_COMPOSE_ARGS` (for example `-p name`) and `E2E_COMPOSE_DIR` if your stack is not the default one in the current folder. Set `PLAYWRIGHT_CHANNEL=msedge` or `chrome` to use an installed browser, or run `pnpm exec playwright install chromium` once. `E2E_VENDOR_SWAP=0` skips the part of the sweep that temporarily gives the demo owner the vendor with the longest name.
+`pnpm test:e2e` runs the Playwright specs in `tests/e2e`: the student happy path (filter, add to cart, order, then the vendor moves it through Accepted, Preparing and Ready, it appears under Done today, the student taps I picked it up, and the bell fills), the owner's sales page and staff access to it, account deletion and the owner's menu editing at 1280 and 390 pixels, and an overflow sweep of every page at 1280, 768 and 390 pixels using the longest outlet name. It resets the demo before it starts and again when it ends, even if a test fails, so the stack is left in the demo state. It reaches the database through `docker compose exec`; set `E2E_COMPOSE_ARGS` (for example `-p name`) and `E2E_COMPOSE_DIR` if your stack is not the default one in the current folder. Set `PLAYWRIGHT_CHANNEL=msedge` or `chrome` to use an installed browser, or run `pnpm exec playwright install chromium` once. `E2E_VENDOR_SWAP=0` skips the part of the sweep that temporarily gives the demo owner the vendor with the longest name.
 
 `pnpm --filter @app/worker test:db` runs the database tests against `DATABASE_URL`: the demo reset, a scheduled order starting at its `fire_at` through the worker loop, and the worker's notifications.
 
@@ -207,7 +208,7 @@ Theme: data driven apps. UniBowl combines canteen ticket counts, order timestamp
 
 Not built, so not part of the features above:
 
-- Menu photo import, platform sync with outlets' existing ordering systems (`PlatformAdapter` is an interface only), promotions, rewards, vendor insights, web push, and "back in stock" notifications.
+- Menu photo import, platform sync with outlets' existing ordering systems (`PlatformAdapter` is an interface only), promotions, rewards, deeper vendor insights beyond the sales page, web push, and "back in stock" notifications.
 - Timetable integration with HKBU's own systems, and anonymous people counting with no faces stored.
 - Real payments instead of the demo wallet, and more campuses.
 - Vendor sign-up and adding staff in the app, deleting a dish, setting pickup-slot capacity, importing stopwatch samples, and a data export.

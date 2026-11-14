@@ -16,8 +16,8 @@ Signing in as an owner or staff member opens the order board at `/vendor`.
 
 **Order board** (owner and staff)
 
-- Four columns: New, Accepted, Preparing and Ready, updated live.
-- One button per order moves it forward: Accept, Start preparing, Mark ready, and in the Ready column Picked up (for students who forget to tap it). Each button works from one status only, and repeating a tap does nothing.
+- Three columns: New, Accepted and Preparing, updated live. Below them, **Done today** lists the orders marked ready today, as waiting for pickup or completed.
+- One button per order moves it forward: Accept, Start preparing and Mark ready. Ready is the last step: the student taps I picked it up, or the order completes by itself 30 minutes after it was ready on the demo clock. Each button works from one status only, and repeating a tap does nothing.
 - A scheduled order shows its pickup time and the time to start by.
 - If the vendor does not accept an order, the worker accepts it after 60 seconds.
 - A sound toggle plays a short beep when a new order arrives. It is off by default.
@@ -45,6 +45,6 @@ The board shows each order's items, total and times, but not which student place
 - Deleting a dish, uploading menu photos or importing a menu.
 - Setting pickup-slot capacity (it is worked out from the outlet's estimated capacity, see `WAIT_TIME_ENGINE.md`).
 - Syncing with an outlet's existing ordering or payment system. `PlatformAdapter` is an interface with no implementation.
-- Vendor insights or reports.
+- Reports beyond the owner's sales page, and any export.
 
 These are on the Roadmap in the README.

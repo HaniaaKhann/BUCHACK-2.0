@@ -5,10 +5,9 @@ const STEPS = [
   { action: 'accept', status: 'accepted' },
   { action: 'preparing', status: 'preparing' },
   { action: 'ready', status: 'ready' },
-  { action: 'picked-up', status: 'picked_up' },
 ] as const;
 
-test('a student filters, orders, and the vendor takes the order from Accepted to Picked up', async ({
+test('a student filters, orders, the vendor takes the order to Ready, and the student completes it', async ({
   page,
   browser,
   request,
@@ -89,18 +88,27 @@ test('a student filters, orders, and the vendor takes the order from Accepted to
       );
     }
   }
-  await expect(page.locator('[data-step="picked_up"][data-done="true"]')).toBeVisible();
+  await expect(page.locator('[data-step="ready"][data-done="true"]')).toBeVisible();
+
+  await expect(ownerPage.locator('[data-action="ready"]')).toHaveCount(0);
+  await expect(ownerPage.locator('[data-action="picked-up"]')).toHaveCount(0);
+  const doneOrder = ownerPage.locator('[data-done-today] [data-done-order]');
+  await expect(doneOrder).toHaveCount(1);
+  await expect(doneOrder).toHaveAttribute('data-done-status', 'ready');
+  await expect(doneOrder).toContainText('Waiting for pickup');
+  await expect(page.locator('[data-status-message]')).toContainText('completes by itself');
+
+  await page.getByRole('button', { name: 'I picked it up' }).click();
+  await expect(orderStatus).toHaveAttribute('data-order-status', 'completed');
+  await expect(page.locator('[data-step="completed"][data-done="true"]')).toBeVisible();
+  await expect(page.locator('[data-status-label]')).toHaveText('Completed');
+  await expect(doneOrder).toHaveAttribute('data-done-status', 'completed', { timeout: 20_000 });
+  await expect(doneOrder).toContainText('Completed');
 
   const bellCount = page.locator('[data-bell-count]');
-  await expect(bellCount).toHaveText('5');
+  await expect(bellCount).toHaveText('4');
   await page.locator('[data-bell]').click();
-  for (const kind of [
-    'order_accepted',
-    'leave_now',
-    'order_preparing',
-    'order_ready',
-    'order_picked_up',
-  ]) {
+  for (const kind of ['order_accepted', 'leave_now', 'order_preparing', 'order_ready']) {
     await expect(page.locator(`[data-notification="${kind}"]`)).toHaveCount(1);
   }
   await expect(page.locator('[data-notification="order_ready"]')).toContainText('Order ready');

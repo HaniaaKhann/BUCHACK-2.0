@@ -151,10 +151,17 @@ test.describe('no horizontal overflow, with the longest outlet name', () => {
       await owner.locator('[data-edit-dish]').first().click();
       await expect(owner.locator('[data-dish-form]')).toHaveCount(2);
       problems.push(...(await findViolations(owner, at('/vendor/menu with an edit form open'))));
+      problems.push(...(await visit(owner, '/vendor/sales', at('/vendor/sales'))));
+      await owner.getByRole('button', { name: 'Last 7 days' }).click();
+      await expect(owner.locator('[data-sales-view="7d"]')).toBeVisible();
+      problems.push(...(await findViolations(owner, at('/vendor/sales (last 7 days)'))));
       if (SWAP_VENDOR) {
         swapOwnerToLongestVendor();
         problems.push(...(await visit(owner, '/vendor', at('/vendor (long name)'), LONGEST)));
         problems.push(...(await visit(owner, '/vendor/menu', at('/vendor/menu (long name)'))));
+        problems.push(
+          ...(await visit(owner, '/vendor/sales', at('/vendor/sales (long name)'), LONGEST)),
+        );
         restoreOwnerMembership();
       }
       await ownerContext.close();

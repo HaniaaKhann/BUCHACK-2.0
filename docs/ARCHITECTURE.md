@@ -67,7 +67,7 @@ sequenceDiagram
   D-->>W: LISTEN
   W-->>V: SSE: the new order appears on the board
   K->>D: after 60 clock seconds: placed becomes accepted, a notification is stored
-  V->>W: PATCH accept, preparing, ready, picked-up
+  V->>W: PATCH accept, preparing, ready
   W->>D: status change and notification in one transaction
   D-->>W: LISTEN
   W-->>S: SSE: the order page and the bell refresh
@@ -75,7 +75,7 @@ sequenceDiagram
 
 - **Placing an order** is one database transaction under a per-user advisory lock. It checks the vendor is open, not paused, the items are in stock and any slot has room, creates the order and charges the wallet. If the balance is too low or the slot is full it rolls back (402 or 409). Two simultaneous orders cannot overspend the wallet.
 - **The wallet** is a mock behind a `PaymentProvider` interface. There is no balance column: the balance is the sum of `wallet_ledger` rows.
-- **Vendor taps** are one-way steps: Accept, Start preparing, Mark ready, Picked up. A repeated tap does nothing, and a tap from the wrong state returns 409.
+- **Vendor taps** are one-way steps: Accept, Start preparing, Mark ready. Ready is the last one. A repeated tap does nothing, and a tap from the wrong state returns 409. The student completes the order with I picked it up, or the worker does 30 demo minutes after `ready_at`.
 
 ## Shared clock
 
@@ -91,6 +91,7 @@ One loop ticks every real second and runs, in order:
 4. `slotFire`: accepted scheduled orders become preparing at `fire_at`.
 5. `leaveReminder`: a leave-now notification when the clock reaches the predicted ready time minus the walk.
 6. `busyExpiry`: a rush state ends 30 clock minutes after it was set.
+7. `autoComplete`: a real student's order still `ready` 30 clock minutes after `ready_at` becomes `completed` (the wait is `AUTO_COMPLETE_AFTER_MINUTES` in `packages/core/src/orderLifecycle.ts`). It does not set `picked_up_at` and it skips simulated students, whose orders the demo load finishes.
 
 Each job updates one order at a time, so a worker tick and a vendor tap cannot both create the same notification.
 

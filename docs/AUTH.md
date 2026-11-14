@@ -22,11 +22,11 @@ Roles: `student`, `vendor_staff`, `vendor_owner`, `admin`. Every guarded route c
 
 Responses: `401` with no valid session, `403` for the wrong role, the wrong vendor or a staff member on an owner-only action, and `400` for input that fails `zod` validation. `admin` has no implicit access to vendor routes, and vendors have no access to student or admin routes.
 
-| Area    | Gate                                                                                                                                            |
-| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| Student | `student` only: profile, classes, free gaps, vendors, menu, slots, wallet, orders, notifications, and the student stream.                       |
-| Vendor  | A member of that vendor. Adding or editing a dish and confirming tags need the owner. Stock, busy, pause and order steps are open to staff too. |
-| Admin   | `admin` only: the demo clock and the accuracy page. Clock changes also need `DEMO_MODE=true`.                                                   |
+| Area    | Gate                                                                                                                                                                                       |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Student | `student` only: profile, classes, free gaps, vendors, menu, slots, wallet, orders, notifications, and the student stream.                                                                  |
+| Vendor  | A member of that vendor. Adding or editing a dish and confirming tags need the owner. Stock, busy, pause and order steps are open to staff too. The sales page and its API are owner-only. |
+| Admin   | `admin` only: the demo clock and the accuracy page. Clock changes also need `DEMO_MODE=true`.                                                                                              |
 
 The full route list, with every gate, is in `API.md`.
 

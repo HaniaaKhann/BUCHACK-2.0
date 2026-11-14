@@ -8,12 +8,18 @@ export const PASSWORD = 'demo-password-1';
 export const ACCOUNTS = {
   student: 'student@demo.example',
   owner: 'owner@demo.example',
+  staff: 'staff@demo.example',
   admin: 'admin@demo.example',
 } as const;
 
 export type Role = keyof typeof ACCOUNTS;
 
-const LANDING: Record<Role, string> = { student: '/', owner: '/vendor', admin: '/admin' };
+const LANDING: Record<Role, string> = {
+  student: '/',
+  owner: '/vendor',
+  staff: '/vendor',
+  admin: '/admin',
+};
 
 export async function signIn(page: Page, role: Role): Promise<void> {
   await page.goto('/sign-in');
