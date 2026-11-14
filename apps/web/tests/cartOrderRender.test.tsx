@@ -75,7 +75,7 @@ describe('cart drawer HTML', () => {
     expect(html).toContain('aria-label="One more Milk Tea"');
     expect(html).toContain('aria-label="One less Vegetable Noodles"');
     expect(html).toContain('3 items');
-    expect(html).toContain('Pay HK$90 from wallet');
+    expect(html).toContain('Pay HK$90 from demo wallet');
     expect(html).toContain('Wallet balance (demo money)');
   });
 

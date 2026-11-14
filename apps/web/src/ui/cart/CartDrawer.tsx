@@ -213,7 +213,7 @@ export function CartDrawer({
 
             <ErrorNote message={error} />
             <Button type="button" disabled={!canPay} onClick={() => void pay()}>
-              {busy ? 'Paying…' : `Pay ${formatHkd(total)} from wallet`}
+              {busy ? 'Paying…' : `Pay ${formatHkd(total)} from demo wallet`}
             </Button>
             <button
               type="button"
