@@ -22,6 +22,10 @@ Then open http://localhost:3000.
 
 The database is not published on the host, so it never clashes with a local Postgres. To reach it from the host, pick a free port: `DB_HOST_PORT=55432 docker compose -f docker-compose.yml -f docker-compose.db-port.yml up`.
 
+`docker compose up` runs everything with `DEMO_MODE=true` (set for the setup, web and worker services in `docker-compose.yml`). Demo mode seeds the demo accounts and the simulated history, and it is the only mode where the admin can change the clock.
+
+Demo admin login: `admin@demo.example` with password `demo-password-1`. After signing in you land on `/admin`, which has the demo clock (speed, jump forward, set a time) and the accuracy page. Other demo accounts are listed in `docs/AUTH.md`. These are demo logins only, with no real credentials.
+
 To return a running demo to its starting state (fixed clock, no orders, seeded stock and tags), run `pnpm demo:reset` with `DEMO_MODE=true` and `DATABASE_URL` set.
 
 ## Local development
