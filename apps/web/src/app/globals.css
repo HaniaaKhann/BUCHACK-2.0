@@ -34,7 +34,7 @@ body {
 [data-logo] [data-logo-hero] {
   display: block;
   background-size: contain;
-  background-position: left center;
+  background-position: center;
 }
 
 [data-logo] [data-hero-name] {

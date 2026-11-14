@@ -23,10 +23,16 @@ describe('landing hero', () => {
     expect(html).toContain(APP_TAGLINE);
   });
 
-  it('has a hero logo slot of 128 pixels on a phone and 176 on a laptop, hidden from screen readers', () => {
+  it('shows the tagline in bold italic navy and has no blue line under it', () => {
+    expect(html).toMatch(/<p[^>]*text-xl font-bold italic text-navy[^>]*>/);
+    expect(html).not.toContain('bg-sky');
+  });
+
+  it('has a hero logo slot of 208 pixels on a phone, 256 on a tablet and 288 on a laptop, hidden from screen readers', () => {
     expect(html).toContain('data-logo-hero');
-    expect(html).toContain('h-32 w-32');
-    expect(html).toContain('lg:h-44 lg:w-44');
+    expect(html).toContain('h-52 w-52');
+    expect(html).toContain('sm:h-64 sm:w-64');
+    expect(html).toContain('lg:h-72 lg:w-72');
     expect(html).toMatch(
       /data-logo-hero[^>]*aria-hidden="true"|aria-hidden="true"[^>]*data-logo-hero/,
     );
