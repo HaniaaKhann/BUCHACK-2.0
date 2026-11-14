@@ -26,6 +26,7 @@ async function resetData(db: PrismaClient, startMs: number): Promise<void> {
   const accountIds = DEMO_ACCOUNTS.map((account) => account.id);
   await db.$transaction([
     db.order.deleteMany({}),
+    db.menuItem.deleteMany({ where: { isDemo: false } }),
     db.pickupSlot.deleteMany({}),
     db.busyEvent.deleteMany({}),
     db.engineSnapshot.deleteMany({}),

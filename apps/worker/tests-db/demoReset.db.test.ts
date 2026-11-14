@@ -68,6 +68,7 @@ let dirtyCounts = {
   profiles: 0,
   windows: 0,
   notifications: 0,
+  addedDishes: 0,
 };
 let pausedVendorId = '';
 let rushVendorId = '';
@@ -166,6 +167,18 @@ beforeAll(async () => {
   await db.freeWindow.create({
     data: { userId: student.id, weekday: 2, startMinute: 720, endMinute: 780 },
   });
+  await db.menuItem.create({
+    data: {
+      vendorId: rushVendorId,
+      name: 'Dish the owner added',
+      priceHkd: 15,
+      category: 'Drinks',
+      dietTags: [],
+      allergens: [],
+      prepPriorMin: 3,
+      isDemo: false,
+    },
+  });
   await db.notification.create({
     data: {
       userId: student.id,
@@ -188,6 +201,7 @@ beforeAll(async () => {
     profiles: await db.studentProfile.count({ where: { userId: student.id } }),
     windows: await db.freeWindow.count({ where: { userId: student.id } }),
     notifications: await db.notification.count({ where: { userId: student.id } }),
+    addedDishes: await db.menuItem.count({ where: { isDemo: false } }),
   };
 
   second = await runDemoReset(db);
@@ -211,6 +225,7 @@ describe('demo reset after every kind of change', () => {
       profiles: 1,
       windows: 1,
       notifications: 1,
+      addedDishes: 1,
     });
   });
 
@@ -241,6 +256,11 @@ describe('demo reset after every kind of change', () => {
   it('puts the student back to a fresh demo account that must onboard again', async () => {
     expect(await db.studentProfile.count({ where: { userId: student?.id ?? '' } })).toBe(0);
     expect(await db.freeWindow.count({ where: { userId: student?.id ?? '' } })).toBe(0);
+  });
+
+  it('removes dishes an owner added, and leaves the seeded dishes', async () => {
+    expect(await db.menuItem.count({ where: { isDemo: false } })).toBe(0);
+    expect(await db.menuItem.count({ where: { isDemo: true } })).toBeGreaterThan(0);
   });
 
   it('removes notifications left over from an earlier run', async () => {
