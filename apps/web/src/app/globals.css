@@ -21,8 +21,37 @@ header :focus-visible,
   outline-color: #e9f4c9;
 }
 
+[data-logo-hero] {
+  display: none;
+}
+
 [data-logo] [data-logo-slot] {
-  background: url('/logo.svg') center / contain no-repeat;
+  box-sizing: border-box;
+  border-radius: 0.75rem;
+  background-color: #e9f4c9;
+  background-image: url('/logo.svg');
+  background-repeat: no-repeat;
+  background-size: 165%;
+  background-position: center 25%;
+}
+
+[data-logo] [data-logo-hero] {
+  display: block;
+  padding: 8px;
+  border-radius: 1.25rem;
+  background-origin: content-box;
+  background-size: 154%;
+  background-position: center 46%;
+}
+
+[data-logo] [data-hero-name] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 ::selection {

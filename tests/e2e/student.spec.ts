@@ -209,7 +209,7 @@ for (const width of [1280, 390] as const) {
   });
 }
 
-test('outlet cards fall back to palette tiles and the header keeps an empty logo slot, without errors', async ({
+test('every outlet card shows a photo or a palette tile, and the header has a logo slot, without errors', async ({
   page,
   request,
 }) => {
@@ -221,8 +221,12 @@ test('outlet cards fall back to palette tiles and the header keeps an empty logo
   await prepareStudent(request);
   await signIn(page, 'student');
   await expect(page.locator('article[data-item]').first()).toBeVisible();
-  await expect(page.locator('[data-image-slot="tile"]').first()).toBeVisible();
-  await expect(page.locator('[data-image-slot="photo"]')).toHaveCount(0);
+  await expect(page.locator('[data-image-slot]').first()).toBeVisible();
+  const total = await page.locator('[data-image-slot]').count();
+  const photos = await page.locator('[data-image-slot="photo"]').count();
+  const tiles = await page.locator('[data-image-slot="tile"]').count();
+  expect(total).toBeGreaterThan(5);
+  expect(photos + tiles).toBe(total);
   await expect(page.locator('[data-logo-slot]').first()).toBeAttached();
   expect(problems).toEqual([]);
 });

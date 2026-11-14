@@ -143,11 +143,7 @@ export function AppHeader({
     <header className="bg-navy text-cream">
       <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
         <div className="flex min-w-0 items-center gap-3">
-          <span
-            data-logo-slot
-            aria-hidden="true"
-            className="block h-8 w-8 shrink-0 sm:h-9 sm:w-9"
-          />
+          <span data-logo-slot aria-hidden="true" className="block h-11 w-11 shrink-0" />
           {left}
         </div>
         {right ? <div className="flex flex-wrap items-center gap-2 sm:gap-3">{right}</div> : null}
