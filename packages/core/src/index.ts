@@ -18,6 +18,8 @@ export * from './leaveAt.js';
 export * from './slots.js';
 export * from './ranking.js';
 export * from './time.js';
+export * from './clockControl.js';
+export * from './engine/inAppAccuracy.js';
 export * from './openRanges.js';
 export * from './dietary.js';
 export * from './schedule.js';
