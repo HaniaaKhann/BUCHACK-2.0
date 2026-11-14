@@ -1,7 +1,6 @@
 import { DEMO_ACCOUNTS, PrismaClient } from '@app/db';
 import pg from 'pg';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { DELETE as deleteMeStub } from '../src/app/api/me/route';
 import { PATCH as cancelRoute } from '../src/app/api/orders/[id]/cancel/route';
 import { PATCH as pickUpRoute } from '../src/app/api/orders/[id]/pick-up/route';
 import { GET as getOrderRoute } from '../src/app/api/orders/[id]/route';
@@ -199,9 +198,6 @@ describe('student-only order routes', () => {
       }
       expect((await call.run(null)).status, `${call.name} anonymous`).toBe(401);
     }
-    expect((await deleteMeStub(request('/api/me', 'student', { method: 'DELETE' }))).status).toBe(
-      501,
-    );
   });
 });
 

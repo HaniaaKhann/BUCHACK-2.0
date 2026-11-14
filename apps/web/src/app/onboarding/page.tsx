@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { APP_NAME } from '@/brand';
 import { prisma } from '@/server/db';
 import { getPageActor } from '@/server/session';
+import { DeleteAccount } from '@/ui/account/DeleteAccount';
 import { OnboardingForm, type OnboardingInitial } from '@/ui/OnboardingForm';
 
 export const dynamic = 'force-dynamic';
@@ -35,12 +36,17 @@ export default async function OnboardingPage(): Promise<React.JSX.Element> {
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-6 sm:px-6 lg:py-10">
       <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Welcome to {APP_NAME}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          {profile === null ? `Welcome to ${APP_NAME}` : 'Your profile'}
+        </h1>
         <p className="text-sm text-neutral-700">
-          Only the building is needed. Everything else can be changed later.
+          {profile === null
+            ? 'Only the building is needed. Everything else can be changed later.'
+            : 'Change your settings, or delete your account at the bottom of this page.'}
         </p>
       </header>
       <OnboardingForm buildings={buildings} initial={initial} />
+      <DeleteAccount />
     </main>
   );
 }

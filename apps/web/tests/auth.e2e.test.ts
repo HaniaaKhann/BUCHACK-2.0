@@ -4,7 +4,7 @@ import { DEMO_ACCOUNTS, DEMO_PASSWORD, PrismaClient } from '@app/db';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { GET as adminPing } from '../src/app/api/admin/ping/route';
 import { POST as authPost } from '../src/app/api/auth/[...all]/route';
-import { DELETE as deleteMe, GET as getMe } from '../src/app/api/me/route';
+import { GET as getMe } from '../src/app/api/me/route';
 import { GET as vendorOrders } from '../src/app/api/vendor/[id]/orders/route';
 
 const BASE_URL = process.env['BETTER_AUTH_URL'] ?? 'http://localhost:3000';
@@ -111,14 +111,6 @@ describe('role-gated routes with real sessions', () => {
   it('GET /api/me is student only', async () => {
     const { byAccount, unauthenticated } = await statuses((k) => getMe(authed('/api/me', k)));
     expectStatuses(byAccount, ['student'], unauthenticated);
-  });
-
-  it('DELETE /api/me is student only', async () => {
-    const { byAccount, unauthenticated } = await statuses((k) =>
-      deleteMe(authed('/api/me', k, { method: 'DELETE' })),
-    );
-    for (const key of ALL) expect(byAccount.get(key), key).toBe(key === 'student' ? 501 : 403);
-    expect(unauthenticated).toBe(401);
   });
 
   it('GET /api/admin/ping is admin only', async () => {

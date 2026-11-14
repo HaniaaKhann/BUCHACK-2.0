@@ -3,6 +3,7 @@ import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { APIError } from 'better-auth/api';
 import { rateLimitOptions } from './authRateLimit';
+import { ACTIVE_ORDER_STATUSES } from './orderStatuses';
 import { prisma } from './db';
 
 function createAuth() {
@@ -30,6 +31,14 @@ function createAuth() {
         beforeDelete: async (user) => {
           if (isDemoEmail(user.email)) {
             throw new APIError('FORBIDDEN', { message: 'Demo accounts cannot be deleted' });
+          }
+          const active = await prisma.order.count({
+            where: { studentId: user.id, status: { in: [...ACTIVE_ORDER_STATUSES] } },
+          });
+          if (active > 0) {
+            throw new APIError('CONFLICT', {
+              message: 'Finish or cancel your active orders before deleting your account',
+            });
           }
         },
       },

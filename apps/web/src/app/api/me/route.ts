@@ -89,9 +89,3 @@ export async function PATCH(request: Request): Promise<Response> {
   });
   return Response.json({ onboardingComplete: true, profile });
 }
-
-export async function DELETE(request: Request): Promise<Response> {
-  const guard = await requireRole(request, ['student']);
-  if (!guard.ok) return guard.response;
-  return Response.json({ error: 'use POST /api/auth/delete-user' }, { status: 501 });
-}

@@ -4,7 +4,7 @@ import { GET as getBuildings } from '../src/app/api/buildings/route';
 import { DELETE as deleteWindow } from '../src/app/api/free-windows/[id]/route';
 import { GET as getWindows, PUT as putWindows } from '../src/app/api/free-windows/route';
 import { GET as getMenu } from '../src/app/api/menu-items/route';
-import { DELETE as deleteMe, GET as getMe, PATCH as patchMe } from '../src/app/api/me/route';
+import { GET as getMe, PATCH as patchMe } from '../src/app/api/me/route';
 import { GET as getVendors } from '../src/app/api/vendors/route';
 import {
   ALL_ACCOUNTS,
@@ -61,11 +61,6 @@ describe('student-only routes', () => {
         name: 'PATCH /api/me',
         run: (k) => patchMe(call('/api/me', k, jsonInit('PATCH', { eatMinutes: 15 }))),
         ok: 200,
-      },
-      {
-        name: 'DELETE /api/me',
-        run: (k) => deleteMe(call('/api/me', k, { method: 'DELETE' })),
-        ok: 501,
       },
       { name: 'GET /api/buildings', run: (k) => getBuildings(call('/api/buildings', k)), ok: 200 },
       {
