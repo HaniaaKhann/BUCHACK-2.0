@@ -65,7 +65,8 @@ export function Field({
   );
 }
 
-const inputClass = 'rounded-md border border-neutral-300 px-3 py-2 text-sm';
+const inputClass =
+  'w-full min-w-0 max-w-full rounded-md border border-neutral-300 px-3 py-2 text-sm';
 
 export function TextInput(props: InputHTMLAttributes<HTMLInputElement>): React.JSX.Element {
   return <input className={inputClass} {...props} />;
@@ -96,5 +97,34 @@ export function ErrorNote({ message }: { message: string | null }): React.JSX.El
     <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-800">
       {message}
     </p>
+  );
+}
+
+export function Switch({
+  checked,
+  onChange,
+  label,
+}: {
+  checked: boolean;
+  onChange: (next: boolean) => void;
+  label: string;
+}): React.JSX.Element {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
+      onClick={() => onChange(!checked)}
+      className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
+        checked ? 'bg-neutral-900' : 'bg-neutral-300'
+      }`}
+    >
+      <span
+        className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${
+          checked ? 'left-[22px]' : 'left-0.5'
+        }`}
+      />
+    </button>
   );
 }

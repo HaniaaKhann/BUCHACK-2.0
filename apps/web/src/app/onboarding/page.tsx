@@ -33,7 +33,7 @@ export default async function OnboardingPage(): Promise<React.JSX.Element> {
   };
 
   return (
-    <main className="mx-auto flex max-w-2xl flex-col gap-5 px-6 py-8">
+    <main className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-6 sm:px-6 lg:py-10">
       <header className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold tracking-tight">Welcome to {APP_NAME}</h1>
         <p className="text-sm text-neutral-700">

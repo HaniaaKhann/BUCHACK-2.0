@@ -163,7 +163,7 @@ export function OnboardingForm({
   }
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-5">
+    <form onSubmit={submit} className="grid gap-5 lg:grid-cols-2 lg:items-start">
       <Card title="Where are you now?">
         <Field label="Building" hint="Used for walk times. No GPS is ever used.">
           <Select value={buildingId} onChange={(event) => setBuildingId(event.target.value)}>
@@ -219,7 +219,7 @@ export function OnboardingForm({
             ))}
           </Select>
         </Field>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <ToggleChip
             selected={eatMinutes === EAT_AT_CANTEEN_MINUTES}
             onToggle={() => setEatMinutes(EAT_AT_CANTEEN_MINUTES)}
@@ -247,74 +247,80 @@ export function OnboardingForm({
         </Field>
       </Card>
 
-      <Card title="Timetable (optional)">
-        <p className="text-xs text-neutral-600">
-          Add your classes to see what fits before your next one. Only your free gaps and the
-          buildings around them are saved. Course names and class times are never stored.
-        </p>
-        {rows.map((row) => (
-          <div key={row.key} className="grid grid-cols-2 gap-2 sm:grid-cols-6">
-            <TextInput
-              aria-label="Course (not saved)"
-              placeholder="Course (not saved)"
-              value={row.course}
-              onChange={(event) => updateRow(row.key, { course: event.target.value })}
-            />
-            <Select
-              aria-label="Day"
-              value={row.weekday}
-              onChange={(event) => updateRow(row.key, { weekday: Number(event.target.value) })}
-            >
-              {WEEKDAYS.map((day) => (
-                <option key={day.value} value={day.value}>
-                  {day.label}
-                </option>
-              ))}
-            </Select>
-            <Select
-              aria-label="Building"
-              value={row.buildingId}
-              onChange={(event) => updateRow(row.key, { buildingId: event.target.value })}
-            >
-              <option value="">Building</option>
-              {buildings.map((building) => (
-                <option key={building.id} value={building.id}>
-                  {building.name}
-                </option>
-              ))}
-            </Select>
-            <TextInput
-              aria-label="Start"
-              type="time"
-              value={row.start}
-              onChange={(event) => updateRow(row.key, { start: event.target.value })}
-            />
-            <TextInput
-              aria-label="End"
-              type="time"
-              value={row.end}
-              onChange={(event) => updateRow(row.key, { end: event.target.value })}
-            />
-            <Button
-              tone="quiet"
-              type="button"
-              onClick={() => setRows((current) => current.filter((entry) => entry.key !== row.key))}
-            >
-              Remove
+      <div className="lg:col-span-2">
+        <Card title="Timetable (optional)">
+          <p className="text-xs text-neutral-600">
+            Add your classes to see what fits before your next one. Only your free gaps and the
+            buildings around them are saved. Course names and class times are never stored.
+          </p>
+          {rows.map((row) => (
+            <div key={row.key} className="grid grid-cols-2 gap-2 sm:grid-cols-6">
+              <TextInput
+                aria-label="Course (not saved)"
+                placeholder="Course (not saved)"
+                value={row.course}
+                onChange={(event) => updateRow(row.key, { course: event.target.value })}
+              />
+              <Select
+                aria-label="Day"
+                value={row.weekday}
+                onChange={(event) => updateRow(row.key, { weekday: Number(event.target.value) })}
+              >
+                {WEEKDAYS.map((day) => (
+                  <option key={day.value} value={day.value}>
+                    {day.label}
+                  </option>
+                ))}
+              </Select>
+              <Select
+                aria-label="Building"
+                value={row.buildingId}
+                onChange={(event) => updateRow(row.key, { buildingId: event.target.value })}
+              >
+                <option value="">Building</option>
+                {buildings.map((building) => (
+                  <option key={building.id} value={building.id}>
+                    {building.name}
+                  </option>
+                ))}
+              </Select>
+              <TextInput
+                aria-label="Start"
+                type="time"
+                value={row.start}
+                onChange={(event) => updateRow(row.key, { start: event.target.value })}
+              />
+              <TextInput
+                aria-label="End"
+                type="time"
+                value={row.end}
+                onChange={(event) => updateRow(row.key, { end: event.target.value })}
+              />
+              <Button
+                tone="quiet"
+                type="button"
+                onClick={() =>
+                  setRows((current) => current.filter((entry) => entry.key !== row.key))
+                }
+              >
+                Remove
+              </Button>
+            </div>
+          ))}
+          <div>
+            <Button tone="quiet" type="button" onClick={addRow}>
+              Add a class
             </Button>
           </div>
-        ))}
-        <div>
-          <Button tone="quiet" type="button" onClick={addRow}>
-            Add a class
-          </Button>
-        </div>
-      </Card>
+        </Card>
+      </div>
 
-      <ErrorNote message={error} />
-      <Button type="submit" disabled={busy}>
-        {busy ? 'Saving…' : 'Save and continue'}
-      </Button>
+      <div className="flex flex-col gap-3 lg:col-span-2">
+        <ErrorNote message={error} />
+        <Button type="submit" disabled={busy} className="lg:w-60 lg:self-end">
+          {busy ? 'Saving…' : 'Save and continue'}
+        </Button>
+      </div>
     </form>
   );
 }
