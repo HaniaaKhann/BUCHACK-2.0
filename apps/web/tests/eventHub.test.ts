@@ -86,4 +86,18 @@ describe('vendorFilter', () => {
     expect(filter({ kind: 'queue', vendorId: 'v1' })).toBe(true);
     expect(filter({ kind: 'queue', vendorId: 'v2' })).toBe(false);
   });
+
+  it('sends a notification event only to the student it is for, never to a vendor', () => {
+    const hub = createEventHub();
+    const mine = vi.fn();
+    const theirs = vi.fn();
+    const vendor = vi.fn();
+    hub.subscribe(studentFilter('a'), mine);
+    hub.subscribe(studentFilter('b'), theirs);
+    hub.subscribe(vendorFilter('v1'), vendor);
+    hub.publish({ kind: 'notification', userId: 'a' });
+    expect(mine).toHaveBeenCalledWith({ kind: 'notification', userId: 'a' });
+    expect(theirs).not.toHaveBeenCalled();
+    expect(vendor).not.toHaveBeenCalled();
+  });
 });

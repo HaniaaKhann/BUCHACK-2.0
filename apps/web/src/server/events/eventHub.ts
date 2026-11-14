@@ -42,9 +42,11 @@ export function studentFilter(studentId: string): EventFilter {
   return (event) =>
     event.kind === 'snapshot' ||
     event.kind === 'queue' ||
-    (event.kind === 'order' && event.studentId === studentId);
+    (event.kind === 'order' && event.studentId === studentId) ||
+    (event.kind === 'notification' && event.userId === studentId);
 }
 
 export function vendorFilter(vendorId: string): EventFilter {
-  return (event) => event.kind !== 'resync' && event.vendorId === vendorId;
+  return (event) =>
+    event.kind !== 'resync' && event.kind !== 'notification' && event.vendorId === vendorId;
 }

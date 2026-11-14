@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-const REFRESH_EVENTS = ['snapshot', 'queue', 'order', 'resync'] as const;
+const REFRESH_EVENTS = ['snapshot', 'queue', 'order', 'notification', 'resync'] as const;
 const DEBOUNCE_MS = 500;
 const FALLBACK_REFRESH_MS = 60_000;
 

@@ -1,3 +1,5 @@
+import { orderLink, orderStatusNotification } from '@app/core';
+import { SIM_EMAIL_DOMAIN, createNotification } from '@app/db';
 import { getClockNowMs } from './clock';
 import { prisma } from './db';
 import { notifyOrderChanged } from './notify';
@@ -66,9 +68,30 @@ export async function transitionVendorOrder(
           ? { pickedUpAt: now }
           : {};
 
-  const result = await prisma.order.updateMany({
-    where: { id: orderId, vendorId, status: transition.from },
-    data: { status: transition.to, ...stamp },
+  const result = await prisma.$transaction(async (tx) => {
+    const updated = await tx.order.updateMany({
+      where: { id: orderId, vendorId, status: transition.from },
+      data: { status: transition.to, ...stamp },
+    });
+    if (updated.count === 1 && transition.to !== 'placed') {
+      const target = await tx.order.findUniqueOrThrow({
+        where: { id: orderId },
+        select: {
+          studentId: true,
+          vendor: { select: { name: true } },
+          student: { select: { email: true } },
+        },
+      });
+      if (!target.student.email.endsWith(`@${SIM_EMAIL_DOMAIN}`)) {
+        await createNotification(tx, {
+          userId: target.studentId,
+          ...orderStatusNotification(transition.to, target.vendor.name),
+          link: orderLink(orderId),
+          at: now.getTime(),
+        });
+      }
+    }
+    return updated;
   });
 
   const order = await prisma.order.findFirst({

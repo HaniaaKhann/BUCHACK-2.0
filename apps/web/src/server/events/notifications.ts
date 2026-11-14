@@ -4,11 +4,13 @@ export const ORDER_CHANGED_CHANNEL = 'order_changed';
 export const SNAPSHOT_WRITTEN_CHANNEL = 'snapshot_written';
 export const VENDOR_CHANGED_CHANNEL = 'vendor_changed';
 export const CLOCK_UPDATED_CHANNEL = 'clock_updated';
+export const NOTIFICATION_CREATED_CHANNEL = 'notification_created';
 export const LISTEN_CHANNELS = [
   ORDER_CHANGED_CHANNEL,
   SNAPSHOT_WRITTEN_CHANNEL,
   VENDOR_CHANGED_CHANNEL,
   CLOCK_UPDATED_CHANNEL,
+  NOTIFICATION_CREATED_CHANNEL,
 ] as const;
 
 const orderStatus = z.enum(['placed', 'accepted', 'preparing', 'ready', 'picked_up', 'cancelled']);
@@ -26,6 +28,7 @@ const snapshotWrittenSchema = z.object({
 });
 
 const vendorChangedSchema = z.object({ vendorId: z.string().min(1) });
+const notificationCreatedSchema = z.object({ userId: z.string().min(1) });
 
 export type AppEvent =
   | {
@@ -38,6 +41,7 @@ export type AppEvent =
     }
   | { kind: 'snapshot'; vendorId: string; computedAt: string }
   | { kind: 'queue'; vendorId: string }
+  | { kind: 'notification'; userId: string }
   | { kind: 'resync' };
 
 function parseJson(payload: string | undefined): unknown {
@@ -67,6 +71,10 @@ export function parseNotification(
     const parsed = vendorChangedSchema.safeParse(json);
     return parsed.success ? { kind: 'queue', vendorId: parsed.data.vendorId } : null;
   }
+  if (channel === NOTIFICATION_CREATED_CHANNEL) {
+    const parsed = notificationCreatedSchema.safeParse(json);
+    return parsed.success ? { kind: 'notification', userId: parsed.data.userId } : null;
+  }
   if (channel === CLOCK_UPDATED_CHANNEL) return { kind: 'resync' };
   return null;
 }
@@ -90,6 +98,8 @@ export function toWire(event: AppEvent): { name: string; data: Record<string, un
       };
     case 'queue':
       return { name: 'queue', data: { vendorId: event.vendorId } };
+    case 'notification':
+      return { name: 'notification', data: {} };
     case 'resync':
       return { name: 'resync', data: {} };
   }

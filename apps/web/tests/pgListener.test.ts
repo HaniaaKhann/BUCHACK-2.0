@@ -107,6 +107,7 @@ describe('createPgListener', () => {
       'LISTEN snapshot_written',
       'LISTEN vendor_changed',
       'LISTEN clock_updated',
+      'LISTEN notification_created',
     ]);
     clients[0]?.emitNotification(
       'order_changed',
@@ -142,7 +143,7 @@ describe('createPgListener', () => {
     retries[0]?.run();
     await settle();
     expect(clients).toHaveLength(2);
-    expect(clients[1]?.queries).toHaveLength(4);
+    expect(clients[1]?.queries).toHaveLength(5);
     expect(events).toEqual([{ kind: 'resync' }]);
   });
 

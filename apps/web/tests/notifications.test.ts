@@ -51,6 +51,14 @@ describe('parseNotification', () => {
     expect(parseNotification('clock_updated', undefined, 5)).toEqual({ kind: 'resync' });
   });
 
+  it('turns notification_created into a notification event that carries only the user id', () => {
+    expect(parseNotification('notification_created', JSON.stringify({ userId: 'u1' }), 5)).toEqual({
+      kind: 'notification',
+      userId: 'u1',
+    });
+    expect(parseNotification('notification_created', JSON.stringify({}), 5)).toBeNull();
+  });
+
   it('ignores channels it does not know', () => {
     expect(parseNotification('something_else', JSON.stringify(order), 1)).toBeNull();
   });
