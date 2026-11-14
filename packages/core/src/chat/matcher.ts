@@ -1,10 +1,14 @@
-import type { ChatIntent, ChatMatch, ChatSlots } from './types.js';
+import { correctInput, dishesIn, mentionsOutlet } from './correct.js';
+import { normalizeInput } from './normalize.js';
+import type { ChatIntent, ChatMatch, ChatSlots, ChatSort } from './types.js';
 import {
   ALLERGEN_CUES,
   ALLERGEN_TERMS,
   BEFORE_CLASS_TERMS,
+  CHEAP_TERMS,
   CURRENCY_WORDS,
   DIET_TERMS,
+  FAST_TERMS,
   FOOD_TERMS,
   HALAL_FALLBACK_TERMS,
   HELP_TERMS,
@@ -14,7 +18,9 @@ import {
   OPEN_TERMS,
   ORDER_STATUS_TERMS,
   OTHER_ORDER_TERMS,
+  SMALLTALK_TERMS,
   SPICY_TERMS,
+  THANKS_TERMS,
   WAIT_TERMS,
   WALLET_TERMS,
 } from './vocab.js';
@@ -39,11 +45,24 @@ function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+const prepared = new Map<string, string>();
+
+function prepare(term: string): string {
+  let value = prepared.get(term);
+  if (value === undefined) {
+    value = normalizeInput(term);
+    prepared.set(term, value);
+  }
+  return value;
+}
+
 export function normalizeText(text: string): string {
   return text.normalize('NFKC').toLowerCase().trim();
 }
 
-function hasTerm(text: string, term: string): boolean {
+function hasTerm(text: string, rawTerm: string): boolean {
+  const term = prepare(rawTerm);
+  if (term === '') return false;
   if (!ASCII_ONLY.test(term)) return text.includes(term);
   return new RegExp(`(?<![a-z0-9])${escapeRegExp(term)}(?![a-z0-9])`).test(text);
 }
@@ -81,7 +100,7 @@ function extractPrice(text: string): number | null {
   return null;
 }
 
-function extractSlots(text: string): ChatSlots {
+function extractSlots(text: string, orderId: string | null): ChatSlots {
   const { minutes, rest } = extractMinutes(text);
   const diets = DIET_TERMS.filter((entry) => hasAny(text, entry.terms)).map((entry) => entry.id);
   const cue = hasAllergenCue(text);
@@ -99,13 +118,14 @@ function extractSlots(text: string): ChatSlots {
     spicy: hasAny(text, SPICY_TERMS),
     beforeClass: hasAny(text, BEFORE_CLASS_TERMS),
     halalFallback: hasAny(text, HALAL_FALLBACK_TERMS),
-    orderId: UUID.exec(text)?.[0] ?? null,
+    orderId,
   };
 }
 
-function hasFoodSignal(text: string, slots: ChatSlots): boolean {
+function hasFoodSignal(text: string, slots: ChatSlots, dishes: readonly string[]): boolean {
   return (
     hasAny(text, FOOD_TERMS) ||
+    dishes.length > 0 ||
     slots.maxPriceHkd !== null ||
     slots.diets.length > 0 ||
     slots.allergens.length > 0 ||
@@ -114,22 +134,52 @@ function hasFoodSignal(text: string, slots: ChatSlots): boolean {
   );
 }
 
-function chooseIntent(text: string, slots: ChatSlots): ChatIntent {
+function chooseSort(text: string): ChatSort | null {
+  if (hasAny(text, CHEAP_TERMS)) return 'lowest_price';
+  if (hasAny(text, FAST_TERMS)) return 'lowest_wait';
+  return null;
+}
+
+function chooseIntent(
+  text: string,
+  slots: ChatSlots,
+  dishes: readonly string[],
+  sort: ChatSort | null,
+  outlet: boolean,
+): ChatIntent {
   if (hasAny(text, OTHER_ORDER_TERMS)) return 'other_order';
   if (hasAny(text, HOW_TO_ORDER_TERMS)) return 'how_to_order';
   if (hasAny(text, WALLET_TERMS)) return 'wallet';
   if (hasAny(text, LEAVE_TERMS)) return 'leave_time';
   if (hasAny(text, ORDER_STATUS_TERMS) || slots.orderId !== null) return 'order_status';
-  const food = hasFoodSignal(text, slots);
-  if (hasAny(text, WAIT_TERMS) && !food) return 'wait_at_vendor';
+  const food = hasFoodSignal(text, slots, dishes) || sort !== null;
+  if (hasAny(text, WAIT_TERMS) && (!food || outlet)) return 'wait_at_vendor';
   if (hasAny(text, OPEN_TERMS) && !food) return 'open_now';
   if (food || slots.maxWaitMinutes !== null) return 'find_food';
+  if (hasAny(text, THANKS_TERMS)) return 'thanks';
+  if (hasAny(text, SMALLTALK_TERMS)) return 'smalltalk';
   if (hasAny(text, HELP_TERMS)) return 'help';
   return 'unknown';
 }
 
 export function matchIntent(input: string): ChatMatch {
-  const text = normalizeText(input);
-  const slots = extractSlots(text);
-  return { intent: chooseIntent(text, slots), slots, text };
+  const orderId = UUID.exec(input.toLowerCase())?.[0] ?? null;
+  const corrected = correctInput(input);
+  const text = corrected.text !== '' ? corrected.text : normalizeText(input);
+  const slots = extractSlots(text, orderId);
+  const dishes = dishesIn(text);
+  const sort = chooseSort(text);
+  const intent =
+    corrected.clarify === null
+      ? chooseIntent(text, slots, dishes, sort, mentionsOutlet(text))
+      : 'find_food';
+  return {
+    intent,
+    slots,
+    text,
+    corrections: corrected.corrections,
+    clarify: corrected.clarify,
+    dishes,
+    sort,
+  };
 }

@@ -1,4 +1,6 @@
 import { formatHktTime } from '../time.js';
+import type { ChatClarify, ChatCorrection } from './correct.js';
+import { DISH_MATCH_TERMS } from './lexicon.js';
 import { NOT_VERIFIED_TEXT } from '../whyChips.js';
 import { normalizeText } from './matcher.js';
 import type {
@@ -401,16 +403,27 @@ function label(
   return t(language, entry[0], entry[1], entry[2]);
 }
 
+function withDishes(foods: ChatFoods, dishes: readonly string[]): ChatFoods {
+  if (dishes.length === 0) return foods;
+  const terms = dishes.flatMap((dish) => DISH_MATCH_TERMS[dish] ?? []);
+  return {
+    ...foods,
+    items: foods.items.filter((item) =>
+      terms.some((term) => item.name.toLowerCase().includes(term)),
+    ),
+  };
+}
+
 function foodReply(language: ChatLanguage, match: ChatMatch, data: ChatData): ChatReply {
-  const foods = data.foods;
-  if (foods === undefined) return dataErrorReply(language);
+  if (data.foods === undefined) return dataErrorReply(language);
+  const foods = withDishes(data.foods, match.dishes);
   const { slots } = match;
   const notes: ChatNote[] = [];
   const lines: string[] = [];
 
   const halalAsked = slots.diets.includes('halal');
   const halalUnconfirmed =
-    halalAsked && foods.items.length === 0 && foods.emptyState === HALAL_EMPTY_STATE;
+    halalAsked && data.foods.items.length === 0 && data.foods.emptyState === HALAL_EMPTY_STATE;
 
   const applied: string[] = [];
   if (slots.maxWaitMinutes !== null) {
@@ -435,6 +448,13 @@ function foodReply(language: ChatLanguage, match: ChatMatch, data: ChatData): Ch
   }
   if (slots.beforeClass) {
     applied.push(t(language, 'ready before your next class', '趕得及下一節課', '赶得及下一节课'));
+  }
+  for (const dish of match.dishes) applied.push(dish);
+  if (match.sort === 'lowest_price') {
+    applied.push(t(language, 'cheapest first', '最便宜優先', '最便宜优先'));
+  }
+  if (match.sort === 'lowest_wait') {
+    applied.push(t(language, 'shortest wait first', '等候最短優先', '等候最短优先'));
   }
   for (const diet of slots.diets) {
     if (diet === 'halal' && (halalUnconfirmed || slots.halalFallback)) continue;
@@ -514,7 +534,7 @@ function foodReply(language: ChatLanguage, match: ChatMatch, data: ChatData): Ch
     );
     const fallback = data.foodsWithoutDiet;
     if (fallback === undefined) return dataErrorReply(language);
-    const items = toItems(language, fallback);
+    const items = toItems(language, withDishes(fallback, match.dishes));
     if (items.length === 0) {
       notes.push('no_results');
       lines.push(
@@ -540,7 +560,7 @@ function foodReply(language: ChatLanguage, match: ChatMatch, data: ChatData): Ch
 
   const source =
     slots.halalFallback && halalAsked && data.foodsWithoutDiet !== undefined
-      ? data.foodsWithoutDiet
+      ? withDishes(data.foodsWithoutDiet, match.dishes)
       : foods;
   const items = toItems(language, source);
   if (items.length === 0) {
@@ -747,22 +767,125 @@ function helpReply(language: ChatLanguage): ChatReply {
   });
 }
 
+const FALLBACK_EXAMPLES = 4;
+
 function unknownReply(language: ChatLanguage): ChatReply {
-  return reply('unknown', language, {
+  return {
+    intent: 'unknown',
     lines: [
       t(
         language,
-        'I did not understand that. I can help with these:',
-        '我不太明白這個問題。我可以協助以下這些：',
-        '我不太明白这个问题。我可以协助以下这些：',
+        'I could not match that to anything I can answer. I only answer from this app: open outlets, waits, food that fits your time, your orders and your wallet. Tap one of these questions, or ask in your own words:',
+        '我無法把這個問題對應到我能回答的內容。我只根據本應用的資料回答：營業中的檔口、等候時間、符合你時間的食物、你的訂單和錢包。請點選下面的問題，或用自己的話再問一次：',
+        '我无法把这个问题对应到我能回答的内容。我只根据本应用的数据回答：营业中的档口、等候时间、符合你时间的食物、你的订单和钱包。请点选下面的问题，或用自己的话再问一次：',
       ),
     ],
-    all: true,
+    items: [],
+    notes: [],
+    suggestions: defaultSuggestions(language).slice(0, FALLBACK_EXAMPLES),
+  };
+}
+
+function thanksReply(language: ChatLanguage): ChatReply {
+  return reply('thanks', language, {
+    lines: [
+      t(
+        language,
+        'You are welcome! Ask me anything else about the outlets, your food or your order.',
+        '不客氣！關於檔口、食物或你的訂單，還有什麼想問的嗎？',
+        '不客气！关于档口、食物或你的订单，还有什么想问的吗？',
+      ),
+    ],
   });
+}
+
+function smalltalkReply(language: ChatLanguage, text: string): ChatReply {
+  const leaving = /\b(bye|goodbye|see you|good night)\b|再見|拜拜|再见/.test(text);
+  return reply('smalltalk', language, {
+    lines: [
+      leaving
+        ? t(
+            language,
+            'Bye! Come back when you are hungry.',
+            '再見！餓了再來找我。',
+            '再见！饿了再来找我。',
+          )
+        : t(
+            language,
+            'I am the UniBowl assistant. I follow simple rules and answer only from this app, so I am not a person and I do not chat freely. I can help with these:',
+            '我是 UniBowl 小助手。我按簡單規則運作，只根據本應用的資料回答，不是真人，也不會閒聊。我可以協助：',
+            '我是 UniBowl 小助手。我按简单规则运作，只根据本应用的数据回答，不是真人，也不会闲聊。我可以协助：',
+          ),
+    ],
+    all: !leaving,
+  });
+}
+
+const CLARIFY_DIET_KEYS: Readonly<Record<string, string>> = { pork: 'no_pork', beef: 'no_beef' };
+
+const CLARIFY_DIET_QUERIES: Readonly<Record<string, string>> = {
+  halal: 'halal food',
+  vegan: 'vegan food',
+  vegetarian: 'vegetarian food',
+  pork: 'food with no pork',
+  beef: 'food with no beef',
+};
+
+function clarifyReply(language: ChatLanguage, clarify: ChatClarify): ChatReply {
+  const allergen = clarify.kind === 'allergen';
+  const lines = [
+    allergen
+      ? t(
+          language,
+          'Which allergen do you mean? I will not guess, because an allergen filter has to be right. Tap one:',
+          '你指的是哪一種過敏原？我不會猜測，因為過敏原篩選必須準確。請點選：',
+          '你指的是哪一种过敏原？我不会猜测，因为过敏原筛选必须准确。请点选：',
+        )
+      : t(
+          language,
+          'Which diet do you mean? I will not guess. Tap one:',
+          '你指的是哪一種飲食？我不會猜測。請點選：',
+          '你指的是哪一种饮食？我不会猜测。请点选：',
+        ),
+  ];
+  const suggestions: ChatSuggestion[] = clarify.options.map((id) =>
+    allergen
+      ? {
+          label: label(language, ALLERGEN_NAMES, id),
+          query: `food without ${ALLERGEN_NAMES[id]?.[0] ?? id}`,
+        }
+      : {
+          label: label(language, DIET_NAMES, CLARIFY_DIET_KEYS[id] ?? id),
+          query: CLARIFY_DIET_QUERIES[id] ?? `${id} food`,
+        },
+  );
+  return { intent: 'find_food', lines, items: [], notes: [], suggestions };
+}
+
+const SAFETY_KINDS: ReadonlySet<string> = new Set(['diet', 'allergen']);
+
+function correctionLines(language: ChatLanguage, corrections: readonly ChatCorrection[]): string[] {
+  if (corrections.length === 0) return [];
+  const words = [...new Set(corrections.map((item) => item.to))].join(', ');
+  const lines = [
+    t(language, `I read this as ${words}.`, `我把它理解為 ${words}。`, `我把它理解为 ${words}。`),
+  ];
+  if (corrections.some((item) => SAFETY_KINDS.has(item.kind))) {
+    lines.push(
+      t(
+        language,
+        'I matched that word loosely, so I am not saying any dish is safe for it. Check the dish tags before you order.',
+        '我是按相近字詞推斷的，所以我不會說任何菜式對此安全。下單前請先查看菜式標籤。',
+        '我是按相近字词推断的，所以我不会说任何菜式对此安全。下单前请先查看菜式标签。',
+      ),
+    );
+  }
+  return lines;
 }
 
 export function requestsFor(match: ChatMatch): ChatRequest[] {
   const { slots } = match;
+  if (match.clarify !== null) return [];
   switch (match.intent) {
     case 'open_now':
     case 'wait_at_vendor':
@@ -772,6 +895,7 @@ export function requestsFor(match: ChatMatch): ChatRequest[] {
       if (slots.maxWaitMinutes !== null) params.set('maxWait', String(slots.maxWaitMinutes));
       if (slots.maxPriceHkd !== null) params.set('maxPrice', String(slots.maxPriceHkd));
       if (slots.beforeClass) params.set('fits', '1');
+      if (match.sort !== null) params.set('sort', match.sort);
       if (slots.allergens.length > 0) params.set('allergens', slots.allergens.join(','));
       const withoutHalal = new URLSearchParams(params);
       const others = slots.diets.filter((diet) => diet !== 'halal');
@@ -798,12 +922,14 @@ export function requestsFor(match: ChatMatch): ChatRequest[] {
     case 'how_to_order':
     case 'other_order':
     case 'help':
+    case 'thanks':
+    case 'smalltalk':
     case 'unknown':
       return [];
   }
 }
 
-export function buildReply(match: ChatMatch, data: ChatData, language: ChatLanguage): ChatReply {
+function coreReply(match: ChatMatch, data: ChatData, language: ChatLanguage): ChatReply {
   switch (match.intent) {
     case 'open_now':
       return openNowReply(language, data);
@@ -823,7 +949,18 @@ export function buildReply(match: ChatMatch, data: ChatData, language: ChatLangu
       return refusalReply(language);
     case 'help':
       return helpReply(language);
+    case 'thanks':
+      return thanksReply(language);
+    case 'smalltalk':
+      return smalltalkReply(language, match.text);
     case 'unknown':
       return unknownReply(language);
   }
+}
+
+export function buildReply(match: ChatMatch, data: ChatData, language: ChatLanguage): ChatReply {
+  if (match.clarify !== null) return clarifyReply(language, match.clarify);
+  const core = coreReply(match, data, language);
+  const lead = correctionLines(language, match.corrections);
+  return lead.length === 0 ? core : { ...core, lines: [...lead, ...core.lines] };
 }

@@ -1,3 +1,5 @@
+import type { ChatClarify, ChatCorrection } from './correct.js';
+
 export type ChatLanguage = 'en' | 'zh_HK' | 'zh_CN';
 
 export const CHAT_LANGUAGES: readonly ChatLanguage[] = ['en', 'zh_HK', 'zh_CN'];
@@ -12,6 +14,8 @@ export const CHAT_INTENTS = [
   'how_to_order',
   'other_order',
   'help',
+  'thanks',
+  'smalltalk',
   'unknown',
 ] as const;
 
@@ -28,10 +32,16 @@ export interface ChatSlots {
   orderId: string | null;
 }
 
+export type ChatSort = 'lowest_price' | 'lowest_wait';
+
 export interface ChatMatch {
   intent: ChatIntent;
   slots: ChatSlots;
   text: string;
+  corrections: ChatCorrection[];
+  clarify: ChatClarify | null;
+  dishes: string[];
+  sort: ChatSort | null;
 }
 
 export type ChatNote =
@@ -90,14 +100,7 @@ export interface ChatFoods {
 
 export interface ChatOrder {
   id: string;
-  status:
-    | 'placed'
-    | 'accepted'
-    | 'preparing'
-    | 'ready'
-    | 'completed'
-    | 'picked_up'
-    | 'cancelled';
+  status: 'placed' | 'accepted' | 'preparing' | 'ready' | 'completed' | 'picked_up' | 'cancelled';
   vendorName: string;
   placedAt: number;
   predicted: { low: number; point: number; high: number };
