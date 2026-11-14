@@ -6,6 +6,7 @@ import { autoAccept } from './jobs/autoAccept.js';
 import { busyExpiry } from './jobs/busyExpiry.js';
 import { demoLoad, newDemoLoadState, type DemoLoadState } from './jobs/demoLoad.js';
 import { runEngineSnapshots } from './jobs/engineSnapshot.js';
+import { leaveReminder } from './jobs/leaveReminder.js';
 import { slotFire } from './jobs/slotFire.js';
 
 export interface TickState {
@@ -44,5 +45,6 @@ export async function runTick(
   }
   await autoAccept(db, nowMs);
   await slotFire(db, nowMs);
+  await leaveReminder(db, nowMs);
   await busyExpiry(db, nowMs);
 }
