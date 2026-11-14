@@ -1,5 +1,12 @@
 import { expect, test, type Page } from '@playwright/test';
-import { BASE_URL, longestOutletName, prepareStudent, signIn, startClock } from './helpers';
+import {
+  BASE_URL,
+  longestOutletName,
+  prepareStudent,
+  signIn,
+  signInApi,
+  startClock,
+} from './helpers';
 import { sql } from './stack';
 
 const WIDTHS = [1280, 768, 390] as const;
@@ -100,6 +107,21 @@ test.describe('no horizontal overflow, with the longest outlet name', () => {
     expect(placed.status()).toBe(201);
     orderId = ((await placed.json()) as { order: { id: string } }).order.id;
     await request.dispose();
+
+    if (SWAP_VENDOR) {
+      swapOwnerToLongestVendor();
+      const ownerRequest = await playwright.request.newContext({ baseURL: BASE_URL });
+      await signInApi(ownerRequest, 'owner');
+      for (const action of ['accept', 'preparing', 'ready']) {
+        const moved = await ownerRequest.patch(
+          `/api/vendor/${vendor.id}/orders/${orderId}/${action}`,
+          { headers: { origin: BASE_URL } },
+        );
+        expect(moved.status()).toBe(200);
+      }
+      await ownerRequest.dispose();
+      restoreOwnerMembership();
+    }
   });
 
   test.afterAll(() => {
@@ -124,7 +146,18 @@ test.describe('no horizontal overflow, with the longest outlet name', () => {
       await signIn(student, 'student');
       problems.push(...(await visit(student, '/', at('/'), LONGEST)));
       problems.push(...(await visit(student, '/onboarding', at('/onboarding'))));
+      await student.goto('/', { waitUntil: 'networkidle' });
+      await expect(student.locator('[data-bell]')).toBeVisible();
+      await student.locator('[data-bell]').click();
+      await expect(student.locator('[data-bell-panel]')).toBeVisible();
+      if (SWAP_VENDOR) {
+        await expect(student.locator('[data-bell-panel]')).toContainText(LONGEST);
+      }
+      problems.push(...(await findViolations(student, at('/ with the bell open'))));
       problems.push(...(await visit(student, '/orders', at('/orders'), LONGEST)));
+      await student.locator('[data-bell]').click();
+      await expect(student.locator('[data-bell-panel]')).toBeVisible();
+      problems.push(...(await findViolations(student, at('/orders with the bell open'))));
       problems.push(...(await visit(student, `/orders/${orderId}`, at('/orders/[id]'), LONGEST)));
 
       await student.goto('/', { waitUntil: 'networkidle' });

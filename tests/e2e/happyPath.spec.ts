@@ -71,7 +71,30 @@ test('a student filters, orders, and the vendor takes the order from Accepted to
     await expect(orderStatus).toHaveAttribute('data-order-status', step.status, {
       timeout: 20_000,
     });
+    if (step.action === 'accept') {
+      await expect(page.locator('[data-bell-count]')).toHaveText('2', { timeout: 20_000 });
+      await expect(page.locator('[data-bell]')).toHaveAttribute(
+        'aria-label',
+        'Notifications, 2 unread',
+      );
+    }
   }
   await expect(page.locator('[data-step="picked_up"][data-done="true"]')).toBeVisible();
+
+  const bellCount = page.locator('[data-bell-count]');
+  await expect(bellCount).toHaveText('5');
+  await page.locator('[data-bell]').click();
+  for (const kind of [
+    'order_accepted',
+    'leave_now',
+    'order_preparing',
+    'order_ready',
+    'order_picked_up',
+  ]) {
+    await expect(page.locator(`[data-notification="${kind}"]`)).toHaveCount(1);
+  }
+  await expect(page.locator('[data-notification="order_ready"]')).toContainText('Order ready');
+  await page.locator('[data-bell-mark-all]').click();
+  await expect(bellCount).toHaveCount(0);
   await ownerContext.close();
 });
