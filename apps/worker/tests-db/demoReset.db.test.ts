@@ -1,5 +1,6 @@
 import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { clockNowMs, nextClockAnchor } from '@app/core';
 import { DEMO_ACCOUNTS, DEMO_CLOCK_START, PrismaClient } from '@app/db';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { runDemoReset, type DemoResetResult } from '../src/demoReset.js';
@@ -208,5 +209,25 @@ describe('demo reset after every kind of change', () => {
     expect(second.lines).toEqual(first.lines);
     expect(second.lines.length).toBeGreaterThan(0);
     if (expectedFingerprint !== undefined) expect(second.fingerprint).toBe(expectedFingerprint);
+  });
+  it('puts the clock and the waits back after the admin has jumped the clock and set a speed', async () => {
+    const before = await db.systemClock.findUniqueOrThrow({ where: { id: 1 } });
+    const now = Date.now();
+    const jumped = nextClockAnchor(before, now, { kind: 'jump', minutes: 1440 });
+    await db.systemClock.update({
+      where: { id: 1 },
+      data: {
+        currentTime: new Date(jumped.currentTimeMs),
+        speed: 60,
+        updatedAt: new Date(now),
+      },
+    });
+    const moved = await db.systemClock.findUniqueOrThrow({ where: { id: 1 } });
+    expect(clockNowMs(moved, now)).toBe(Date.parse(DEMO_CLOCK_START) + 86_400_000);
+
+    const third = await runDemoReset(db);
+    const clock = await db.systemClock.findUniqueOrThrow({ where: { id: 1 } });
+    expect([clock.speed, clock.currentTime.getTime()]).toEqual([0, Date.parse(DEMO_CLOCK_START)]);
+    expect(third.fingerprint).toBe(second.fingerprint);
   });
 });
