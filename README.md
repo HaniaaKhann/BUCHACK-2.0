@@ -47,6 +47,10 @@ We have not run a student survey yet, so no student numbers are claimed.
 - An accuracy page with the backtest results below.
 - `pnpm demo:reset` and `pnpm demo:reset:ready` return the demo to a known starting state.
 
+**Design**
+
+- One five-colour theme in a single file, with every text colour pair tested for WCAG AA contrast, and animation that switches off for people who ask their device for reduced motion. Details are in [`docs/THEME.md`](docs/THEME.md).
+
 ## How it differs
 
 |                                                         | Grubhub                                             | Transact                                                                                                               | Plain campus ordering (example: HKBU's QR pre-order) | UniBowl                                                    |
@@ -193,7 +197,7 @@ The app stores a student's building choice, diet and allergen filters, goal, cha
 
 ## Documentation
 
-[`ARCHITECTURE`](docs/ARCHITECTURE.md), [`WAIT_TIME_ENGINE`](docs/WAIT_TIME_ENGINE.md), [`PRIVACY`](docs/PRIVACY.md), [`API`](docs/API.md), [`AUTH`](docs/AUTH.md), [`DATA`](docs/DATA.md), [`VENDOR_ONBOARDING`](docs/VENDOR_ONBOARDING.md).
+[`ARCHITECTURE`](docs/ARCHITECTURE.md), [`WAIT_TIME_ENGINE`](docs/WAIT_TIME_ENGINE.md), [`PRIVACY`](docs/PRIVACY.md), [`API`](docs/API.md), [`AUTH`](docs/AUTH.md), [`DATA`](docs/DATA.md), [`VENDOR_ONBOARDING`](docs/VENDOR_ONBOARDING.md), [`THEME`](docs/THEME.md).
 
 ## Theme
 
