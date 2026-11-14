@@ -8,6 +8,7 @@ import type { MenuItemView } from '@/server/menuView';
 import type { ChatLanguage } from '@app/core';
 import { CartDrawer } from '../cart/CartDrawer';
 import { ChatPanel } from '../chat/ChatPanel';
+import { NotificationBell } from '../notifications/NotificationBell';
 import { useCart } from '../cart/CartProvider';
 import { cartCount, conflictsWithCart } from '../cart/cartReducer';
 import { SignOutButton } from '../SignOutButton';
@@ -114,6 +115,7 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
             <Link href="/orders" className="text-sm font-medium underline">
               Orders
             </Link>
+            <NotificationBell />
             <button
               type="button"
               data-cart-button

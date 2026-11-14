@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { listOrders, walletView } from '@/server/orderService';
 import { getPageActor } from '@/server/session';
+import { NotificationBell } from '@/ui/notifications/NotificationBell';
 import { STATUS_LABELS, formatHkd } from '@/ui/orders/orderViewModel';
 
 export const dynamic = 'force-dynamic';
@@ -21,12 +22,15 @@ export default async function OrdersPage(): Promise<React.JSX.Element> {
           <Link href="/" className="text-sm font-medium underline">
             Back to food
           </Link>
-          <p className="text-sm">
-            Wallet (demo money){' '}
-            <span className="font-semibold" data-wallet-balance>
-              {formatHkd(wallet.balanceHkd)}
-            </span>
-          </p>
+          <div className="flex items-center gap-3">
+            <p className="text-sm">
+              Wallet (demo money){' '}
+              <span className="font-semibold" data-wallet-balance>
+                {formatHkd(wallet.balanceHkd)}
+              </span>
+            </p>
+            <NotificationBell />
+          </div>
         </div>
       </header>
 

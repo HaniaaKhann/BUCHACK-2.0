@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { OrderView } from '@/server/orderViews';
 import { useLiveRefresh } from '../dashboard/useLiveRefresh';
+import { NotificationBell } from '../notifications/NotificationBell';
 import { Button, Card, ErrorNote } from '../primitives';
 import {
   STATUS_LABELS,
@@ -69,9 +70,12 @@ export function OrderTracker({ initial }: { initial: OrderView }): React.JSX.Ele
           <Link href="/" className="text-sm font-medium underline">
             Back to food
           </Link>
-          <Link href="/orders" className="text-sm font-medium underline">
-            My orders
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link href="/orders" className="text-sm font-medium underline">
+              My orders
+            </Link>
+            <NotificationBell />
+          </div>
         </div>
       </header>
 
