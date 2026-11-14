@@ -39,7 +39,7 @@ White and cream small text is never placed on `sky` (2.43 and 2.12), and `sky` i
 
 The photos and the logo are our own, taken on campus. Nothing is downloaded, and no caterer's brand, logo or photo is reused.
 
-- **Logo:** put `apps/web/public/logo.svg` in place. Every header has a fixed-size slot that shows it when the file exists and stays empty when it does not.
+- **Logo:** put `apps/web/public/logo.svg` in place. Every header has a 44 pixel slot that shows it on a cream rounded plate, cropped to the emblem, next to the "UniBowl" text. The landing hero shows it on a cream plate of 96 pixels on phones and 112 pixels on laptops, with the wordmark that is part of the logo, and the "UniBowl" heading (from `brand.ts`) stays in the page for screen readers only. When the file does not exist the slots stay empty, and the hero shows the large "UniBowl" text as before. The logo file itself is never changed: the crop is done in CSS.
 - **Outlet photos:** put one JPEG per outlet in `apps/web/public/outlets/`, named from the outlet name in lower case with every run of other characters turned into one hyphen. Any outlet without a file keeps a navy, raspberry, brown or blue tile with the outlet's initial. The card shows the photo as a banner across its top, 16 by 9, and reserves that space either way, so adding a photo moves nothing. The photo's alt text is the outlet name. A 1280 by 720 JPEG is a good size.
 - **Rebuild:** the files are read when the page is served, so with Docker rebuild the web image after adding them.
 
