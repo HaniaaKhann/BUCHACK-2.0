@@ -17,7 +17,7 @@ Students have short breaks between classes. They do not know which canteen has f
 
 These are reports from other campuses, not measurements of HKBU.
 
-**Our own HKBU survey:** `[SURVEY_RESULTS]` (placeholder: no survey has been run, and this project does not quote any survey figure).
+We have not run a student survey yet, so no student numbers are claimed.
 
 ## Demo
 
@@ -197,7 +197,7 @@ The app stores a student's building choice, diet and allergen filters, goal, cha
 
 ## Theme
 
-`[THEME]` (placeholder: one honest sentence linking the product to the hackathon theme goes here).
+Theme: data driven apps. UniBowl combines canteen ticket counts, order timestamps and students' free class windows to predict a ready time range, and it corrects itself from real order outcomes (shown on simulated data for now).
 
 ## Roadmap
 
@@ -207,12 +207,12 @@ Not built, so not part of the features above:
 - Timetable integration with HKBU's own systems, and anonymous people counting with no faces stored.
 - Real payments instead of the demo wallet, and more campuses.
 - Vendor sign-up and adding staff in the app, deleting a dish, setting pickup-slot capacity, importing stopwatch samples, and a data export.
-- Real measurements of ready times, to replace the simulated history.
+- Real measurements of ready times, to replace the simulated history. The first step is a real canteen stopwatch sample at an HKBU outlet, which would also give the first honest accuracy figures.
 
 ## Team
 
-`[TEAM_SIZE_AND_SKILLS]` (placeholder)
+Team ByteNBite. `[TEAM_SIZE_AND_SKILLS]` (placeholder)
 
 ## License
 
-`[LICENSE]` (placeholder: not chosen yet)
+MIT. See [`LICENSE`](LICENSE).

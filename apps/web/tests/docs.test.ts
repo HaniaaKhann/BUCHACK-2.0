@@ -86,15 +86,30 @@ describe('README claims', () => {
   });
 
   it('marks every unfinished item as a placeholder', () => {
-    for (const marker of [
-      '[DEMO_VIDEO_LINK]',
-      '[SURVEY_RESULTS]',
-      '[DEMO_GIF]',
-      '[THEME]',
-      '[TEAM_SIZE_AND_SKILLS]',
-      '[LICENSE]',
-    ]) {
+    for (const marker of ['[DEMO_VIDEO_LINK]', '[DEMO_GIF]', '[TEAM_SIZE_AND_SKILLS]']) {
       expect(readme, marker).toContain(`\`${marker}\` (placeholder`);
+    }
+    for (const marker of ['[SURVEY_RESULTS]', '[THEME]', '[LICENSE]']) {
+      expect(readme, marker).not.toContain(marker);
+    }
+  });
+
+  it('states the theme, the survey position and the licence', () => {
+    expect(readme).toContain('Theme: data driven apps. UniBowl combines');
+    expect(readme).toContain(
+      'We have not run a student survey yet, so no student numbers are claimed.',
+    );
+    expect(readme).toContain('stopwatch sample');
+    expect(readme).toContain('Team ByteNBite.');
+    expect(readme).toContain('MIT. See [`LICENSE`](LICENSE).');
+    expect(read('LICENSE')).toContain('MIT License');
+    expect(read('LICENSE')).toContain('Copyright (c) 2026 ByteNBite');
+  });
+
+  it('uses the product name UniBowl and the old name nowhere', () => {
+    expect(readme.startsWith('# UniBowl\n')).toBe(true);
+    for (const file of [...allDocs, 'CONTRIBUTING.md', join('apps', 'web', 'src', 'brand.ts')]) {
+      expect(read(file), file).not.toMatch(/readyby/i);
     }
   });
 
