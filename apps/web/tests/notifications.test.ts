@@ -46,8 +46,13 @@ describe('parseNotification', () => {
     expect(parseNotification('vendor_changed', JSON.stringify({}), 5)).toBeNull();
   });
 
+  it('turns clock_updated into a resync so every screen refreshes', () => {
+    expect(parseNotification('clock_updated', '{}', 5)).toEqual({ kind: 'resync' });
+    expect(parseNotification('clock_updated', undefined, 5)).toEqual({ kind: 'resync' });
+  });
+
   it('ignores channels it does not know', () => {
-    expect(parseNotification('clock_updated', JSON.stringify(order), 1)).toBeNull();
+    expect(parseNotification('something_else', JSON.stringify(order), 1)).toBeNull();
   });
 });
 

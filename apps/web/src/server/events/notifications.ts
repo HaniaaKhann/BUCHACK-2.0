@@ -3,10 +3,12 @@ import { z } from 'zod';
 export const ORDER_CHANGED_CHANNEL = 'order_changed';
 export const SNAPSHOT_WRITTEN_CHANNEL = 'snapshot_written';
 export const VENDOR_CHANGED_CHANNEL = 'vendor_changed';
+export const CLOCK_UPDATED_CHANNEL = 'clock_updated';
 export const LISTEN_CHANNELS = [
   ORDER_CHANGED_CHANNEL,
   SNAPSHOT_WRITTEN_CHANNEL,
   VENDOR_CHANGED_CHANNEL,
+  CLOCK_UPDATED_CHANNEL,
 ] as const;
 
 const orderStatus = z.enum(['placed', 'accepted', 'preparing', 'ready', 'picked_up', 'cancelled']);
@@ -65,6 +67,7 @@ export function parseNotification(
     const parsed = vendorChangedSchema.safeParse(json);
     return parsed.success ? { kind: 'queue', vendorId: parsed.data.vendorId } : null;
   }
+  if (channel === CLOCK_UPDATED_CHANNEL) return { kind: 'resync' };
   return null;
 }
 
