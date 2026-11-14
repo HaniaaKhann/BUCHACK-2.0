@@ -5,7 +5,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { APP_NAME } from '@/brand';
 import type { MenuResponse, VendorListResponse } from '@/server/menuService';
 import type { MenuItemView } from '@/server/menuView';
+import type { ChatLanguage } from '@app/core';
 import { CartDrawer } from '../cart/CartDrawer';
+import { ChatPanel } from '../chat/ChatPanel';
 import { useCart } from '../cart/CartProvider';
 import { cartCount, conflictsWithCart } from '../cart/cartReducer';
 import { SignOutButton } from '../SignOutButton';
@@ -24,6 +26,7 @@ import {
 } from './viewModel';
 
 export interface DashboardProps {
+  chatLanguage?: ChatLanguage;
   initialMenu: MenuResponse;
   initialVendors: VendorListResponse;
   profile: ProfileSummary;
@@ -183,6 +186,7 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
         </div>
       </main>
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+      <ChatPanel {...(props.chatLanguage ? { initialLanguage: props.chatLanguage } : {})} />
     </div>
   );
 }

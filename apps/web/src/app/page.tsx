@@ -47,6 +47,7 @@ export default async function HomePage(): Promise<React.JSX.Element> {
     return (
       <CartProvider>
         <Dashboard
+          chatLanguage={profile.chatLanguage}
           initialMenu={menu.body}
           initialVendors={vendors}
           buildings={buildings}
