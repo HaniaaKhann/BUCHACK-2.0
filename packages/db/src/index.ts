@@ -15,6 +15,13 @@ export { createNotification } from './notifications.js';
 export type { NewNotification } from './notifications.js';
 export { verifyDemoMenus } from './seed/demoVerification.js';
 export { DEMO_CLOCK_START } from './seed/clockStart.js';
+export {
+  SAMPLE_DAYS,
+  buildSampleSales,
+  writeSampleSales,
+  type SampleOrderInput,
+  type SampleVendorInput,
+} from './seed/sampleSales.js';
 export { openingHoursSchema } from './openingHours.js';
 export { ACTIVE_VENDOR_WHERE } from './vendorVisibility.js';
 export {

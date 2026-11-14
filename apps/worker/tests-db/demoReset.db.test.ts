@@ -71,6 +71,7 @@ let dirtyCounts = {
   notifications: 0,
   addedDishes: 0,
 };
+let sampleBaseline = 0;
 let pausedVendorId = '';
 let rushVendorId = '';
 let outOfStockItemId = '';
@@ -177,6 +178,17 @@ beforeAll(async () => {
       buildingId: (await db.building.findFirstOrThrow()).id,
     },
   });
+  sampleBaseline = await db.sampleVendorOrder.count();
+  await db.sampleVendorOrder.deleteMany({ where: { vendorId: rushVendorId } });
+  await db.sampleVendorOrder.create({
+    data: {
+      vendorId: rushVendorId,
+      placedAt: new Date(),
+      status: 'completed',
+      totalHkd: 1,
+      items: [{ name: 'Tampered sample dish', qty: 1, priceHkd: 1 }],
+    },
+  });
   await db.menuItem.create({
     data: {
       vendorId: rushVendorId,
@@ -263,6 +275,17 @@ describe('demo reset after every kind of change', () => {
     expect(await db.pickupSlot.count()).toBe(0);
     const rows = await db.walletLedger.findMany({ where: { userId: student?.id ?? '' } });
     expect(rows.map((row) => [row.reason, row.deltaHkd])).toEqual([['seed', 300]]);
+  });
+
+  it('rebuilds the sample sales data for the demo, apart from the real orders', async () => {
+    expect(sampleBaseline).toBeGreaterThan(0);
+    expect(await db.sampleVendorOrder.count()).toBe(sampleBaseline);
+    expect(
+      await db.sampleVendorOrder.count({
+        where: { items: { path: ['0', 'name'], equals: 'Tampered sample dish' } },
+      }),
+    ).toBe(0);
+    expect(await db.order.count()).toBe(0);
   });
 
   it('puts the student back to a fresh demo account that must onboard again', async () => {

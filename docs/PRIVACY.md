@@ -8,7 +8,7 @@ This page lists what the app stores, why, who can see it and how long it stays. 
 - The chat assistant stores nothing. Its history lives in the page and disappears on reload, and no question text is sent to the server.
 - The web app makes no calls to third parties: no analytics, no advertising, no external fonts or scripts.
 - A student can delete their account in the app. That deletes their profile, classes, free gaps, notifications, wallet and all of their orders, past and present.
-- Vendors see the items, totals and times of orders for their own outlet. They do not see which student placed an order.
+- Vendors see the items, totals and times of orders for their own outlet. They do not see which student placed an order. The owner also sees a sales page for their outlet built from the same orders plus the labelled sample data.
 
 ## What is stored, field by field
 
@@ -55,7 +55,7 @@ Classes are saved with the Save button on the profile page and stay there for ev
 
 ### Vendor and outlet data (not personal)
 
-`vendors`, `buildings`, `walk_times`, `menu_items`, `pickup_slots`, `busy_events`, `ticket_counts`, `engine_snapshots`, `academic_weeks`, `public_holidays` and `system_clock` describe outlets, buildings, menus, queues, the calendar and the demo clock. They hold no student data. `ticket_counts` and the history behind `engine_snapshots` are simulated. Vendor staff and owners are ordinary `users` with a `vendor_members` row that ties them to one outlet.
+`vendors`, `buildings`, `walk_times`, `menu_items`, `pickup_slots`, `busy_events`, `ticket_counts`, `engine_snapshots`, `academic_weeks`, `public_holidays`, `system_clock` and `sample_vendor_orders` describe outlets, buildings, menus, queues, the calendar, the demo clock and the sample sales shown to the owner in the demo. They hold no student data. `sample_vendor_orders` holds made-up orders (vendor, time, status, total and dishes) for the last 7 days of the demo. It has no link to any student, order or wallet, so deleting an account cannot touch it, and the wait-time engine never reads it. The demo reset rebuilds it. `ticket_counts` and the history behind `engine_snapshots` are simulated. Vendor staff and owners are ordinary `users` with a `vendor_members` row that ties them to one outlet.
 
 ### Defined but not written
 

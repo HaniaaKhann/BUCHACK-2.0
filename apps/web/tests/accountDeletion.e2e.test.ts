@@ -41,7 +41,7 @@ async function signUp(name: string): Promise<Person> {
   return { id: user.id, email, cookie };
 }
 
-async function fillAccount(person: Person, status: 'picked_up' | 'placed'): Promise<string> {
+async function fillAccount(person: Person, status: 'completed' | 'placed'): Promise<string> {
   await db.studentProfile.create({
     data: { userId: person.id, dietTags: ['vegan'], allergens: [], eatMinutes: 15 },
   });
@@ -145,8 +145,8 @@ beforeAll(async () => {
   people.alice = await signUp('alice');
   people.bob = await signUp('bob');
   people.carol = await signUp('carol');
-  await fillAccount(people.alice, 'picked_up');
-  await fillAccount(people.bob, 'picked_up');
+  await fillAccount(people.alice, 'completed');
+  await fillAccount(people.bob, 'completed');
   await fillAccount(people.carol, 'placed');
 }, 180_000);
 
@@ -195,6 +195,8 @@ describe('deleting an account', () => {
       items: 1,
     });
     expect(aliceBefore.sessions).toBeGreaterThan(0);
+    const sampleBefore = await db.sampleVendorOrder.count();
+    expect(sampleBefore).toBeGreaterThan(0);
 
     const response = await remove(people.alice, {
       password: PASSWORD,
@@ -202,6 +204,7 @@ describe('deleting an account', () => {
       email: people.bob.email,
     });
     expect(response.status).toBe(200);
+    expect(await db.sampleVendorOrder.count()).toBe(sampleBefore);
 
     expect(await counts(people.alice.id)).toEqual({
       user: 0,
@@ -230,7 +233,7 @@ describe('deleting an account', () => {
   it('lets a user delete once the active order is finished', async () => {
     await db.order.updateMany({
       where: { studentId: people.carol.id },
-      data: { status: 'picked_up' },
+      data: { status: 'completed' },
     });
     expect((await remove(people.carol, { password: PASSWORD })).status).toBe(200);
     expect((await counts(people.carol.id)).user).toBe(0);

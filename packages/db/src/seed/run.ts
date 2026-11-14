@@ -8,6 +8,7 @@ import { DEMO_CLOCK_START } from './clockStart.js';
 import { verifyDemoMenus } from './demoVerification.js';
 import { grantStartingCredit } from './wallet.js';
 import { withMeatTags } from './dietTags.js';
+import { writeSampleSales } from './sampleSales.js';
 import { GENERATED_DIR, seedHistory } from './history.js';
 import { mergeMenus } from './menus.js';
 import { expandOpeningHours } from './openingHours.js';
@@ -157,6 +158,7 @@ async function main(): Promise<void> {
     if (process.env['DEMO_MODE'] === 'true') {
       await seedDemoAccounts(db);
       await verifyDemoMenus(db);
+      await writeSampleSales(db, Date.parse(DEMO_CLOCK_START));
       for (const account of DEMO_ACCOUNTS.filter((entry) => entry.role === 'student')) {
         await grantStartingCredit(db, account.id);
       }

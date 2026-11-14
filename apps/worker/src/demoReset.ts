@@ -16,6 +16,7 @@ import {
   readSnapshotPayload,
   toWaitSnapshot,
   verifyDemoMenus,
+  writeSampleSales,
 } from '@app/db';
 import { SNAPSHOT_STEP_MS, boundaryAtOrBefore } from './clock.js';
 import { runEngineSnapshots } from './jobs/engineSnapshot.js';
@@ -51,6 +52,7 @@ async function resetData(db: PrismaClient, startMs: number): Promise<void> {
     }),
   ]);
   await verifyDemoMenus(db);
+  await writeSampleSales(db, startMs);
   for (const account of DEMO_ACCOUNTS) await grantStartingCredit(db, account.id);
 }
 

@@ -113,6 +113,11 @@ export function VendorBoard({
             <Link href="/vendor/menu" className="text-sm font-medium underline">
               Menu and stock
             </Link>
+            {isOwner ? (
+              <Link href="/vendor/sales" className="text-sm font-medium underline">
+                Sales
+              </Link>
+            ) : null}
             <SignOutButton />
           </>
         }

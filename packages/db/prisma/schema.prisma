@@ -198,6 +198,20 @@ model FreeWindow {
   @@map("free_windows")
 }
 
+model SampleVendorOrder {
+  id       String   @id @default(uuid())
+  vendorId String
+  placedAt DateTime
+  status   String
+  totalHkd Int
+  items    Json
+
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@index([vendorId, placedAt])
+  @@map("sample_vendor_orders")
+}
+
 model ClassEntry {
   id          String @id @default(uuid())
   userId      String
@@ -273,6 +287,7 @@ model Vendor {
   members          VendorMember[]
   menuItems        MenuItem[]
   orders           Order[]
+  sampleOrders     SampleVendorOrder[]
   pickupSlots      PickupSlot[]
   busyEvents       BusyEvent[]
   ticketCounts     TicketCount[]
