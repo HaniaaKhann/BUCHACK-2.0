@@ -30,6 +30,8 @@ The student dashboard has a chat assistant in English, Traditional Chinese and S
 
 To return a running demo to its starting state (fixed clock, no orders, seeded stock and tags), run `pnpm demo:reset` with `DEMO_MODE=true` and `DATABASE_URL` set.
 
+Before recording the video, run `pnpm demo:reset`. With the Docker stack that is `docker compose exec worker ./node_modules/.bin/tsx src/demoResetCli.ts`.
+
 ## Local development
 
 Prereqs: Node 22+, pnpm 9+, Docker (for Postgres).
@@ -41,6 +43,19 @@ pnpm typecheck
 pnpm test
 pnpm build
 ```
+
+### End-to-end and database tests
+
+`test:e2e` needs the whole Docker stack running (`docker compose up -d --build`) and a browser, so it is not part of CI; it was proven stable on a local machine (five runs in a row). `test:db` needs only Postgres at `DATABASE_URL`, and CI runs it after the unit tests.
+
+```
+pnpm test:e2e
+pnpm --filter @app/worker test:db
+```
+
+`pnpm test:e2e` runs two Playwright specs in `tests/e2e`: the student happy path (filter, add to cart, order, then the vendor moves it through Accepted, Preparing, Ready and Picked up) and an overflow sweep of every page at 1280, 768 and 390 pixels using the longest outlet name. It resets the demo before it starts and again when it ends, even if a test fails, so the stack is left in the demo state. It reaches the database through `docker compose exec`; set `E2E_COMPOSE_ARGS` (for example `-p name`) and `E2E_COMPOSE_DIR` if your stack is not the default one in the current folder. Set `PLAYWRIGHT_CHANNEL=msedge` or `chrome` to use an installed browser, or run `pnpm exec playwright install chromium` once. `E2E_VENDOR_SWAP=0` skips the part of the sweep that temporarily gives the demo owner the vendor with the longest name.
+
+`pnpm --filter @app/worker test:db` runs the database tests against `DATABASE_URL`: the demo reset and a scheduled order starting at its `fire_at` through the worker loop.
 
 ## Repo layout
 
