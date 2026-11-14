@@ -64,7 +64,7 @@ export function OrderTracker({ initial }: { initial: OrderView }): React.JSX.Ele
   const cancelled = order.status === 'cancelled';
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-paper">
       <AppHeader
         left={
           <Link href="/" className="text-sm font-medium underline">

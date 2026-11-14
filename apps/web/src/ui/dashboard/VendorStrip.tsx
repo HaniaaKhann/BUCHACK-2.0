@@ -5,16 +5,16 @@ import { outletPhotoPath, outletSlug } from '../outletSlug';
 import { BUSY_LABELS, formatWaitRange, waitNote } from './viewModel';
 
 const BUSY_CLASSES = {
-  quiet: 'bg-cream text-navy',
+  quiet: 'bg-paper text-navy',
   normal: 'border border-navy/40 bg-white text-navy',
   rush: 'bg-berry text-white',
 } as const;
 
 const TILE_CLASSES = [
-  'bg-navy text-cream',
-  'bg-berry text-cream',
-  'bg-cocoa text-cream',
-  'bg-sky text-navy',
+  'bg-cream text-navy',
+  'bg-blush text-cocoa',
+  'bg-mist text-navy',
+  'bg-paper text-berry',
 ] as const;
 
 function tileClass(vendorId: string): string {
@@ -33,7 +33,7 @@ function OutletImageSlot({
   const [failed, setFailed] = useState(false);
   if (hasPhoto && !failed) {
     return (
-      <span data-image-slot="photo" className="block aspect-video w-full overflow-hidden bg-cream">
+      <span data-image-slot="photo" className="block aspect-video w-full overflow-hidden bg-paper">
         <img
           src={outletPhotoPath(vendor.name)}
           alt={vendor.name}
@@ -104,7 +104,7 @@ export function VendorStrip({
                     <span className="text-sm font-semibold leading-snug">{vendor.name}</span>
                     <span
                       className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
-                        vendor.openNow ? 'bg-navy text-cream' : 'bg-cream text-muted'
+                        vendor.openNow ? 'bg-navy text-cream' : 'bg-paper text-muted'
                       }`}
                     >
                       {vendor.openNow ? 'Open' : 'Closed'}

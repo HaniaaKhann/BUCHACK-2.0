@@ -175,7 +175,7 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
   }
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-paper">
       <AppHeader
         left={<h1 className="text-lg font-semibold tracking-tight">{APP_NAME}</h1>}
         right={
@@ -191,7 +191,7 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
               type="button"
               data-cart-button
               onClick={() => setCartOpen(true)}
-              className="rounded-md bg-cream px-3 py-2 text-sm font-semibold text-navy hover:bg-white"
+              className="rounded-md border border-navy/60 bg-white px-3 py-2 text-sm font-semibold text-navy transition-colors hover:bg-paper"
             >
               Cart (
               <span
@@ -289,7 +289,7 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
 
           <div className="flex min-w-0 flex-col gap-6">
             {notice ? (
-              <p role="status" className="rounded-lg bg-cream px-3 py-2 text-sm text-cocoa">
+              <p role="status" className="rounded-lg bg-blush px-3 py-2 text-sm text-cocoa">
                 {notice}
               </p>
             ) : null}

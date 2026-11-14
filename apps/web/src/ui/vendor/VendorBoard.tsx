@@ -102,7 +102,7 @@ export function VendorBoard({
       : '';
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-paper">
       <AppHeader
         left={<h1 className="text-lg font-semibold">{status.name}</h1>}
         right={

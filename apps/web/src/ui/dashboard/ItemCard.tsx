@@ -5,8 +5,8 @@ import { formatWaitRange, waitNote, whenToGoText } from './viewModel';
 
 const CHIP_CLASSES: Record<ChipTone, string> = {
   verified: 'border-navy bg-navy text-cream',
-  neutral: 'border-navy/15 bg-cream text-navy',
-  warn: 'border-cocoa/50 bg-cream text-cocoa',
+  neutral: 'border-navy/15 bg-paper text-navy',
+  warn: 'border-cocoa/30 bg-blush text-cocoa',
   late: 'border-berry bg-white text-berry',
 };
 

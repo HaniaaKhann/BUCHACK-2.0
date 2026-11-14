@@ -17,7 +17,7 @@ export default async function OrdersPage(): Promise<React.JSX.Element> {
   const [orders, wallet] = await Promise.all([listOrders(actor.userId), walletView(actor.userId)]);
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-paper">
       <AppHeader
         left={
           <Link href="/" className="text-sm font-medium underline">

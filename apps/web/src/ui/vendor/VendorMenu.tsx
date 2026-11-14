@@ -140,7 +140,7 @@ export function VendorMenu({
   const categories = [...new Set(items.map((item) => item.category))].sort();
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-paper">
       <AppHeader
         left={
           <Link href="/vendor" className="text-sm font-medium underline">

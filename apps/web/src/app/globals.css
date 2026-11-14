@@ -16,7 +16,6 @@ body {
   outline-offset: 2px;
 }
 
-header :focus-visible,
 [data-on-dark] :focus-visible {
   outline-color: #e9f4c9;
 }
@@ -26,22 +25,16 @@ header :focus-visible,
 }
 
 [data-logo] [data-logo-slot] {
-  box-sizing: border-box;
-  border-radius: 0.75rem;
-  background-color: #e9f4c9;
   background-image: url('/logo.svg');
   background-repeat: no-repeat;
   background-size: 165%;
-  background-position: center 25%;
+  background-position: center 23%;
 }
 
 [data-logo] [data-logo-hero] {
   display: block;
-  padding: 8px;
-  border-radius: 1.25rem;
-  background-origin: content-box;
-  background-size: 154%;
-  background-position: center 46%;
+  background-size: contain;
+  background-position: left center;
 }
 
 [data-logo] [data-hero-name] {

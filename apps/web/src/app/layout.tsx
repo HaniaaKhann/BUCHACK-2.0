@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }): React
   return (
     <html lang="en">
       <body
-        className="min-h-screen bg-cream text-navy antialiased"
+        className="min-h-screen bg-paper text-navy antialiased"
         {...(logoExists() ? { 'data-logo': '' } : {})}
       >
         <DemoBanner />

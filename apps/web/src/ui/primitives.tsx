@@ -43,7 +43,7 @@ export function ToggleChip({
       className={`rounded-full border px-3 py-1 text-sm ${
         selected
           ? 'border-navy bg-navy text-cream'
-          : 'border-navy/60 bg-white text-navy hover:bg-navy/10'
+          : 'border-navy/30 bg-white text-navy hover:bg-paper'
       }`}
     >
       {children}
@@ -140,7 +140,7 @@ export function AppHeader({
   right?: ReactNode;
 }): React.JSX.Element {
   return (
-    <header className="bg-navy text-cream">
+    <header className="border-b border-navy/15 bg-white text-navy">
       <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
         <div className="flex min-w-0 items-center gap-3">
           <span data-logo-slot aria-hidden="true" className="block h-11 w-11 shrink-0" />
@@ -148,7 +148,7 @@ export function AppHeader({
         </div>
         {right ? <div className="flex flex-wrap items-center gap-2 sm:gap-3">{right}</div> : null}
       </div>
-      <div className="h-1 bg-sky" />
+      <div className="h-0.5 bg-sky" />
     </header>
   );
 }

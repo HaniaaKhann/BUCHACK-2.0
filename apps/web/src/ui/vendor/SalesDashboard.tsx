@@ -208,7 +208,7 @@ export function SalesDashboard({
   }
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-paper">
       <AppHeader
         left={
           <Link href="/vendor" className="text-sm font-medium underline">

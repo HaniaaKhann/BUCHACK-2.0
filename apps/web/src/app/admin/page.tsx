@@ -12,7 +12,7 @@ export default async function AdminPage(): Promise<React.JSX.Element> {
   if (actor.role !== 'admin') redirect('/');
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-paper">
       <AdminHeader current="clock" />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:py-6">
         <h1 className="text-xl font-semibold">Demo clock</h1>
