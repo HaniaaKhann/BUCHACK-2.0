@@ -74,14 +74,19 @@ export function leaveText(leaveNow: boolean, leaveAt: number): string {
 export interface WhenToGoInput {
   vendorOpenNow: boolean;
   leaveNow: boolean;
-  leaveAt: number;
+  leaveAt: number | null;
 }
 
 export function whenToGoText(
   item: WhenToGoInput,
-  schedule: { freeNow: boolean; classEnd: number | null },
+  schedule: { freeNow: boolean; classEnd: number | null; nextClassStart?: number | null },
 ): string {
   if (!item.vendorOpenNow) return 'Closed now';
+  if (item.leaveAt === null) {
+    return schedule.nextClassStart == null
+      ? 'No class later today'
+      : `Class at ${formatHktTime(schedule.nextClassStart)}`;
+  }
   if (!schedule.freeNow && schedule.classEnd !== null) {
     return `After class, ${formatHktTime(schedule.classEnd)}`;
   }
@@ -93,6 +98,8 @@ const WEEKDAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
 export function formatDemoClock(now: number): string {
   return `${WEEKDAY_NAMES[hktWeekday(now)] ?? ''} ${formatHktTime(now)}`;
 }
+
+export const FROM_HINT = 'Choose where you are to see a leave time';
 
 export function scheduleSummary(schedule: MenuResponse['meta']['schedule']): string {
   const nextClass =
@@ -133,12 +140,6 @@ export interface EmptyMessage {
 }
 
 export function emptyMessage(meta: MenuResponse['meta'], filtersOn: boolean): EmptyMessage {
-  if (meta.needsBuilding) {
-    return {
-      title: 'Where are you?',
-      body: 'Choose the building you are in to see walk times and what fits before class.',
-    };
-  }
   if (meta.emptyState === 'halal_unconfirmed') {
     return { title: 'Halal', body: HALAL_EMPTY_TEXT };
   }

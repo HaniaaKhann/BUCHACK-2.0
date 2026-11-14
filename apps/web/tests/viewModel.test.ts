@@ -157,10 +157,10 @@ describe('emptyMessage', () => {
     expect(message.body).toBe(HALAL_EMPTY_TEXT);
   });
 
-  it('asks for a building before anything else', () => {
-    expect(
-      emptyMessage(meta({ needsBuilding: true, emptyState: 'halal_unconfirmed' }), true).title,
-    ).toBe('Where are you?');
+  it('no longer asks for a building, because the list shows without one', () => {
+    expect(emptyMessage(meta({ needsBuilding: true }), false).title).toBe(
+      'Nothing matches right now',
+    );
   });
 
   it('suggests turning a filter off only when one is on', () => {
@@ -189,5 +189,13 @@ describe('whenToGoText', () => {
 
   it('says closed for a vendor that is shut', () => {
     expect(whenToGoText({ ...base, vendorOpenNow: false }, free)).toBe('Closed now');
+  });
+
+  it('shows the class start instead of a leave time when the building is unknown', () => {
+    const unknown = { vendorOpenNow: true, leaveNow: false, leaveAt: null };
+    expect(whenToGoText(unknown, { ...free, nextClassStart: NOON_TUESDAY + 90 * 60_000 })).toBe(
+      'Class at 13:45',
+    );
+    expect(whenToGoText(unknown, free)).toBe('No class later today');
   });
 });

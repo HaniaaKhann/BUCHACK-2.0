@@ -271,3 +271,58 @@ describe('dashboard layout', () => {
     expect(html).not.toContain('data-add=');
   });
 });
+
+describe('dashboard without a from building', () => {
+  const unknownItem = item({ leaveAt: null, chips: [{ text: 'Ready 12:21', tone: 'neutral' }] });
+  const html = renderToStaticMarkup(
+    <CartProvider>
+      <Dashboard
+        initialMenu={menu([unknownItem], { needsBuilding: true })}
+        initialVendors={vendors}
+        profile={{ dietTags: [], allergens: [], goal: null }}
+        buildings={[{ id: 'b1', campus: 'BURC', name: 'Undergraduate Halls' }]}
+        currentBuildingId={null}
+      />
+    </CartProvider>,
+  );
+
+  it('shows the class start and the short hint above the list', () => {
+    expect(html).toContain('Next class 13:45');
+    expect(html).toContain('data-from-hint-summary');
+    expect(html).toContain('Choose where you are to see a leave time');
+  });
+
+  it('calls the selector From, with the hint beside it', () => {
+    expect(html).toContain('>From</h2>');
+    expect(html).toContain('data-from-select');
+    expect(html).toContain('data-from-hint="true"');
+    expect(html).not.toContain('Where you are');
+  });
+
+  it('lists the items under Available now instead of fit groups, and shows the class start on the tile', () => {
+    expect(html).toContain('Available now');
+    expect(html).not.toContain('Fits before your next class');
+    expect(html).toContain('Class at 13:45');
+  });
+
+  it('disables the fits filter, because it needs a leave time', () => {
+    expect(html).toMatch(
+      /<input[^>]*disabled[^>]*type="checkbox"|<input[^>]*type="checkbox"[^>]*disabled/,
+    );
+  });
+
+  it('shows no hint once a building is chosen', () => {
+    const chosen = renderToStaticMarkup(
+      <CartProvider>
+        <Dashboard
+          initialMenu={menu([item()])}
+          initialVendors={vendors}
+          profile={{ dietTags: [], allergens: [], goal: null }}
+          buildings={[{ id: 'b1', campus: 'BURC', name: 'Undergraduate Halls' }]}
+          currentBuildingId="b1"
+        />
+      </CartProvider>,
+    );
+    expect(chosen).not.toContain('data-from-hint');
+  });
+});

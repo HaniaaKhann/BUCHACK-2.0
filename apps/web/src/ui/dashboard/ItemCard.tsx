@@ -16,7 +16,7 @@ export function ItemCard({
   onAdd,
 }: {
   item: MenuItemView;
-  schedule: { freeNow: boolean; classEnd: number | null };
+  schedule: { freeNow: boolean; classEnd: number | null; nextClassStart?: number | null };
   onAdd?: (item: MenuItemView) => void;
 }): React.JSX.Element {
   const note = waitNote(item.wait.source);

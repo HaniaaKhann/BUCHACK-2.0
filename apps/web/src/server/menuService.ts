@@ -33,6 +33,7 @@ export async function loadMenu(userId: string, params: URLSearchParams): Promise
   const view = buildMenuView({
     now,
     schedule: state.schedule,
+    originKnown: state.originBuildingId !== null,
     eatMinutes: state.profile.eatMinutes,
     vendors: vendors.map((vendor) => vendor.forMenu),
     items,

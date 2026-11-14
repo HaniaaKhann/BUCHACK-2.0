@@ -25,16 +25,22 @@ export function toChatVendors(response: VendorListResponse): ChatVendor[] {
 
 export function toChatFoods(response: MenuResponse): ChatFoods {
   return {
-    items: response.items.map((item) => ({
-      id: item.id,
-      name: item.name,
-      vendorName: item.vendorName,
-      priceHkd: item.priceHkd,
-      tagsStatus: item.tagsStatus,
-      wait: { lowMinutes: item.wait.lowMinutes, highMinutes: item.wait.highMinutes },
-      leaveAt: item.leaveAt,
-      leaveNow: item.leaveNow,
-    })),
+    items: response.items.flatMap((item) =>
+      item.leaveAt === null
+        ? []
+        : [
+            {
+              id: item.id,
+              name: item.name,
+              vendorName: item.vendorName,
+              priceHkd: item.priceHkd,
+              tagsStatus: item.tagsStatus,
+              wait: { lowMinutes: item.wait.lowMinutes, highMinutes: item.wait.highMinutes },
+              leaveAt: item.leaveAt,
+              leaveNow: item.leaveNow,
+            },
+          ],
+    ),
     emptyState: response.meta.emptyState,
   };
 }

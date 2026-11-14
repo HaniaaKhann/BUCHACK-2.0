@@ -34,7 +34,7 @@ interface Item {
   orderable: boolean;
   wait: { lowMinutes: number; highMinutes: number; source: string };
   leaveNow: boolean;
-  leaveAt: number;
+  leaveAt: number | null;
   cookedFor: { slotStart: number } | null;
   chips: { text: string; tone: string }[];
 }
@@ -166,7 +166,7 @@ describe('what the student sees by default', () => {
     expect(vendors.size).toBeGreaterThan(3);
   });
 
-  it('labels every unverified item Not verified and gives it no tick, ever', async () => {
+  it('puts no verification text and no tick on a tile while no diet or allergen filter is active', async () => {
     for (const diet of [
       '',
       'diet=vegetarian,vegan,halal,no_pork,no_beef,gluten_free,dairy_free&off=diet',
@@ -176,10 +176,16 @@ describe('what the student sees by default', () => {
       expect(unverified.length).toBeGreaterThan(0);
       for (const item of unverified) {
         expect(item.notVerified).toBe(true);
-        expect(item.chips.map((chip) => chip.text)).toContain('Not verified');
+        expect(item.chips.map((chip) => chip.text)).not.toContain('Not verified');
         expect(ticks(item)).toEqual([]);
       }
     }
+  });
+
+  it('leaves unverified items out while a diet filter is on, and ticks the confirmed ones', async () => {
+    const { body } = await menu('diet=vegetarian');
+    expect(body.items.every((item) => item.tagsStatus === 'verified')).toBe(true);
+    expect(body.items.every((item) => ticks(item).length > 0)).toBe(true);
   });
 
   it('shows ready ranges built from the shared clock, with the vendor wait range attached', async () => {
@@ -334,7 +340,7 @@ describe('fit groups, leave-at and cooked for when you arrive', () => {
   it('says leave now when the walk equals the wait, and gives a later time otherwise', async () => {
     await saveWindows([]);
     const { body } = await menu(`vendor=${mainCanteenId}`);
-    expect(body.items.every((item) => item.leaveAt >= NOON_TUESDAY.getTime())).toBe(true);
+    expect(body.items.every((item) => (item.leaveAt ?? 0) >= NOON_TUESDAY.getTime())).toBe(true);
     expect(body.items.some((item) => item.leaveNow)).toBe(true);
   });
 
@@ -393,11 +399,12 @@ describe('walk times decide which vendors can be ranked', () => {
     }
   });
 
-  it('asks for a building when none is set', async () => {
+  it('lists the items without leave times when no building is set', async () => {
     await saveProfile({ currentBuildingId: null });
     const { body } = await menu();
     expect(body.meta.needsBuilding).toBe(true);
-    expect(body.items).toEqual([]);
+    expect(body.items.length).toBeGreaterThan(0);
+    expect(body.items.every((item) => item.leaveAt === null && !item.leaveNow)).toBe(true);
     await saveProfile({ currentBuildingId: mainCanteenBuilding });
   });
 });

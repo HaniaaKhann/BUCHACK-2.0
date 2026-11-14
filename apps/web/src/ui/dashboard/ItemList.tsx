@@ -31,7 +31,7 @@ export function ItemList({
     );
   }
 
-  const hasNextClass = menu.meta.schedule.nextClassStart !== null;
+  const hasNextClass = menu.meta.schedule.nextClassStart !== null && !menu.meta.needsBuilding;
   const shown = menu.items.slice(0, limit);
   const hidden = menu.items.length - shown.length;
   const totals = new Map(groupByFit(menu.items).map((group) => [group.status, group.items.length]));

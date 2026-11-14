@@ -6,6 +6,7 @@ import { APP_NAME } from '@/brand';
 import type { MenuResponse, VendorListResponse } from '@/server/menuService';
 import type { MenuItemView } from '@/server/menuView';
 import type { ChatLanguage } from '@app/core';
+import { AddedToast, type ToastMessage } from '../cart/AddedToast';
 import { CartDrawer } from '../cart/CartDrawer';
 import { ChatPanel } from '../chat/ChatPanel';
 import { NotificationBell } from '../notifications/NotificationBell';
@@ -19,6 +20,7 @@ import { VendorStrip } from './VendorStrip';
 import { useLiveRefresh } from './useLiveRefresh';
 import {
   DEFAULT_FILTERS,
+  FROM_HINT,
   activeFilterCount,
   formatDemoClock,
   scheduleSummary,
@@ -51,6 +53,9 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
   const cart = useCart();
   const [limit, setLimit] = useState(PAGE_SIZE);
   const [notice, setNotice] = useState<string | null>(null);
+  const [toast, setToast] = useState<ToastMessage | null>(null);
+  const toastCounter = useRef(0);
+  const clearToast = useCallback(() => setToast(null), []);
   const filtersRef = useRef(filters);
   filtersRef.current = filters;
 
@@ -99,10 +104,13 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
       const ok = window.confirm(
         `Your cart has items from ${cart.state.vendorName}. Replace it with items from ${item.vendorName}?`,
       );
-      if (ok) cart.dispatch({ type: 'replace', vendor, line });
-      return;
+      if (!ok) return;
+      cart.dispatch({ type: 'replace', vendor, line });
+    } else {
+      cart.dispatch({ type: 'add', vendor, line });
     }
-    cart.dispatch({ type: 'add', vendor, line });
+    toastCounter.current += 1;
+    setToast({ id: toastCounter.current, text: `Added to cart: ${item.name}` });
   }
 
   const filterCount = activeFilterCount(filters);
@@ -142,6 +150,11 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:py-6">
         <p className="text-sm text-navy" data-schedule>
           {scheduleSummary(menu.meta.schedule)}
+          {menu.meta.needsBuilding ? (
+            <span className="block text-muted" data-from-hint-summary>
+              {FROM_HINT}
+            </span>
+          ) : null}
         </p>
 
         <button
@@ -163,6 +176,7 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
               buildings={props.buildings}
               currentBuildingId={buildingId}
               onBuildingChange={(next) => void changeBuilding(next)}
+              fitsAvailable={!menu.meta.needsBuilding}
             />
           </aside>
 
@@ -189,6 +203,14 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
           </div>
         </div>
       </main>
+      <AddedToast
+        toast={toast}
+        onView={() => {
+          setToast(null);
+          setCartOpen(true);
+        }}
+        onDone={clearToast}
+      />
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
       <ChatPanel {...(props.chatLanguage ? { initialLanguage: props.chatLanguage } : {})} />
     </div>

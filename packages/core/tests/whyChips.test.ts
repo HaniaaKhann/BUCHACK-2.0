@@ -26,6 +26,7 @@ const fit = (overrides: Partial<FitResult> = {}): FitResult => ({
 
 const input = (overrides: Partial<WhyChipInput> = {}): WhyChipInput => ({
   selectedDietIds: [],
+  selectedAllergenIds: [],
   item: { dietTags: ['vegetarian'], allergens: ['soy'], tagsStatus: 'verified' },
   fit: fit(),
   nextClassStart: at(13, 30),
@@ -70,20 +71,30 @@ describe('verified diet chips', () => {
 });
 
 describe('unverified items', () => {
-  it('shows Not verified and never a tick for any diet, however many are selected', () => {
+  const unverified = {
+    dietTags: ['vegetarian', 'vegan', 'halal', 'no_pork', 'no_beef'],
+    allergens: [],
+    tagsStatus: 'unverified' as const,
+  };
+
+  it('shows Not verified and never a tick when a diet filter is active, however many are selected', () => {
     const everyDiet = DIET_OPTIONS.map((option) => option.id);
-    for (const selected of [[], ['vegetarian'], ['halal'], ['gluten_free'], everyDiet]) {
-      const chips = buildWhyChips(
-        input({
-          selectedDietIds: selected,
-          item: {
-            dietTags: ['vegetarian', 'vegan', 'halal', 'no_pork', 'no_beef'],
-            allergens: [],
-            tagsStatus: 'unverified',
-          },
-        }),
-      );
+    for (const selected of [['vegetarian'], ['halal'], ['gluten_free'], everyDiet]) {
+      const chips = buildWhyChips(input({ selectedDietIds: selected, item: unverified }));
       expect(texts(chips)).toContain(NOT_VERIFIED_TEXT);
+      expect(texts(chips).join(' ')).not.toContain(VERIFIED_TICK);
+    }
+  });
+
+  it('shows Not verified when only an allergen filter is active', () => {
+    const chips = buildWhyChips(input({ selectedAllergenIds: ['peanut'], item: unverified }));
+    expect(texts(chips)).toContain(NOT_VERIFIED_TEXT);
+  });
+
+  it('shows no verification text at all when no diet or allergen filter is active', () => {
+    for (const item of [unverified, { ...unverified, tagsStatus: 'verified' as const }]) {
+      const chips = buildWhyChips(input({ item }));
+      expect(texts(chips).join(' ')).not.toContain(NOT_VERIFIED_TEXT);
       expect(texts(chips).join(' ')).not.toContain(VERIFIED_TICK);
     }
   });

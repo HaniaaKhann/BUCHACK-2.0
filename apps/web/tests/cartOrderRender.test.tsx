@@ -76,7 +76,8 @@ describe('cart drawer HTML', () => {
     expect(html).toContain('aria-label="One less Vegetable Noodles"');
     expect(html).toContain('3 items');
     expect(html).toContain('Pay HK$90 from demo wallet');
-    expect(html).toContain('Wallet balance (demo money)');
+    expect(html).toContain('Wallet (demo credit):');
+    expect(html).toContain('After this order:');
   });
 
   it('offers as soon as ready and a slot choice, defaulting to as soon as ready', () => {

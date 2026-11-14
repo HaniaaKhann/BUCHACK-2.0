@@ -15,6 +15,7 @@ export interface WhyChip {
 
 export interface WhyChipInput {
   selectedDietIds: readonly string[];
+  selectedAllergenIds: readonly string[];
   item: {
     dietTags: readonly string[];
     allergens: readonly string[];
@@ -63,7 +64,10 @@ function fitChip(input: WhyChipInput): WhyChip | null {
 
 export function buildWhyChips(input: WhyChipInput): WhyChip[] {
   const chips: WhyChip[] = [...dietChips(input)];
-  if (input.item.tagsStatus !== 'verified') chips.push({ text: NOT_VERIFIED_TEXT, tone: 'warn' });
+  const filterActive = input.selectedDietIds.length > 0 || input.selectedAllergenIds.length > 0;
+  if (filterActive && input.item.tagsStatus !== 'verified') {
+    chips.push({ text: NOT_VERIFIED_TEXT, tone: 'warn' });
+  }
   if (!input.vendorOpenNow) {
     chips.push({ text: 'Closed now', tone: 'late' });
     return chips;

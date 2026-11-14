@@ -48,6 +48,7 @@ export interface MenuItemRow {
 export interface MenuViewInput {
   now: number;
   schedule: ScheduleContext;
+  originKnown: boolean;
   eatMinutes: number;
   vendors: readonly VendorForMenu[];
   items: readonly MenuItemRow[];
@@ -75,7 +76,7 @@ export interface MenuItemView {
   readyHighAt: number;
   pickupAt: number;
   deadline: number | null;
-  leaveAt: number;
+  leaveAt: number | null;
   leaveNow: boolean;
   cookedFor: { slotStart: number } | null;
   chips: WhyChip[];
@@ -112,11 +113,22 @@ interface Candidate {
   vendorOpenNow: boolean;
   fit: FitResult;
   wait: WaitEstimate;
-  leaveAt: number;
+  leaveAt: number | null;
   cookedFor: { slotStart: number } | null;
 }
 
-function readyVendors(vendors: readonly VendorForMenu[], schedule: ScheduleContext): ReadyVendor[] {
+function readyVendors(
+  vendors: readonly VendorForMenu[],
+  schedule: ScheduleContext,
+  originKnown: boolean,
+): ReadyVendor[] {
+  if (!originKnown) {
+    return vendors.map((vendor) => ({
+      ...vendor,
+      walkFromOriginMinutes: 0,
+      walkToNextClassMinutes: null,
+    }));
+  }
   return vendors.flatMap((vendor) => {
     if (vendor.walkFromOriginMinutes === null) return [];
     if (schedule.nextClass !== null && vendor.walkToNextClassMinutes === null) return [];
@@ -125,7 +137,10 @@ function readyVendors(vendors: readonly VendorForMenu[], schedule: ScheduleConte
 }
 
 function candidateFor(input: MenuViewInput, vendor: ReadyVendor, row: MenuItemRow): Candidate {
-  const { now, schedule, query } = input;
+  const { now, query } = input;
+  const schedule = input.originKnown
+    ? input.schedule
+    : { ...input.schedule, classEnd: null, nextClass: null };
   const prep = orderPrep([
     itemPrep({
       learned: vendor.wait?.payload?.prep[row.name]?.minutes ?? null,
@@ -149,17 +164,22 @@ function candidateFor(input: MenuViewInput, vendor: ReadyVendor, row: MenuItemRo
     eatMinutes: input.eatMinutes,
   });
   const fit: FitResult = vendor.openNow ? raw : { ...raw, status: 'late' };
-  const leave = leaveAt({
-    now,
-    readyPointAt: fit.readyPointAt,
-    walkToVendorMinutes: vendor.walkFromOriginMinutes,
-  });
-  const slot = suggestCookedForArrival({
-    leaveAt: leave,
-    currentClassEnd: schedule.classEnd,
-    walkClassToVendorMinutes: vendor.walkFromOriginMinutes,
-    slots: vendor.slots,
-  });
+  const leave = input.originKnown
+    ? leaveAt({
+        now,
+        readyPointAt: fit.readyPointAt,
+        walkToVendorMinutes: vendor.walkFromOriginMinutes,
+      })
+    : null;
+  const slot =
+    leave === null
+      ? null
+      : suggestCookedForArrival({
+          leaveAt: leave,
+          currentClassEnd: schedule.classEnd,
+          walkClassToVendorMinutes: vendor.walkFromOriginMinutes,
+          slots: vendor.slots,
+        });
   return {
     id: row.id,
     row,
@@ -183,7 +203,7 @@ function candidateFor(input: MenuViewInput, vendor: ReadyVendor, row: MenuItemRo
 
 export function buildMenuView(input: MenuViewInput): { items: MenuItemView[]; meta: MenuViewMeta } {
   const { query, schedule, now } = input;
-  const vendors = readyVendors(input.vendors, schedule);
+  const vendors = readyVendors(input.vendors, schedule, input.originKnown);
   const vendorById = new Map(vendors.map((vendor) => [vendor.id, vendor]));
 
   const candidates = input.items.flatMap((row) => {
@@ -229,13 +249,14 @@ export function buildMenuView(input: MenuViewInput): { items: MenuItemView[]; me
       pickupAt: fit.pickupAt,
       deadline: fit.deadline,
       leaveAt: item.leaveAt,
-      leaveNow: item.leaveAt <= now,
+      leaveNow: item.leaveAt !== null && item.leaveAt <= now,
       cookedFor: item.cookedFor,
       chips: buildWhyChips({
         selectedDietIds: query.dietIds,
+        selectedAllergenIds: query.allergenIds,
         item: { dietTags: item.dietTags, allergens: item.allergens, tagsStatus: item.tagsStatus },
         fit,
-        nextClassStart: schedule.nextClass?.start ?? null,
+        nextClassStart: input.originKnown ? (schedule.nextClass?.start ?? null) : null,
         vendorOpenNow: item.vendorOpenNow,
       }),
       score,

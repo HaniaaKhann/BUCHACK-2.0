@@ -2,6 +2,7 @@ import { ALLERGEN_OPTIONS, DIET_OPTIONS, type Goal, type SortKey } from '@app/co
 import { Select, Switch } from '../primitives';
 import {
   DEFAULT_FILTERS,
+  FROM_HINT,
   PRICE_CHOICES,
   SORT_LABELS,
   WAIT_CHOICES,
@@ -69,6 +70,7 @@ export function FilterPanel({
   buildings,
   currentBuildingId,
   onBuildingChange,
+  fitsAvailable,
 }: {
   filters: FilterState;
   onChange: (next: FilterState) => void;
@@ -76,6 +78,7 @@ export function FilterPanel({
   buildings: readonly BuildingChoice[];
   currentBuildingId: string | null;
   onBuildingChange: (buildingId: string) => void;
+  fitsAvailable: boolean;
 }): React.JSX.Element {
   const isOn = (id: ProfileFilterId): boolean => !filters.off.includes(id);
   const flip = (id: ProfileFilterId): void =>
@@ -85,14 +88,15 @@ export function FilterPanel({
   return (
     <div className="flex flex-col gap-5 rounded-xl border border-navy/15 bg-white p-4">
       <section className="flex flex-col gap-2">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">Where you are</h2>
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">From</h2>
         <Select
-          aria-label="Building you are in"
+          aria-label="From (the building you are in)"
+          data-from-select
           value={currentBuildingId ?? ''}
           onChange={(event) => onBuildingChange(event.target.value)}
         >
           <option value="" disabled>
-            Choose a building
+            Choose where you are
           </option>
           {buildings.map((building) => (
             <option key={building.id} value={building.id}>
@@ -100,6 +104,11 @@ export function FilterPanel({
             </option>
           ))}
         </Select>
+        {currentBuildingId === null ? (
+          <p className="text-xs text-muted" data-from-hint>
+            {FROM_HINT}
+          </p>
+        ) : null}
       </section>
 
       <section className="flex flex-col gap-3">
@@ -184,7 +193,8 @@ export function FilterPanel({
         <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
-            checked={filters.fits}
+            checked={filters.fits && fitsAvailable}
+            disabled={!fitsAvailable}
             onChange={(event) => onChange({ ...filters, fits: event.target.checked })}
             className="h-4 w-4"
           />

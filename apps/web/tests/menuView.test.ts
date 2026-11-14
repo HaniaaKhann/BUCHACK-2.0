@@ -39,6 +39,7 @@ function input(overrides: Partial<MenuViewInput> = {}): MenuViewInput {
   return {
     now: NOW,
     schedule: { freeNow: true, classEnd: null, classBuildingId: null, nextClass: null },
+    originKnown: true,
     eatMinutes: 15,
     vendors: [vendor()],
     items: [item()],
@@ -65,6 +66,53 @@ function input(overrides: Partial<MenuViewInput> = {}): MenuViewInput {
 const withDiet = (...dietIds: string[]): MenuViewInput['query'] => ({
   ...input().query,
   dietIds,
+});
+
+describe('buildMenuView without a from building', () => {
+  const nextClassAt = NOW + 90 * 60_000;
+  const unknown = (): MenuViewInput =>
+    input({
+      originKnown: false,
+      schedule: {
+        freeNow: true,
+        classEnd: null,
+        classBuildingId: null,
+        nextClass: { start: nextClassAt, buildingId: 'b-class' },
+      },
+      vendors: [vendor({ walkFromOriginMinutes: null, walkToNextClassMinutes: null })],
+    });
+
+  it('still lists the items, with waits and ready times, instead of an empty menu', () => {
+    const { items, meta } = buildMenuView(unknown());
+    expect(items).toHaveLength(1);
+    expect(items[0]?.wait.highMinutes).toBeGreaterThan(0);
+    expect(items[0]?.chips.map((chip) => chip.text).join(' ')).toContain('Ready');
+    expect(meta.vendorsWithoutWalk).toBe(0);
+    expect(meta.schedule.nextClassStart).toBe(nextClassAt);
+  });
+
+  it('gives no leave time, no fit message and no cooked-for suggestion', () => {
+    const { items } = buildMenuView(unknown());
+    expect(items[0]?.leaveAt).toBeNull();
+    expect(items[0]?.leaveNow).toBe(false);
+    expect(items[0]?.cookedFor).toBeNull();
+    expect(items[0]?.chips.map((chip) => chip.text).join(' ')).not.toContain('class');
+  });
+
+  it('still gives a leave time once the building is known', () => {
+    const { items } = buildMenuView(
+      input({
+        schedule: {
+          freeNow: true,
+          classEnd: null,
+          classBuildingId: null,
+          nextClass: { start: nextClassAt, buildingId: 'b-class' },
+        },
+        vendors: [vendor({ walkFromOriginMinutes: 4, walkToNextClassMinutes: 3 })],
+      }),
+    );
+    expect(items[0]?.leaveAt).not.toBeNull();
+  });
 });
 
 describe('buildMenuView', () => {
@@ -122,8 +170,25 @@ describe('buildMenuView', () => {
     const off = buildMenuView(input({ items: rows }));
     const unverified = off.items.find((entry) => entry.id === 'i2');
     expect(unverified?.notVerified).toBe(true);
-    expect(unverified?.chips.map((chip) => chip.text)).toContain('Not verified');
+    expect(unverified?.chips.map((chip) => chip.text)).not.toContain('Not verified');
     expect(unverified?.chips.some((chip) => chip.text.includes('✓'))).toBe(false);
+  });
+
+  it('puts no verification text on any tile when no diet or allergen filter is active', () => {
+    const rows = [item(), item({ id: 'i2', tagsStatus: 'unverified' })];
+    const { items } = buildMenuView(input({ items: rows }));
+    for (const entry of items) {
+      const text = entry.chips.map((chip) => chip.text).join(' ');
+      expect(text).not.toContain('Not verified');
+      expect(text).not.toContain('✓');
+    }
+  });
+
+  it('ticks a verified item only while a diet filter that it satisfies is active', () => {
+    const withFilter = buildMenuView(input({ query: withDiet('vegetarian') }));
+    expect(withFilter.items[0]?.chips.map((chip) => chip.text)).toContain('Vegetarian ✓');
+    const without = buildMenuView(input());
+    expect(without.items[0]?.chips.map((chip) => chip.text).join(' ')).not.toContain('✓');
   });
 
   it('reports the halal empty state when halal is on and nothing is confirmed', () => {

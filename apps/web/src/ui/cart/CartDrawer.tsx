@@ -7,6 +7,7 @@ import type { SlotsView, WalletView } from '@/server/orderService';
 import { formatHkd, orderErrorMessage, type ErrorBody } from '../orders/orderViewModel';
 import { Button, ErrorNote, ToggleChip } from '../primitives';
 import { cartCount, cartTotal, toOrderRequest } from './cartReducer';
+import { walletLines } from './checkoutModel';
 import { useCart } from './CartProvider';
 
 type Mode = 'asap' | 'scheduled';
@@ -64,7 +65,9 @@ export function CartDrawer({
     mode === 'asap' || slotStart === null ? { kind: 'asap' } : { kind: 'scheduled', slotStart },
   );
   const total = cartTotal(state);
-  const canPay = request !== null && !busy && (mode === 'asap' || slotStart !== null);
+  const wallet = walletLines(balance, total);
+  const canPay =
+    request !== null && !busy && wallet.enough && (mode === 'asap' || slotStart !== null);
 
   async function pay(): Promise<void> {
     if (request === null) return;
@@ -199,10 +202,23 @@ export function CartDrawer({
                 <span>{cartCount(state)} items</span>
                 <span className="font-semibold">{formatHkd(total)}</span>
               </p>
-              <p className="flex justify-between text-muted">
-                <span>Wallet balance (demo money)</span>
-                <span data-balance>{balance === null ? '…' : formatHkd(balance)}</span>
+              <p data-wallet-line>
+                Wallet (demo credit):{' '}
+                <span className="font-semibold" data-balance>
+                  {wallet.before}
+                </span>
               </p>
+              <p data-wallet-after>
+                After this order:{' '}
+                <span className="font-semibold" data-balance-after>
+                  {wallet.after}
+                </span>
+              </p>
+              {wallet.enough ? null : (
+                <p className="text-berry" data-wallet-short>
+                  Not enough demo credit for this order.
+                </p>
+              )}
             </section>
 
             <ErrorNote message={error} />
