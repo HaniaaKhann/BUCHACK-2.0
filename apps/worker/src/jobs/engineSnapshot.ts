@@ -25,7 +25,7 @@ import {
 
 const SLOT_MS = SLOT_MINUTES * MS_PER_MINUTE;
 
-interface LoadedOrder {
+export interface LoadedOrder {
   placedAt: Date;
   readyAt: Date | null;
   pickedUpAt: Date | null;
@@ -36,7 +36,7 @@ interface LoadedOrder {
   items: { qty: number; prepPriorSnapshotMin: number; menuItem: { name: string } }[];
 }
 
-function toSnapshotOrder(order: LoadedOrder): SnapshotOrder {
+export function toSnapshotOrder(order: LoadedOrder): SnapshotOrder {
   const [only] = order.items;
   return {
     placedAt: order.placedAt.getTime(),
@@ -63,7 +63,7 @@ function groupByDate<T>(rows: readonly T[], at: (row: T) => number): Map<string,
   return groups;
 }
 
-function completedDayBusyRates(
+export function completedDayBusyRates(
   hours: OpeningHours,
   holidays: ReadonlySet<string>,
   orders: readonly LoadedOrder[],
