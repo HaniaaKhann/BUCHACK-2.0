@@ -45,7 +45,7 @@ export function ItemList({
               {totals.get(group.status)}
             </span>
           </h2>
-          <ul className="grid gap-3 md:grid-cols-2">
+          <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
             {group.items.map((item) => (
               <li key={item.id}>
                 <ItemCard item={item} schedule={menu.meta.schedule} {...(onAdd ? { onAdd } : {})} />

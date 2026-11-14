@@ -135,6 +135,11 @@ describe('ranked list HTML', () => {
     expect(card).not.toContain('Not verified');
   });
 
+  it('uses a shrinkable single column on a phone, so a long outlet name cannot widen the page', () => {
+    const html = renderToStaticMarkup(<ItemList menu={menu([item()])} filtersOn={false} />);
+    expect(html).toContain('grid grid-cols-1 gap-3 md:grid-cols-2');
+  });
+
   it('never ticks halal for an unverified item that carries a halal tag', () => {
     const html = renderToStaticMarkup(<ItemList menu={menu([unverified()])} filtersOn={false} />);
     expect(html).not.toContain('Halal ✓');
