@@ -1,6 +1,7 @@
 import {
   MS_PER_MINUTE,
   computeLiveWait,
+  type BusyState,
   hktDate,
   isOpenAt,
   itemPrep,
@@ -88,6 +89,7 @@ async function placeSimOrder(
   payload: StoredSnapshotPayload,
   students: readonly string[],
   uniform: Uniform,
+  busyState: BusyState,
 ): Promise<void> {
   const studentId = students[Math.floor(uniform() * students.length)];
   const menu = await db.menuItem.findMany({
@@ -109,6 +111,7 @@ async function placeSimOrder(
     snapshot: toWaitSnapshot(payload),
     now: placedAt,
     appArrivalTimes: sinceSnapshot.map((row) => row.placedAt.getTime()),
+    busyState,
     prepMinutes: orderPrep(
       items.map((item) =>
         itemPrep({
@@ -161,7 +164,7 @@ async function generateMinute(
   const [vendors, holidays, students] = await Promise.all([
     db.vendor.findMany({
       where: ACTIVE_VENDOR_WHERE,
-      select: { id: true, openingHours: true, pickupEnabled: true, paused: true },
+      select: { id: true, openingHours: true, pickupEnabled: true, paused: true, busyState: true },
     }),
     holidayDates(db, state),
     simStudents(db, state),
@@ -196,7 +199,7 @@ async function generateMinute(
     const arrivals = poisson(slot.lambdaPerMinute * share, uniform);
     for (let n = 0; n < arrivals; n += 1) {
       const placedAt = minuteStart + Math.floor(uniform() * MS_PER_MINUTE);
-      await placeSimOrder(db, vendor.id, placedAt, payload, students, uniform);
+      await placeSimOrder(db, vendor.id, placedAt, payload, students, uniform, vendor.busyState);
     }
   }
 }

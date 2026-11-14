@@ -38,6 +38,14 @@ describe('parseNotification', () => {
     expect(parseNotification('snapshot_written', JSON.stringify({ vendorId: 'v' }), 1)).toBeNull();
   });
 
+  it('turns a vendor_changed payload into a queue event with only the vendor id', () => {
+    expect(parseNotification('vendor_changed', JSON.stringify({ vendorId: 'v1' }), 5)).toEqual({
+      kind: 'queue',
+      vendorId: 'v1',
+    });
+    expect(parseNotification('vendor_changed', JSON.stringify({}), 5)).toBeNull();
+  });
+
   it('ignores channels it does not know', () => {
     expect(parseNotification('clock_updated', JSON.stringify(order), 1)).toBeNull();
   });

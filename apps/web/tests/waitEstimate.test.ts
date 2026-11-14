@@ -1,6 +1,6 @@
 import type { StoredSnapshotPayload } from '@app/db';
 import { describe, expect, it } from 'vitest';
-import { estimateWait } from '../src/server/waitEstimate';
+import { effectiveBusyState, estimateWait } from '../src/server/waitEstimate';
 
 const NOW = Date.UTC(2026, 10, 17, 4, 15);
 
@@ -57,5 +57,46 @@ describe('estimateWait', () => {
     expect(wait.source).toBe('stale');
     expect(wait.backlog).toBe(0);
     expect(wait.pointMinutes).toBeGreaterThanOrEqual(5);
+  });
+});
+
+describe('estimateWait with the busy state', () => {
+  const wait = (busyState: 'quiet' | 'normal' | 'rush', busyUntil: number | null = null) =>
+    estimateWait(
+      {
+        payload: payload({
+          forecast: [
+            {
+              slotStart: new Date(NOW).toISOString(),
+              lambdaPerMinute: 2,
+              lambdaSource: 'matching_weeks',
+              expectedWalkIns: 30,
+            },
+          ],
+          mu: { prior: 1, perMinute: 1, busyMinutes: 0 },
+        }),
+        arrivals: [],
+        busyState,
+        busyUntil,
+      },
+      NOW + 5 * 60_000,
+      4,
+    );
+
+  it('lengthens the wait in a rush and shortens it when quiet', () => {
+    expect(wait('rush').backlog).toBeGreaterThan(wait('normal').backlog);
+    expect(wait('normal').backlog).toBeGreaterThan(wait('quiet').backlog);
+  });
+
+  it('treats a rush that has already expired as normal', () => {
+    expect(wait('rush', NOW + 60_000).backlog).toBe(wait('normal').backlog);
+    expect(wait('rush', NOW + 10 * 60_000).backlog).toBeGreaterThan(wait('normal').backlog);
+  });
+
+  it('is normal when no state is known', () => {
+    expect(effectiveBusyState(undefined, NOW)).toBe('normal');
+    expect(effectiveBusyState({ payload: null, arrivals: [], busyState: 'quiet' }, NOW)).toBe(
+      'quiet',
+    );
   });
 });

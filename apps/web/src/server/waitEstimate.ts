@@ -4,6 +4,7 @@ import {
   MU_FLOOR_PER_MINUTE,
   computeLiveWait,
   predictWait,
+  type BusyState,
 } from '@app/core';
 import { toWaitSnapshot, type StoredSnapshotPayload } from '@app/db';
 
@@ -12,6 +13,18 @@ export type WaitSource = 'live' | 'stale' | 'cold';
 export interface VendorWaitState {
   payload: StoredSnapshotPayload | null;
   arrivals: readonly number[];
+  busyState?: BusyState;
+  busyUntil?: number | null;
+}
+
+export function effectiveBusyState(state: VendorWaitState | undefined, now: number): BusyState {
+  if (state?.busyState === undefined) return 'normal';
+  const expired =
+    state.busyState === 'rush' &&
+    state.busyUntil !== undefined &&
+    state.busyUntil !== null &&
+    state.busyUntil <= now;
+  return expired ? 'normal' : state.busyState;
 }
 
 export interface WaitEstimate {
@@ -53,6 +66,7 @@ export function estimateWait(
     now,
     appArrivalTimes: state.arrivals,
     prepMinutes,
+    busyState: effectiveBusyState(state, now),
   });
   return {
     baseMinutes: result.prediction.baseMinutes,

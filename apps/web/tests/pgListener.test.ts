@@ -102,7 +102,11 @@ describe('createPgListener', () => {
     const { listener, clients, events } = setup();
     listener.start();
     await settle();
-    expect(clients[0]?.queries).toEqual(['LISTEN order_changed', 'LISTEN snapshot_written']);
+    expect(clients[0]?.queries).toEqual([
+      'LISTEN order_changed',
+      'LISTEN snapshot_written',
+      'LISTEN vendor_changed',
+    ]);
     clients[0]?.emitNotification(
       'order_changed',
       JSON.stringify({ orderId: 'o', vendorId: 'v', studentId: 's', status: 'ready' }),
@@ -137,7 +141,7 @@ describe('createPgListener', () => {
     retries[0]?.run();
     await settle();
     expect(clients).toHaveLength(2);
-    expect(clients[1]?.queries).toHaveLength(2);
+    expect(clients[1]?.queries).toHaveLength(3);
     expect(events).toEqual([{ kind: 'resync' }]);
   });
 
