@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "ES2022"],
+    "module": "CommonJS",
+    "moduleResolution": "Node10",
+    "types": ["node"],
+    "noEmit": true,
+    "incremental": false,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false
+  },
+  "include": ["./**/*.ts", "../../playwright.config.ts"]
+}
