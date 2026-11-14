@@ -90,7 +90,14 @@ export interface ChatFoods {
 
 export interface ChatOrder {
   id: string;
-  status: 'placed' | 'accepted' | 'preparing' | 'ready' | 'picked_up' | 'cancelled';
+  status:
+    | 'placed'
+    | 'accepted'
+    | 'preparing'
+    | 'ready'
+    | 'completed'
+    | 'picked_up'
+    | 'cancelled';
   vendorName: string;
   placedAt: number;
   predicted: { low: number; point: number; high: number };

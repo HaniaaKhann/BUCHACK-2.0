@@ -1,0 +1,1 @@
+export const AUTO_COMPLETE_AFTER_MINUTES = 30;

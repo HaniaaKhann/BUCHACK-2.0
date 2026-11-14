@@ -101,14 +101,12 @@ describe('notifications made by the vendor taps', () => {
     expect(await vendorAction('accept')).toBe(200);
     expect(await vendorAction('preparing')).toBe(200);
     expect(await vendorAction('ready')).toBe(200);
-    expect(await vendorAction('picked-up')).toBe(200);
-    expect(await vendorAction('picked-up')).toBe(200);
+    expect(await vendorAction('ready')).toBe(200);
 
     const { body } = await list();
-    expect(body.unread).toBe(4);
+    expect(body.unread).toBe(3);
     expect(body.notifications.map((item) => item.kind).sort()).toEqual([
       'order_accepted',
-      'order_picked_up',
       'order_preparing',
       'order_ready',
     ]);
@@ -119,7 +117,7 @@ describe('notifications made by the vendor taps', () => {
 
   it('creates nothing when the tap is refused', async () => {
     const before = (await list()).body.unread;
-    expect(await vendorAction('ready')).toBe(409);
+    expect(await vendorAction('accept')).toBe(409);
     expect((await list()).body.unread).toBe(before);
   });
 });
@@ -146,7 +144,7 @@ describe('marking notifications read', () => {
     const first = mine[0];
     expect(await read({ ids: [first?.id ?? ''] })).toBe(200);
     const afterOne = (await list()).body;
-    expect(afterOne.unread).toBe(3);
+    expect(afterOne.unread).toBe(2);
     expect(afterOne.notifications.find((item) => item.id === first?.id)?.read).toBe(true);
 
     expect(await read({ all: true })).toBe(200);

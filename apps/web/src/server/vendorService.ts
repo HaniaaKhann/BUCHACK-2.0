@@ -1,4 +1,4 @@
-import { orderLink, orderStatusNotification } from '@app/core';
+import { hktDate, hktMidnight, orderLink, orderStatusNotification } from '@app/core';
 import { SIM_EMAIL_DOMAIN, createNotification } from '@app/db';
 import { getClockNowMs } from './clock';
 import { prisma } from './db';
@@ -32,7 +32,7 @@ const vendorOrderSelect = {
   items: { select: { qty: true, menuItem: { select: { name: true } } } },
 } as const;
 
-const ACTIVE_STATUSES: VendorOrderStatus[] = ['placed', 'accepted', 'preparing', 'ready'];
+const ACTIVE_STATUSES: VendorOrderStatus[] = ['placed', 'accepted', 'preparing'];
 
 export async function listVendorOrders(vendorId: string): Promise<VendorOrderView[]> {
   const rows = await prisma.order.findMany({
@@ -52,6 +52,48 @@ export async function listVendorOrders(vendorId: string): Promise<VendorOrderVie
   }));
 }
 
+export interface DoneOrderView {
+  id: string;
+  status: 'ready' | 'completed';
+  totalHkd: number;
+  readyAt: number;
+  items: { name: string; qty: number }[];
+}
+
+export async function listDoneToday(vendorId: string): Promise<DoneOrderView[]> {
+  const now = await getClockNowMs();
+  const dayStart = new Date(hktMidnight(hktDate(now)));
+  const rows = await prisma.order.findMany({
+    where: {
+      vendorId,
+      status: { in: ['ready', 'completed', 'picked_up'] },
+      readyAt: { gte: dayStart },
+    },
+    orderBy: { readyAt: 'desc' },
+    take: 100,
+    select: {
+      id: true,
+      status: true,
+      totalHkd: true,
+      readyAt: true,
+      items: { select: { qty: true, menuItem: { select: { name: true } } } },
+    },
+  });
+  return rows.flatMap((row) =>
+    row.readyAt === null
+      ? []
+      : [
+          {
+            id: row.id,
+            status: row.status === 'ready' ? ('ready' as const) : ('completed' as const),
+            totalHkd: row.totalHkd,
+            readyAt: row.readyAt.getTime(),
+            items: row.items.map((item) => ({ name: item.menuItem.name, qty: item.qty })),
+          },
+        ],
+  );
+}
+
 export async function transitionVendorOrder(
   vendorId: string,
   orderId: string,
@@ -64,9 +106,7 @@ export async function transitionVendorOrder(
       ? { acceptedAt: now }
       : transition.to === 'ready'
         ? { readyAt: now }
-        : transition.to === 'picked_up'
-          ? { pickedUpAt: now }
-          : {};
+        : {};
 
   const result = await prisma.$transaction(async (tx) => {
     const updated = await tx.order.updateMany({

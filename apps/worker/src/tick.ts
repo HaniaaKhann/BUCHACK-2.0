@@ -3,6 +3,7 @@ import { SNAPSHOT_STEP_MS, boundaryAtOrBefore, dueBoundaries, type ClockReading 
 import { MAX_REPLAYED_BOUNDARIES } from './config.js';
 import type { Uniform } from './demoLoadPlan.js';
 import { autoAccept } from './jobs/autoAccept.js';
+import { autoComplete } from './jobs/autoComplete.js';
 import { busyExpiry } from './jobs/busyExpiry.js';
 import { demoLoad, newDemoLoadState, type DemoLoadState } from './jobs/demoLoad.js';
 import { runEngineSnapshots } from './jobs/engineSnapshot.js';
@@ -44,6 +45,7 @@ export async function runTick(
     state.lastSnapshotBoundary = boundaryAtOrBefore(nowMs, SNAPSHOT_STEP_MS);
   }
   await autoAccept(db, nowMs);
+  await autoComplete(db, nowMs);
   await slotFire(db, nowMs);
   await leaveReminder(db, nowMs);
   await busyExpiry(db, nowMs);

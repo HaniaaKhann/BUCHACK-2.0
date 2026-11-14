@@ -408,12 +408,16 @@ describe('cancel and pick up', () => {
     expect(await balance()).toBe(before);
   });
 
-  it('picks up from accepted or ready, idempotently, and refuses before acceptance', async () => {
+  it('completes from ready only, idempotently, and refuses in every earlier state', async () => {
     const placed = String(orderOf((await placeOrder(asap())).json)['id']);
-    expect(await patch(pickUpRoute, placed)).toMatchObject({
-      status: 409,
-      json: { error: 'not_ready' },
-    });
+    for (const earlier of ['placed', 'accepted', 'preparing'] as const) {
+      await db.order.update({ where: { id: placed }, data: { status: earlier } });
+      expect(await patch(pickUpRoute, placed)).toMatchObject({
+        status: 409,
+        json: { error: 'not_ready' },
+      });
+    }
+    expect((await db.order.findUniqueOrThrow({ where: { id: placed } })).pickedUpAt).toBeNull();
 
     await db.order.update({
       where: { id: placed },
@@ -421,15 +425,11 @@ describe('cancel and pick up', () => {
     });
     const first = await patch(pickUpRoute, placed);
     expect(first.status).toBe(200);
-    expect(orderOf(first.json)).toMatchObject({ status: 'picked_up', canPickUp: false });
+    expect(orderOf(first.json)).toMatchObject({ status: 'completed', canPickUp: false });
+    expect(orderOf(first.json)['pickedUpAt']).not.toBeNull();
     const again = await patch(pickUpRoute, placed);
     expect(again.status).toBe(200);
     expect(orderOf(again.json)['pickedUpAt']).toBe(orderOf(first.json)['pickedUpAt']);
-
-    const forgotten = String(orderOf((await placeOrder(asap())).json)['id']);
-    await db.order.update({ where: { id: forgotten }, data: { status: 'accepted' } });
-    const noTap = await patch(pickUpRoute, forgotten);
-    expect(orderOf(noTap.json)).toMatchObject({ status: 'picked_up', readyAt: null });
   });
 
   it('refuses to pick up a cancelled order', async () => {

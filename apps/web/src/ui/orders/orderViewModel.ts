@@ -1,21 +1,23 @@
-import { formatHktTime } from '@app/core';
+import { AUTO_COMPLETE_AFTER_MINUTES, formatHktTime } from '@app/core';
 import type { OrderView } from '@/server/orderViews';
 
 export type OrderStatus = OrderView['status'];
 
-export const STATUS_STEPS = ['placed', 'accepted', 'preparing', 'ready', 'picked_up'] as const;
+export const STATUS_STEPS = ['placed', 'accepted', 'preparing', 'ready', 'completed'] as const;
 
 export const STATUS_LABELS: Record<OrderStatus, string> = {
   placed: 'Placed',
   accepted: 'Accepted',
   preparing: 'Preparing',
   ready: 'Ready',
-  picked_up: 'Picked up',
+  completed: 'Completed',
+  picked_up: 'Completed',
   cancelled: 'Cancelled',
 };
 
 export function stepIndex(status: OrderStatus): number {
-  return STATUS_STEPS.findIndex((step) => step === status);
+  const step = status === 'picked_up' ? 'completed' : status;
+  return STATUS_STEPS.findIndex((entry) => entry === step);
 }
 
 export function formatHkd(amount: number): string {
@@ -35,7 +37,8 @@ export function statusMessage(order: OrderView): string {
     case 'preparing':
       return 'Your food is being cooked.';
     case 'ready':
-      return 'Your order is ready. Tap "I picked it up" when you have it.';
+      return `Your order is ready. Tap "I picked it up" when you have it. It completes by itself ${AUTO_COMPLETE_AFTER_MINUTES} minutes after it was ready.`;
+    case 'completed':
     case 'picked_up':
       return 'Enjoy your meal.';
     case 'cancelled':

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { requireVendorAccess } from '@/server/rbac';
-import { listVendorOrders } from '@/server/vendorService';
+import { listDoneToday, listVendorOrders } from '@/server/vendorService';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,5 +18,6 @@ export async function GET(
   return Response.json({
     vendorId: params.data.id,
     orders: await listVendorOrders(params.data.id),
+    done: await listDoneToday(params.data.id),
   });
 }

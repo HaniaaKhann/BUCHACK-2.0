@@ -8,28 +8,28 @@ import {
 } from '../src/server/vendorTransitions';
 
 describe('vendor transitions', () => {
-  it('walks placed to picked up in four steps, and picked up only comes from ready', () => {
+  it('walks placed to ready in three steps, and ready is the last one', () => {
     expect(VENDOR_ACTIONS.map((action) => VENDOR_TRANSITIONS[action].to)).toEqual([
       'accepted',
       'preparing',
       'ready',
-      'picked_up',
     ]);
-    expect(VENDOR_TRANSITIONS['picked-up'].from).toBe('ready');
-    expect(actionFor('ready')).toBe('picked-up');
+    expect(VENDOR_TRANSITIONS.ready.from).toBe('preparing');
+    expect(actionFor('ready')).toBeNull();
+    expect(Object.keys(VENDOR_TRANSITIONS)).not.toContain('picked-up');
   });
 
-  it('refuses picked up from every state except ready, and treats a repeat as done', () => {
-    for (const status of ['placed', 'accepted', 'preparing', 'cancelled']) {
-      expect(checkTransition('picked-up', status)).toBe('wrong_state');
+  it('refuses ready from every state except preparing, and treats a repeat as done', () => {
+    for (const status of ['placed', 'accepted', 'cancelled', 'completed']) {
+      expect(checkTransition('ready', status)).toBe('wrong_state');
     }
-    expect(checkTransition('picked-up', 'ready')).toBe('apply');
-    expect(checkTransition('picked-up', 'picked_up')).toBe('already_done');
+    expect(checkTransition('ready', 'preparing')).toBe('apply');
+    expect(checkTransition('ready', 'ready')).toBe('already_done');
   });
 });
 
 describe('newOrderIds', () => {
-  const order = (id: string, status: 'placed' | 'ready') => ({
+  const order = (id: string, status: 'placed' | 'preparing') => ({
     id,
     status,
     totalHkd: 1,
@@ -42,7 +42,7 @@ describe('newOrderIds', () => {
   it('reports only unseen orders that are still new', () => {
     const seen = new Set(['a']);
     expect(
-      newOrderIds(seen, [order('a', 'placed'), order('b', 'placed'), order('c', 'ready')]),
+      newOrderIds(seen, [order('a', 'placed'), order('b', 'placed'), order('c', 'preparing')]),
     ).toEqual(['b']);
   });
 });

@@ -20,7 +20,7 @@ export const orderSelect = {
 
 export interface OrderRow {
   id: string;
-  status: 'placed' | 'accepted' | 'preparing' | 'ready' | 'picked_up' | 'cancelled';
+  status: 'placed' | 'accepted' | 'preparing' | 'ready' | 'completed' | 'picked_up' | 'cancelled';
   totalHkd: number;
   placedAt: Date;
   acceptedAt: Date | null;
@@ -84,6 +84,6 @@ export function toOrderView(row: OrderRow, now: number): OrderView {
     now,
     graceSecondsLeft: row.status === 'placed' ? graceSecondsLeft(row.placedAt.getTime(), now) : 0,
     canCancel: row.status === 'placed',
-    canPickUp: row.status === 'accepted' || row.status === 'preparing' || row.status === 'ready',
+    canPickUp: row.status === 'ready',
   };
 }

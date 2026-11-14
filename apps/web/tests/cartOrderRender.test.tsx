@@ -114,6 +114,14 @@ describe('order page HTML', () => {
     expect(html).not.toContain('Cancel order');
   });
 
+  it('shows the last step as Completed once the order is completed, with no buttons', () => {
+    const html = tracker(order({ status: 'completed', canCancel: false, canPickUp: false }));
+    expect(html).toContain('data-step="completed" data-done="true"');
+    expect(html).toContain('Enjoy your meal.');
+    expect(html).not.toContain('I picked it up');
+    expect(html).not.toContain('Cancel order');
+  });
+
   it('shows the pick-up button once the order can be picked up', () => {
     const html = tracker(order({ status: 'ready', canCancel: false, canPickUp: true }));
     expect(html).toContain('I picked it up');

@@ -47,6 +47,8 @@ describe('order status text', () => {
 
   it('tells the student to tap pick up when ready and mentions the refund when cancelled', () => {
     expect(statusMessage(order({ status: 'ready' }))).toContain('I picked it up');
+    expect(statusMessage(order({ status: 'ready' }))).toContain('30 minutes after it was ready');
+    expect(statusMessage(order({ status: 'completed' }))).toBe('Enjoy your meal.');
     expect(statusMessage(order({ status: 'cancelled' }))).toContain('HK$76 was refunded');
   });
 
@@ -58,6 +60,7 @@ describe('order status text', () => {
 
   it('orders the steps and leaves cancelled outside them', () => {
     expect(stepIndex('placed')).toBe(0);
+    expect(stepIndex('completed')).toBe(4);
     expect(stepIndex('picked_up')).toBe(4);
     expect(stepIndex('cancelled')).toBe(-1);
   });

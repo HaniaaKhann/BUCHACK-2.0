@@ -44,9 +44,17 @@ describe('toOrderView', () => {
     expect(accepted).toMatchObject({ canCancel: false, graceSecondsLeft: 0 });
   });
 
-  it('allows pick-up from accepted, preparing and ready only', () => {
-    const states = ['placed', 'accepted', 'preparing', 'ready', 'picked_up', 'cancelled'] as const;
+  it('allows pick-up from ready only', () => {
+    const states = [
+      'placed',
+      'accepted',
+      'preparing',
+      'ready',
+      'completed',
+      'picked_up',
+      'cancelled',
+    ] as const;
     const allowed = states.filter((status) => toOrderView(row({ status }), PLACED).canPickUp);
-    expect(allowed).toEqual(['accepted', 'preparing', 'ready']);
+    expect(allowed).toEqual(['ready']);
   });
 });

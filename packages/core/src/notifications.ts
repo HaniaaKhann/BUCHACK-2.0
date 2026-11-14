@@ -6,6 +6,7 @@ export const NOTIFICATION_KINDS = [
   'order_preparing',
   'order_ready',
   'order_picked_up',
+  'order_completed',
   'leave_now',
 ] as const;
 
@@ -49,6 +50,14 @@ export function orderStatusNotification(
         body: `Your order at ${vendorName} was marked as picked up.`,
       };
   }
+}
+
+export function orderCompletedNotification(vendorName: string): NotificationContent {
+  return {
+    kind: 'order_completed',
+    title: 'Order completed',
+    body: `Your order at ${vendorName} was completed automatically.`,
+  };
 }
 
 export function leaveNowNotification(vendorName: string, readyAtMs: number): NotificationContent {

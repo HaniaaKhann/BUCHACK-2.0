@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getPageActor } from '@/server/session';
-import { listVendorOrders } from '@/server/vendorService';
+import { listDoneToday, listVendorOrders } from '@/server/vendorService';
 import { vendorStatus } from '@/server/vendorControls';
 import { getVendorContext } from '@/server/vendorContext';
 import { VendorBoard } from '@/ui/vendor/VendorBoard';
@@ -13,8 +13,9 @@ export default async function VendorPage(): Promise<React.JSX.Element> {
   const context = await getVendorContext(actor);
   if (context === null) redirect('/');
 
-  const [orders, status] = await Promise.all([
+  const [orders, done, status] = await Promise.all([
     listVendorOrders(context.vendorId),
+    listDoneToday(context.vendorId),
     vendorStatus(context.vendorId),
   ]);
   if (status === null) redirect('/');
@@ -23,6 +24,7 @@ export default async function VendorPage(): Promise<React.JSX.Element> {
     <VendorBoard
       vendorId={context.vendorId}
       initialOrders={orders}
+      initialDone={done}
       initialStatus={status}
       isOwner={context.memberRole === 'owner'}
     />

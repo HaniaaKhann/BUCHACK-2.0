@@ -18,7 +18,6 @@ const COLUMNS: { status: VendorOrderStatus; title: string }[] = [
   { status: 'placed', title: 'New' },
   { status: 'accepted', title: 'Accepted' },
   { status: 'preparing', title: 'Preparing' },
-  { status: 'ready', title: 'Ready' },
 ];
 
 export function boardColumns(orders: readonly VendorOrderView[]): BoardColumn[] {

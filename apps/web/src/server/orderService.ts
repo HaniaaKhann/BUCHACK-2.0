@@ -320,19 +320,21 @@ export async function cancelOrder(userId: string, orderId: string): Promise<Orde
 export async function pickUpOrder(userId: string, orderId: string): Promise<OrderView> {
   const now = await getClockNowMs();
   const result = await prisma.order.updateMany({
-    where: { id: orderId, studentId: userId, status: { in: ['accepted', 'preparing', 'ready'] } },
-    data: { status: 'picked_up', pickedUpAt: new Date(now) },
+    where: { id: orderId, studentId: userId, status: 'ready' },
+    data: { status: 'completed', pickedUpAt: new Date(now) },
   });
 
   const view = await getOrder(userId, orderId);
   if (view === null) throw new OrderError(404, 'not_found');
-  if (result.count === 0 && view.status !== 'picked_up') throw new OrderError(409, 'not_ready');
+  if (result.count === 0 && view.status !== 'completed' && view.status !== 'picked_up') {
+    throw new OrderError(409, 'not_ready');
+  }
   if (result.count === 1) {
     await notifyOrderChanged({
       id: orderId,
       vendorId: view.vendor.id,
       studentId: userId,
-      status: 'picked_up',
+      status: 'completed',
     });
   }
   return view;

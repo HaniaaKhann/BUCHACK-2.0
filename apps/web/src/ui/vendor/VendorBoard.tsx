@@ -4,12 +4,13 @@ import { formatHktTime } from '@app/core';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { VendorStatusView } from '@/server/vendorControls';
-import type { VendorOrderView } from '@/server/vendorService';
+import type { DoneOrderView, VendorOrderView } from '@/server/vendorService';
 import type { VendorAction } from '@/server/vendorTransitions';
 import { useLiveRefresh } from '../dashboard/useLiveRefresh';
 import { AppHeader, Button, Card, ErrorNote, Switch } from '../primitives';
 import { SignOutButton } from '../SignOutButton';
 import { BoardColumns } from './BoardColumns';
+import { DoneToday } from './DoneToday';
 import { newOrderIds } from './boardModel';
 
 function beep(): void {
@@ -31,6 +32,7 @@ const BUSY_CHOICES = [
 interface VendorBoardProps {
   vendorId: string;
   initialOrders: VendorOrderView[];
+  initialDone: DoneOrderView[];
   initialStatus: VendorStatusView;
   isOwner: boolean;
 }
@@ -38,10 +40,12 @@ interface VendorBoardProps {
 export function VendorBoard({
   vendorId,
   initialOrders,
+  initialDone,
   initialStatus,
   isOwner,
 }: VendorBoardProps): React.JSX.Element {
   const [orders, setOrders] = useState(initialOrders);
+  const [done, setDone] = useState(initialDone);
   const [status, setStatus] = useState(initialStatus);
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -60,7 +64,12 @@ export function VendorBoard({
       fetch(`/api/vendor/${vendorId}/status`, { cache: 'no-store' }),
     ]);
     if (ordersResponse.ok) {
-      setOrders(((await ordersResponse.json()) as { orders: VendorOrderView[] }).orders);
+      const body = (await ordersResponse.json()) as {
+        orders: VendorOrderView[];
+        done: DoneOrderView[];
+      };
+      setOrders(body.orders);
+      setDone(body.done);
     }
     if (statusResponse.ok) {
       setStatus(((await statusResponse.json()) as { status: VendorStatusView }).status);
@@ -155,6 +164,7 @@ export function VendorBoard({
         </Card>
         <ErrorNote message={error} />
         <BoardColumns orders={orders} pendingId={pendingId} onAction={onAction} />
+        <DoneToday orders={done} />
       </main>
     </div>
   );

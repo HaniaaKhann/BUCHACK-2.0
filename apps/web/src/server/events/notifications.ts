@@ -13,7 +13,15 @@ export const LISTEN_CHANNELS = [
   NOTIFICATION_CREATED_CHANNEL,
 ] as const;
 
-const orderStatus = z.enum(['placed', 'accepted', 'preparing', 'ready', 'picked_up', 'cancelled']);
+const orderStatus = z.enum([
+  'placed',
+  'accepted',
+  'preparing',
+  'ready',
+  'completed',
+  'picked_up',
+  'cancelled',
+]);
 
 const orderChangedSchema = z.object({
   orderId: z.string().min(1),

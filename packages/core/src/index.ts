@@ -20,6 +20,7 @@ export * from './ranking.js';
 export * from './time.js';
 export * from './clockControl.js';
 export * from './notifications.js';
+export * from './orderLifecycle.js';
 export * from './chat/index.js';
 export * from './engine/inAppAccuracy.js';
 export * from './openRanges.js';

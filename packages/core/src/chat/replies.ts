@@ -576,6 +576,7 @@ const STATUS_TEXT: Record<ChatOrder['status'], [string, string, string]> = {
   accepted: ['Accepted', '已接單', '已接单'],
   preparing: ['Preparing', '製作中', '制作中'],
   ready: ['Ready', '可取餐', '可取餐'],
+  completed: ['Completed', '已完成', '已完成'],
   picked_up: ['Picked up', '已取餐', '已取餐'],
   cancelled: ['Cancelled', '已取消', '已取消'],
 };
@@ -586,7 +587,10 @@ function statusLine(language: ChatLanguage, order: ChatOrder): string {
   const entry = STATUS_TEXT[order.status];
   const status = t(language, entry[0], entry[1], entry[2]);
   const predicted =
-    order.status === 'ready' || order.status === 'picked_up' || order.status === 'cancelled'
+    order.status === 'ready' ||
+    order.status === 'completed' ||
+    order.status === 'picked_up' ||
+    order.status === 'cancelled'
       ? ''
       : t(
           language,

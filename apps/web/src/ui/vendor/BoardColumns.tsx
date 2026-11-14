@@ -16,7 +16,7 @@ export function BoardColumns({
   onAction,
 }: BoardColumnsProps): React.JSX.Element {
   return (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-3">
       {boardColumns(orders).map((column) => (
         <section key={column.status} aria-label={column.title} className="space-y-3">
           <h2 className="text-sm font-semibold">

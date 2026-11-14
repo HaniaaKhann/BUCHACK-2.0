@@ -18,7 +18,13 @@ function board(paused: boolean): string {
     now: NOW,
   };
   return renderToStaticMarkup(
-    <VendorBoard vendorId="v1" initialOrders={[]} initialStatus={status} isOwner />,
+    <VendorBoard
+      vendorId="v1"
+      initialOrders={[]}
+      initialDone={[]}
+      initialStatus={status}
+      isOwner
+    />,
   );
 }
 

@@ -1,13 +1,8 @@
-export type VendorOrderStatus = 'placed' | 'accepted' | 'preparing' | 'ready' | 'picked_up';
+export type VendorOrderStatus = 'placed' | 'accepted' | 'preparing' | 'ready';
 
-export type VendorAction = 'accept' | 'preparing' | 'ready' | 'picked-up';
+export type VendorAction = 'accept' | 'preparing' | 'ready';
 
-export const VENDOR_ACTIONS: readonly VendorAction[] = [
-  'accept',
-  'preparing',
-  'ready',
-  'picked-up',
-];
+export const VENDOR_ACTIONS: readonly VendorAction[] = ['accept', 'preparing', 'ready'];
 
 interface Transition {
   from: VendorOrderStatus;
@@ -19,7 +14,6 @@ export const VENDOR_TRANSITIONS: Record<VendorAction, Transition> = {
   accept: { from: 'placed', to: 'accepted', label: 'Accept' },
   preparing: { from: 'accepted', to: 'preparing', label: 'Start preparing' },
   ready: { from: 'preparing', to: 'ready', label: 'Mark ready' },
-  'picked-up': { from: 'ready', to: 'picked_up', label: 'Picked up' },
 };
 
 export function actionFor(status: VendorOrderStatus): VendorAction | null {

@@ -3,9 +3,11 @@ import { MS_PER_MINUTE } from '../src/config.js';
 import {
   leaveNowAt,
   leaveNowNotification,
+  orderCompletedNotification,
   orderLink,
   orderStatusNotification,
 } from '../src/notifications.js';
+import { AUTO_COMPLETE_AFTER_MINUTES } from '../src/orderLifecycle.js';
 
 describe('order status notifications', () => {
   it('says what happened at which outlet for every status', () => {
@@ -27,6 +29,20 @@ describe('order status notifications', () => {
       kind: 'order_picked_up',
       title: 'Order picked up',
     });
+  });
+});
+
+describe('order completed', () => {
+  it('says the order was completed automatically', () => {
+    expect(orderCompletedNotification('Deli')).toEqual({
+      kind: 'order_completed',
+      title: 'Order completed',
+      body: 'Your order at Deli was completed automatically.',
+    });
+  });
+
+  it('waits 30 minutes after ready, in one constant', () => {
+    expect(AUTO_COMPLETE_AFTER_MINUTES).toBe(30);
   });
 });
 
