@@ -12,6 +12,7 @@ vi.mock('../src/notifier.js', () => ({ notify: vi.fn(async () => undefined) }));
 const repoRoot = fileURLToPath(new URL('../../..', import.meta.url));
 const db = new PrismaClient();
 
+const SIM_EMAIL = `auto-complete-test@${SIM_EMAIL_DOMAIN}`;
 const PLACED_AT = Date.UTC(2026, 10, 17, 4, 0);
 const READY_AT = PLACED_AT + 8 * MS_PER_MINUTE;
 const state = newTickState();
@@ -67,9 +68,15 @@ beforeAll(async () => {
   vendorId = (await db.vendorMember.findFirstOrThrow({ where: { userId: owner.id } })).vendorId;
   menuItemId = (await db.menuItem.findFirstOrThrow({ where: { vendorId } })).id;
   simId = (
-    await db.user.findFirstOrThrow({
-      where: { email: { endsWith: `@${SIM_EMAIL_DOMAIN}` } },
-      select: { id: true },
+    await db.user.upsert({
+      where: { email: SIM_EMAIL },
+      update: {},
+      create: {
+        id: 'auto-complete-test-sim',
+        name: 'Auto complete test sim',
+        email: SIM_EMAIL,
+        role: 'student',
+      },
     })
   ).id;
   await db.order.deleteMany({ where: { studentId } });
@@ -82,6 +89,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await db.order.deleteMany({ where: { id: { in: Object.values(ids) } } });
   await db.notification.deleteMany({ where: { userId: studentId } });
+  await db.user.deleteMany({ where: { email: SIM_EMAIL } });
   await db.$disconnect();
 });
 

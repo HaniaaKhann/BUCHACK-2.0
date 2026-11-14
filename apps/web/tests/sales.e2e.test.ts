@@ -13,6 +13,7 @@ let simId = '';
 let menuItemId = '';
 let originalClock: { mode: 'real' | 'demo'; currentTime: Date; speed: number } | null = null;
 
+const SIM_EMAIL = `sales-test@${SIM_EMAIL_DOMAIN}`;
 const NOW = Date.UTC(2026, 10, 17, 4, 15);
 const MIDNIGHT = Date.UTC(2026, 10, 16, 16, 0);
 const MINUTE = 60_000;
@@ -72,9 +73,10 @@ beforeAll(async () => {
   otherVendorId = (await db.vendor.findFirstOrThrow({ where: { id: { not: vendorId } } })).id;
   menuItemId = (await db.menuItem.findFirstOrThrow({ where: { vendorId } })).id;
   simId = (
-    await db.user.findFirstOrThrow({
-      where: { email: { endsWith: `@${SIM_EMAIL_DOMAIN}` } },
-      select: { id: true },
+    await db.user.upsert({
+      where: { email: SIM_EMAIL },
+      update: {},
+      create: { id: 'sales-test-sim', name: 'Sales test sim', email: SIM_EMAIL, role: 'student' },
     })
   ).id;
   await db.order.deleteMany({ where: { studentId } });
@@ -88,7 +90,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await db.order.deleteMany({ where: { studentId } });
-  await db.order.deleteMany({ where: { studentId: simId, placedAt: new Date(NOW - 7 * MINUTE) } });
+  await db.user.deleteMany({ where: { email: SIM_EMAIL } });
   if (originalClock) await db.systemClock.update({ where: { id: 1 }, data: originalClock });
   await db.session.deleteMany({
     where: { user: { email: { in: DEMO_ACCOUNTS.map((a) => a.email) } } },
