@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { requireVendorAccess } from '@/server/rbac';
+import { listVendorOrders } from '@/server/vendorService';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,5 +15,8 @@ export async function GET(
 
   const guard = await requireVendorAccess(request, params.data.id);
   if (!guard.ok) return guard.response;
-  return Response.json({ vendorId: params.data.id, orders: [] });
+  return Response.json({
+    vendorId: params.data.id,
+    orders: await listVendorOrders(params.data.id),
+  });
 }
