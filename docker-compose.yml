@@ -41,7 +41,6 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/app
       BETTER_AUTH_SECRET: dev-secret-change-me
       BETTER_AUTH_URL: http://localhost:3000
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       DEMO_MODE: 'true'
       NODE_ENV: production
 
