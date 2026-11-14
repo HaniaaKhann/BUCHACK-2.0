@@ -6,6 +6,9 @@ export const PALETTE = {
   cocoa: '#8B3A17',
   white: '#FFFFFF',
   muted: '#566286',
+  paper: '#FAFCF2',
+  blush: '#F0E5E1',
+  mist: '#D8EFFF',
 } as const;
 
 export type PaletteName = keyof typeof PALETTE;
@@ -33,6 +36,19 @@ export const TEXT_PAIRS: readonly TextPair[] = [
   { text: 'cream', on: 'cocoa', size: 'small', use: 'brown tiles' },
   { text: 'cocoa', on: 'cream', size: 'small', use: 'warning text on the page' },
   { text: 'cocoa', on: 'white', size: 'small', use: 'warning text on cards' },
+  { text: 'navy', on: 'paper', size: 'small', use: 'body text on the page surface' },
+  { text: 'muted', on: 'paper', size: 'small', use: 'secondary text on the page surface' },
+  {
+    text: 'berry',
+    on: 'paper',
+    size: 'small',
+    use: 'error text and tile initials on the page surface',
+  },
+  { text: 'cocoa', on: 'paper', size: 'small', use: 'warning text on the page surface' },
+  { text: 'cocoa', on: 'blush', size: 'small', use: 'the demo banner and warning chips' },
+  { text: 'navy', on: 'blush', size: 'small', use: 'text on a brown tint' },
+  { text: 'cocoa', on: 'cream', size: 'small', use: 'tile initials on cream' },
+  { text: 'navy', on: 'mist', size: 'small', use: 'text on a blue tint' },
   { text: 'navy', on: 'sky', size: 'large', use: 'initial letter on a blue tile' },
 ];
 
