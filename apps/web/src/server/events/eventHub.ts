@@ -40,7 +40,9 @@ export function createEventHub(): EventHub {
 
 export function studentFilter(studentId: string): EventFilter {
   return (event) =>
-    event.kind === 'snapshot' || (event.kind === 'order' && event.studentId === studentId);
+    event.kind === 'snapshot' ||
+    event.kind === 'queue' ||
+    (event.kind === 'order' && event.studentId === studentId);
 }
 
 export function vendorFilter(vendorId: string): EventFilter {

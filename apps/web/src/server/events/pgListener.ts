@@ -75,7 +75,9 @@ export function createPgListener(deps: ListenerDeps): PgListener {
     current = client;
     client.onNotification((message) => {
       const event = parseNotification(message.channel, message.payload, deps.now());
-      if (event !== null) deps.hub.publish(event);
+      if (event === null) return;
+      deps.hub.publish(event);
+      if (event.kind === 'order') deps.hub.publish({ kind: 'queue', vendorId: event.vendorId });
     });
     client.onError((error) => drop(client, error.message));
     client.onEnd(() => drop(client, 'connection ended'));

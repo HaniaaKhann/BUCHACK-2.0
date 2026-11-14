@@ -52,6 +52,13 @@ describe('toWire', () => {
     });
   });
 
+  it('sends only the vendor id for a queue event', () => {
+    expect(toWire({ kind: 'queue', vendorId: 'v' })).toEqual({
+      name: 'queue',
+      data: { vendorId: 'v' },
+    });
+  });
+
   it('names snapshot and resync events', () => {
     expect(toWire({ kind: 'snapshot', vendorId: 'v', computedAt: 't' }).name).toBe('snapshot');
     expect(toWire({ kind: 'resync' })).toEqual({ name: 'resync', data: {} });

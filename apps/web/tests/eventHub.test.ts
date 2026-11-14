@@ -72,6 +72,7 @@ describe('studentFilter', () => {
     expect(filter(orderFor('a', 'v1'))).toBe(true);
     expect(filter(orderFor('b', 'v1'))).toBe(false);
     expect(filter(snapshotFor('v9'))).toBe(true);
+    expect(filter({ kind: 'queue', vendorId: 'v9' })).toBe(true);
   });
 });
 
@@ -82,5 +83,7 @@ describe('vendorFilter', () => {
     expect(filter(orderFor('a', 'v2'))).toBe(false);
     expect(filter(snapshotFor('v1'))).toBe(true);
     expect(filter(snapshotFor('v2'))).toBe(false);
+    expect(filter({ kind: 'queue', vendorId: 'v1' })).toBe(true);
+    expect(filter({ kind: 'queue', vendorId: 'v2' })).toBe(false);
   });
 });

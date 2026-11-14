@@ -110,6 +110,7 @@ describe('createPgListener', () => {
     clients[0]?.emitNotification('order_changed', 'garbage');
     expect(events).toEqual([
       { kind: 'order', orderId: 'o', vendorId: 'v', studentId: 's', status: 'ready', at: 42 },
+      { kind: 'queue', vendorId: 'v' },
     ]);
   });
 

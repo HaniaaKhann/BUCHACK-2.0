@@ -242,6 +242,13 @@ describe('real notifications reach open streams', () => {
     expect(frame?.data).not.toContain(studentId);
     expect(elapsedMs).toBeLessThan(1000);
     expect(reader.frames.some(isOrder('someone-elses-order'))).toBe(false);
+    const queue = reader.frames.find(
+      (frame) => frame.name === 'queue' && (frame.data ?? '').includes(memberVendorId),
+    );
+    expect(queue?.data).toBe(JSON.stringify({ vendorId: memberVendorId }));
+    expect(reader.frames.some((frame) => (frame.data ?? '').includes('another-student'))).toBe(
+      false,
+    );
 
     const snapshot = JSON.stringify({
       vendorId: otherVendorId,

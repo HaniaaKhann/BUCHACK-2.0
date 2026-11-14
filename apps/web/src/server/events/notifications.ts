@@ -28,6 +28,7 @@ export type AppEvent =
       at: number;
     }
   | { kind: 'snapshot'; vendorId: string; computedAt: string }
+  | { kind: 'queue'; vendorId: string }
   | { kind: 'resync' };
 
 function parseJson(payload: string | undefined): unknown {
@@ -73,6 +74,8 @@ export function toWire(event: AppEvent): { name: string; data: Record<string, un
         name: 'snapshot',
         data: { vendorId: event.vendorId, computedAt: event.computedAt },
       };
+    case 'queue':
+      return { name: 'queue', data: { vendorId: event.vendorId } };
     case 'resync':
       return { name: 'resync', data: {} };
   }

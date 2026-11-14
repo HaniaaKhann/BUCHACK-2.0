@@ -54,3 +54,34 @@ it('leaves a vendor that is closed for renovation out of the student vendor list
   const fiesta = hidden.find((vendor) => vendor.name === 'BU Fiesta');
   expect(await db.walkTime.count({ where: { toVendorId: fiesta?.id ?? '' } })).toBeGreaterThan(0);
 });
+
+it('describes each open vendor with building, opening state, busy badge and a wait range', async () => {
+  const response = await listVendors(
+    new Request(`${BASE_URL}/api/vendors`, {
+      headers: { origin: BASE_URL, cookie: studentCookie },
+    }),
+  );
+  const { now, vendors } = (await response.json()) as {
+    now: number;
+    vendors: {
+      building: { id: string; name: string };
+      campus: string;
+      busyState: string;
+      openNow: boolean;
+      walk: unknown;
+      wait: { lowMinutes: number; highMinutes: number; source: string; stale: boolean };
+    }[];
+  };
+  expect(typeof now).toBe('number');
+  expect(vendors.length).toBeGreaterThan(5);
+  for (const vendor of vendors) {
+    expect(vendor.building.name.length).toBeGreaterThan(0);
+    expect(vendor.campus.length).toBeGreaterThan(0);
+    expect(['quiet', 'normal', 'rush']).toContain(vendor.busyState);
+    expect(typeof vendor.openNow).toBe('boolean');
+    expect(vendor.wait.lowMinutes).toBeLessThanOrEqual(vendor.wait.highMinutes);
+    expect(['live', 'stale', 'cold']).toContain(vendor.wait.source);
+    expect(vendor.wait.stale).toBe(vendor.wait.source === 'stale');
+    expect(vendor.walk).toBeNull();
+  }
+});
