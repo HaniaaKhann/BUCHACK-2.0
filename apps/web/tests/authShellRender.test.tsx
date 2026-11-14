@@ -23,10 +23,10 @@ describe('landing hero', () => {
     expect(html).toContain(APP_TAGLINE);
   });
 
-  it('has a hero logo slot of 96 pixels on a phone and 112 on a laptop, hidden from screen readers', () => {
+  it('has a hero logo slot of 128 pixels on a phone and 176 on a laptop, hidden from screen readers', () => {
     expect(html).toContain('data-logo-hero');
-    expect(html).toContain('h-24 w-24');
-    expect(html).toContain('lg:h-28 lg:w-28');
+    expect(html).toContain('h-32 w-32');
+    expect(html).toContain('lg:h-44 lg:w-44');
     expect(html).toMatch(
       /data-logo-hero[^>]*aria-hidden="true"|aria-hidden="true"[^>]*data-logo-hero/,
     );
@@ -44,16 +44,17 @@ describe('header logo slot', () => {
 });
 
 describe('logo styles', () => {
-  it('only show the logo, the cream plate and the hidden heading when the logo file exists', () => {
+  it('only show the logo, straight on the page with no plate, and the hidden heading when the logo file exists', () => {
     expect(css).toMatch(/\[data-logo-hero\]\s*\{\s*display:\s*none/);
     expect(css).toContain('[data-logo] [data-logo-slot]');
     expect(css).toContain("url('/logo.svg')");
-    expect(css).toContain('background-color: #e9f4c9');
+    expect(css).not.toMatch(/\[data-logo\] \[data-logo-slot\] \{[^}]*background-color/);
+    expect(css).not.toMatch(/\[data-logo\] \[data-logo-slot\] \{[^}]*padding/);
     expect(css).toMatch(/\[data-logo\] \[data-hero-name\][\s\S]*clip: rect\(0 0 0 0\)/);
   });
 
   it('never edits the logo file, only crops it with CSS', () => {
     expect(css).toContain('background-size: 165%');
-    expect(css).toContain('background-size: 154%');
+    expect(css).toContain('background-size: contain');
   });
 });

@@ -230,3 +230,42 @@ test('every outlet card shows a photo or a palette tile, and the header has a lo
   await expect(page.locator('[data-logo-slot]').first()).toBeAttached();
   expect(problems).toEqual([]);
 });
+
+test('first-time onboarding says Set up your profile and offers no account deletion, and the settings view does', async ({
+  browser,
+  playwright,
+}) => {
+  const email = `e2e-first-${Date.now()}@example.test`;
+  const password = 'e2e-student-password-1';
+  const api = await playwright.request.newContext({ baseURL: BASE_URL });
+  const signedUp = await api.post('/api/auth/sign-up/email', {
+    data: { email, password, name: 'E2E First' },
+    headers: { origin: BASE_URL },
+  });
+  expect(signedUp.ok()).toBe(true);
+  await api.dispose();
+
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const page = await context.newPage();
+  await page.goto('/sign-in');
+  await page.fill('input[name=email]', email);
+  await page.fill('input[name=password]', password);
+  await page.click('button[type=submit]');
+  await page.waitForURL((url) => url.pathname === '/onboarding');
+  await expect(page.getByRole('heading', { name: 'Set up your profile' })).toBeVisible();
+  await expect(page.getByText(/delete your account/i)).toHaveCount(0);
+  await expect(page.locator('[data-delete-start]')).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Your profile' })).toHaveCount(0);
+
+  await page.getByRole('button', { name: 'Save and continue' }).click();
+  await page.waitForURL((url) => url.pathname === '/');
+  await page.getByRole('link', { name: 'Profile' }).click();
+  await expect(page.getByRole('heading', { name: 'Your profile' })).toBeVisible();
+  await expect(page.getByText(/delete your account/i)).toBeVisible();
+  await expect(page.locator('[data-delete-start]')).toBeVisible();
+  await page.request.post('/api/auth/delete-user', {
+    data: { password },
+    headers: { origin: BASE_URL },
+  });
+  await context.close();
+});
