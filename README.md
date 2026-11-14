@@ -28,7 +28,7 @@ We have not run a student survey yet, so no student numbers are claimed.
 **Students**
 
 - Sign up with nothing required. Diet and allergen filters, a health goal and the chat language are optional. Adding classes is optional too: the day, start, end and building of each class stay on the profile until the student edits or deletes them, and never the course name. Choosing where you are ("From") is a selector in the filter panel; without it the list still shows, with the class start time and a hint instead of a leave time.
-- One ranked list of dishes from all HKBU outlets, with a wait **range**, whether it fits before the next class, and when to leave. Filters for price, wait, "fits before my next class", open now, outlet and sort order.
+- One ranked list of dishes from all HKBU outlets, with a wait **range**, whether it fits before the next class, and when to leave. Filters for price, wait, "fits before my next class", open now, outlet and sort order, in a bottom sheet on phones and a collapsible column on laptops.
 - Diet and allergen filters use only tags an outlet owner has confirmed, so with a filter on, unconfirmed dishes are left out, and halal is never assumed. Tiles show ticks and **Not verified** only while a diet or allergen filter is active.
 - Order as soon as ready or for a 15-minute pickup slot, pay from a demo wallet (the checkout shows the credit before and after the order), follow the order live, cancel while the order is still waiting to be accepted (at most the first minute), and tap **I picked it up** when they have it. An order nobody taps completes by itself 30 minutes after it was ready, on the demo clock.
 - A bell with an unread count for order updates and a leave-now reminder, and a short "Added to cart" message with a View cart button when a dish is added.
@@ -50,7 +50,7 @@ We have not run a student survey yet, so no student numbers are claimed.
 
 **Design**
 
-- One five-colour theme in a single file, with every text colour pair tested for WCAG AA contrast, and animation that switches off for people who ask their device for reduced motion. Details are in [`docs/THEME.md`](docs/THEME.md).
+- One five-colour theme in a single file, with every text colour pair tested for WCAG AA contrast, and light CSS motion (tiles fade in, cards react to the pointer, the cart count bumps, the landing page fades in) that switches off for people who ask their device for reduced motion. Details are in [`docs/THEME.md`](docs/THEME.md).
 
 ## How it differs
 
