@@ -86,7 +86,9 @@ Public holidays inside the academic year (all from the same PDF):
 
 Each menu file carries `isDemoData: true`. The seed stores it on every `menu_items` row as `isDemo` (default `true`), and the app reads that flag to show the demo-data banner. Seed validation rejects a menu file where the flag is missing or false.
 
-Item-level diet and allergen tags are suggestions only. Every seeded item has `tags_status = unverified`; vendor owners verify tags in-app before they ever appear as "Verified". Tags use a fixed vocabulary: diet `vegetarian`, `vegan`; allergens `gluten`, `egg`, `dairy`, `soy`, `peanut`, `tree_nut`, `sesame`, `fish`, `shellfish`.
+Item-level diet and allergen tags are suggestions only. The seed writes every item with `tags_status = unverified`. In demo mode, and only then, the seed marks the menus of three outlets (Bistro NTT, Main Canteen and Harmony Cafeteria) as verified by the demo owner account, so the tick, the filters and the owner screen can be shown. That is a demo shortcut, not a real vendor confirmation. Every other outlet stays "Not verified" until its owner confirms the tags in the app. Halal is never seeded: no item has a halal tag until an owner ticks it. Tags use a fixed vocabulary: diet `vegetarian`, `vegan`, `halal`, `no_pork`, `no_beef`; allergens `gluten`, `egg`, `dairy`, `soy`, `peanut`, `tree_nut`, `sesame`, `fish`, `shellfish`.
+
+A dish an owner adds in the app has `isDemo = false`, no tags and `tags_status = unverified`. `pnpm demo:reset` deletes those dishes and puts stock and tag state back as seeded. It does not undo an owner's edits to the name, price or category of a seeded dish.
 
 ### Menu source
 
