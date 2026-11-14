@@ -1,15 +1,13 @@
-export type PaymentIntentStatus = 'pending' | 'captured' | 'refunded' | 'failed';
+export type PaymentIntentStatus = 'captured' | 'refunded' | 'failed';
 
 export interface PaymentIntent {
   readonly id: string;
   readonly userId: string;
   readonly amountHkd: number;
   readonly status: PaymentIntentStatus;
-  readonly createdAt: Date;
 }
 
 export interface PaymentProvider {
-  authorize(userId: string, amountHkd: number): Promise<PaymentIntent>;
-  capture(intentId: string): Promise<PaymentIntent>;
-  refund(intentId: string): Promise<PaymentIntent>;
+  charge(userId: string, amountHkd: number, reference: string): Promise<PaymentIntent>;
+  refund(reference: string): Promise<PaymentIntent>;
 }

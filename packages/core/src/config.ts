@@ -56,3 +56,8 @@ export const RANKING_PAST_ORDERS_CAP = 5;
 export const FREE_WINDOW_MIN_GAP_MINUTES = 15;
 export const SCHEDULE_DAY_START_MINUTE = 8 * 60;
 export const SCHEDULE_DAY_END_MINUTE = 22 * 60;
+
+export const ORDER_MAX_QTY_PER_LINE = 5;
+export const ORDER_MAX_LINES = 8;
+export const ORDER_MAX_TOTAL_HKD = 500;
+export const SLOT_CHOICES_SHOWN = 12;

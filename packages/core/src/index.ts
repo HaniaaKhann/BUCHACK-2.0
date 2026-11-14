@@ -23,3 +23,4 @@ export * from './dietary.js';
 export * from './schedule.js';
 export * from './itemFilters.js';
 export * from './whyChips.js';
+export * from './scheduledOrder.js';

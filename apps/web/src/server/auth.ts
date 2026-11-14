@@ -1,4 +1,4 @@
-import { isDemoEmail } from '@app/db';
+import { grantStartingCredit, isDemoEmail } from '@app/db';
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { APIError } from 'better-auth/api';
@@ -10,6 +10,17 @@ function createAuth() {
     database: prismaAdapter(prisma, { provider: 'postgresql' }),
     emailAndPassword: { enabled: true },
     ...rateLimitOptions(process.env['DEMO_MODE']),
+    databaseHooks: {
+      user: {
+        create: {
+          after: async (user) => {
+            const role = (user as { role?: string }).role;
+            if (role === undefined || role === 'student')
+              await grantStartingCredit(prisma, user.id);
+          },
+        },
+      },
+    },
     user: {
       additionalFields: {
         role: { type: 'string', required: false, defaultValue: 'student', input: false },

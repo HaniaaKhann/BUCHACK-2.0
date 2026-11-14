@@ -183,6 +183,8 @@ describe('demo accounts cannot be deleted', () => {
     expect(signUp.status).toBe(200);
     const created = await db.user.findUniqueOrThrow({ where: { email } });
     expect(created.role).toBe('student');
+    const credit = await db.walletLedger.findMany({ where: { userId: created.id } });
+    expect(credit.map((row) => [row.reason, row.deltaHkd])).toEqual([['seed', 300]]);
 
     const response = await authPost(
       new Request(`${BASE_URL}/api/auth/delete-user`, {

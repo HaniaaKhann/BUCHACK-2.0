@@ -99,7 +99,10 @@ function learnFromOrders(
 ): LearnedState {
   const known = orders.filter(
     (order) =>
-      order.placedAt >= ingestedFrom && order.placedAt < boundary && labelAt(order) <= boundary,
+      order.slotStart === null &&
+      order.placedAt >= ingestedFrom &&
+      order.placedAt < boundary &&
+      labelAt(order) <= boundary,
   );
   const taps = known.filter((order) => order.readyAt !== null);
   const flags = detectBatchTaps(taps.map((order) => order.readyAt ?? 0));

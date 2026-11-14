@@ -150,6 +150,23 @@ describe('buildSnapshotPayload learning', () => {
     expect(payload.prep).toEqual({});
   });
 
+  it('does not learn bias, residuals or item prep from scheduled orders', () => {
+    const scheduled = (minutesBefore: number): SnapshotOrder => {
+      const placedAt = BOUNDARY - minutesBefore * MINUTE;
+      return order(minutesBefore, {
+        slotStart: placedAt + 90 * MINUTE,
+        readyAt: placedAt + 92 * MINUTE,
+        singleItemName: 'Wonton noodles',
+      });
+    };
+    const payload = buildSnapshotPayload(
+      baseInput({ orders: [200, 190, 180, 170, 160, 150].map(scheduled) }),
+    );
+    expect(payload.bias).toEqual({ value: null, samples: 0 });
+    expect(payload.residuals).toEqual([]);
+    expect(payload.prep).toEqual({});
+  });
+
   it('takes scheduled lateness quantiles once there are enough scheduled orders', () => {
     const scheduled = (minutesBefore: number): SnapshotOrder => {
       const placedAt = BOUNDARY - minutesBefore * MINUTE;
