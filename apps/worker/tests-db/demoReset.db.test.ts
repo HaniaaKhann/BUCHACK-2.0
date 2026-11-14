@@ -60,7 +60,7 @@ let first: DemoResetResult;
 let second: DemoResetResult;
 let dirtyVendors = new Map<string, VendorState>();
 let dirtyItems = new Map<string, ItemState>();
-let dirtyCounts = { orders: 0, slots: 0, events: 0, walletRows: 0 };
+let dirtyCounts = { orders: 0, slots: 0, events: 0, walletRows: 0, profiles: 0, windows: 0 };
 let pausedVendorId = '';
 let rushVendorId = '';
 let outOfStockItemId = '';
@@ -145,6 +145,19 @@ beforeAll(async () => {
       bookedCount: 1,
     },
   });
+  await db.studentProfile.create({
+    data: {
+      userId: student.id,
+      dietTags: ['vegan'],
+      allergens: ['peanuts'],
+      goal: 'balanced',
+      eatMinutes: 20,
+      chatLanguage: 'zh_CN',
+    },
+  });
+  await db.freeWindow.create({
+    data: { userId: student.id, weekday: 2, startMinute: 720, endMinute: 780 },
+  });
   await db.systemClock.update({ where: { id: 1 }, data: { mode: 'real', speed: 1 } });
 
   dirtyVendors = await vendorStates();
@@ -154,6 +167,8 @@ beforeAll(async () => {
     slots: await db.pickupSlot.count(),
     events: await db.busyEvent.count(),
     walletRows: await db.walletLedger.count({ where: { userId: student.id } }),
+    profiles: await db.studentProfile.count({ where: { userId: student.id } }),
+    windows: await db.freeWindow.count({ where: { userId: student.id } }),
   };
 
   second = await runDemoReset(db);
@@ -169,7 +184,14 @@ describe('demo reset after every kind of change', () => {
     expect(dirtyVendors.get(rushVendorId)).toMatchObject({ busyState: 'rush' });
     expect(dirtyItems.get(outOfStockItemId)?.stockStatus).toBe('out_of_stock');
     expect(dirtyItems.get(halalItemId)?.dietTags).toContain('halal');
-    expect(dirtyCounts).toEqual({ orders: 1, slots: 1, events: 1, walletRows: 2 });
+    expect(dirtyCounts).toEqual({
+      orders: 1,
+      slots: 1,
+      events: 1,
+      walletRows: 2,
+      profiles: 1,
+      windows: 1,
+    });
   });
 
   it('leaves a freshly seeded database unchanged on the first reset', () => {
@@ -194,6 +216,11 @@ describe('demo reset after every kind of change', () => {
     expect(await db.pickupSlot.count()).toBe(0);
     const rows = await db.walletLedger.findMany({ where: { userId: student?.id ?? '' } });
     expect(rows.map((row) => [row.reason, row.deltaHkd])).toEqual([['seed', 300]]);
+  });
+
+  it('puts the student back to a fresh demo account that must onboard again', async () => {
+    expect(await db.studentProfile.count({ where: { userId: student?.id ?? '' } })).toBe(0);
+    expect(await db.freeWindow.count({ where: { userId: student?.id ?? '' } })).toBe(0);
   });
 
   it('fixes the clock at the demo start with speed 0', async () => {

@@ -30,6 +30,8 @@ async function resetData(db: PrismaClient, startMs: number): Promise<void> {
     db.busyEvent.deleteMany({}),
     db.engineSnapshot.deleteMany({}),
     db.walletLedger.deleteMany({ where: { userId: { in: accountIds } } }),
+    db.freeWindow.deleteMany({ where: { userId: { in: accountIds } } }),
+    db.studentProfile.deleteMany({ where: { userId: { in: accountIds } } }),
     db.vendor.updateMany({ data: { paused: false, busyState: 'normal', busyUntil: null } }),
     db.menuItem.updateMany({
       data: {
