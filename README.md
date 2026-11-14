@@ -211,7 +211,7 @@ Not built, so not part of the features above:
 
 ## Team
 
-Team ByteNBite. `[TEAM_SIZE_AND_SKILLS]` (placeholder)
+Team ByteNBite, four members: Hania Khan, Moiz Ahmed, Dania Asad and Maryam Noor.
 
 ## License
 

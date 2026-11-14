@@ -86,10 +86,10 @@ describe('README claims', () => {
   });
 
   it('marks every unfinished item as a placeholder', () => {
-    for (const marker of ['[DEMO_VIDEO_LINK]', '[DEMO_GIF]', '[TEAM_SIZE_AND_SKILLS]']) {
+    for (const marker of ['[DEMO_VIDEO_LINK]', '[DEMO_GIF]']) {
       expect(readme, marker).toContain(`\`${marker}\` (placeholder`);
     }
-    for (const marker of ['[SURVEY_RESULTS]', '[THEME]', '[LICENSE]']) {
+    for (const marker of ['[SURVEY_RESULTS]', '[THEME]', '[LICENSE]', '[TEAM_SIZE_AND_SKILLS]']) {
       expect(readme, marker).not.toContain(marker);
     }
   });
@@ -100,7 +100,9 @@ describe('README claims', () => {
       'We have not run a student survey yet, so no student numbers are claimed.',
     );
     expect(readme).toContain('stopwatch sample');
-    expect(readme).toContain('Team ByteNBite.');
+    expect(readme).toContain(
+      'Team ByteNBite, four members: Hania Khan, Moiz Ahmed, Dania Asad and Maryam Noor.',
+    );
     expect(readme).toContain('MIT. See [`LICENSE`](LICENSE).');
     expect(read('LICENSE')).toContain('MIT License');
     expect(read('LICENSE')).toContain('Copyright (c) 2026 ByteNBite');
