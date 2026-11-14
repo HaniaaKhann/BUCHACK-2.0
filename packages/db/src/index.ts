@@ -11,6 +11,8 @@ export {
 } from './seed/accounts.js';
 export type { DemoAccount } from './seed/accounts.js';
 export { STARTING_WALLET_HKD, grantStartingCredit } from './seed/wallet.js';
+export { createNotification } from './notifications.js';
+export type { NewNotification } from './notifications.js';
 export { verifyDemoMenus } from './seed/demoVerification.js';
 export { DEMO_CLOCK_START } from './seed/clockStart.js';
 export { openingHoursSchema } from './openingHours.js';
