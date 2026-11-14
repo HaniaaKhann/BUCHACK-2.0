@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import type { z } from 'zod';
 import { DEMO_ACCOUNTS, seedDemoAccounts } from './accounts.js';
 import { expandAcademicWeeks, expandHolidays } from './academicWeeks.js';
+import { DEMO_CLOCK_START } from './clockStart.js';
 import { verifyDemoMenus } from './demoVerification.js';
 import { grantStartingCredit } from './wallet.js';
 import { withMeatTags } from './dietTags.js';
@@ -18,8 +19,6 @@ import {
   walkTimeDefaultsSchema,
 } from './schemas.js';
 import { buildWalkTimeRows } from './walkTimes.js';
-
-const DEMO_CLOCK_START = '2026-11-17T12:15:00+08:00';
 
 async function loadJson<T>(name: string, schema: z.ZodType<T, z.ZodTypeDef, unknown>): Promise<T> {
   const url = new URL(`../../seed-data/${name}`, import.meta.url);

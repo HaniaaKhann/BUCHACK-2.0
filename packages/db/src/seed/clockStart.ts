@@ -1,0 +1,1 @@
+export const DEMO_CLOCK_START = '2026-11-17T12:15:00+08:00';
