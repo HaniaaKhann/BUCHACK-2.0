@@ -19,7 +19,7 @@ export function NotificationList(props: NotificationListProps): React.JSX.Elemen
             data-bell-mark-all
             disabled={props.unread === 0}
             onClick={props.onMarkAll}
-            className="rounded-md border border-neutral-300 px-2.5 py-1 text-xs font-medium disabled:opacity-50"
+            className="rounded-md border border-navy/60 px-2.5 py-1 text-xs font-medium disabled:opacity-50"
           >
             Mark all read
           </button>
@@ -28,14 +28,14 @@ export function NotificationList(props: NotificationListProps): React.JSX.Elemen
             data-bell-close
             aria-label="Close notifications"
             onClick={props.onClose}
-            className="rounded-md px-2 py-1 text-sm text-neutral-700 hover:bg-neutral-100"
+            className="rounded-md px-2 py-1 text-sm text-navy hover:bg-navy/10"
           >
             ×
           </button>
         </div>
       </div>
       {props.notifications.length === 0 ? (
-        <p className="py-3 text-sm text-neutral-700" data-bell-empty>
+        <p className="py-3 text-sm text-navy" data-bell-empty>
           Nothing yet. You will see order updates and leave-now reminders here.
         </p>
       ) : (
@@ -46,16 +46,14 @@ export function NotificationList(props: NotificationListProps): React.JSX.Elemen
               data-notification={item.kind}
               data-read={item.read}
               className={`rounded-lg border p-3 text-sm ${
-                item.read ? 'border-neutral-200 bg-white' : 'border-neutral-900 bg-neutral-50'
+                item.read ? 'border-navy/15 bg-white' : 'border-navy bg-cream'
               }`}
             >
               <p className="flex items-baseline justify-between gap-2">
                 <span className="font-semibold">{item.title}</span>
-                <span className="shrink-0 text-xs text-neutral-600">
-                  {formatHktTime(item.createdAt)}
-                </span>
+                <span className="shrink-0 text-xs text-muted">{formatHktTime(item.createdAt)}</span>
               </p>
-              <p className="mt-0.5 text-neutral-700">{item.body}</p>
+              <p className="mt-0.5 text-navy">{item.body}</p>
               {item.link === null ? null : (
                 <a href={item.link} className="mt-1 inline-block text-xs font-medium underline">
                   View order

@@ -22,7 +22,7 @@ function ModelTable({
       <table className="w-full min-w-[26rem] text-left text-sm">
         <caption className="pb-2 text-left text-sm font-semibold">{title}</caption>
         <thead>
-          <tr className="border-b border-neutral-200 text-xs text-neutral-600">
+          <tr className="border-b border-navy/15 text-xs text-muted">
             <th className="py-1.5 pr-3 font-medium">Model</th>
             <th className="py-1.5 pr-3 font-medium">Orders</th>
             <th className="py-1.5 pr-3 font-medium">Mean error (min)</th>
@@ -33,7 +33,7 @@ function ModelTable({
           {names.map((model) => {
             const row = models[model.id];
             return (
-              <tr key={model.id} className="border-b border-neutral-100">
+              <tr key={model.id} className="border-b border-navy/15">
                 <td className="py-1.5 pr-3">{model.name}</td>
                 <td className="py-1.5 pr-3" data-value={row.n}>
                   {row.n}
@@ -57,7 +57,7 @@ function SimulatedPanel({ result }: { result: SimulatedResult }): React.JSX.Elem
   if (result.status !== 'ok') {
     return (
       <Card title="Backtest on simulated history">
-        <p data-empty="simulated" className="text-sm text-neutral-700">
+        <p data-empty="simulated" className="text-sm text-navy">
           {result.status === 'missing'
             ? 'The backtest results file is not available yet.'
             : 'The backtest results file could not be read.'}
@@ -72,7 +72,7 @@ function SimulatedPanel({ result }: { result: SimulatedResult }): React.JSX.Elem
         <p className="text-sm font-medium">
           These numbers come from simulated data, not real canteen measurements.
         </p>
-        <p className="text-xs text-neutral-600">
+        <p className="text-xs text-muted">
           {data.label}. Seed {data.seed}, model {data.modelVersion}, history from{' '}
           {data.historyStart}. Trained on weeks {data.trainWeeks.join(', ')}, tested on weeks{' '}
           {data.testWeeks.join(', ')}.
@@ -108,26 +108,26 @@ function InAppPanel({ inApp }: { inApp: InAppAccuracy }): React.JSX.Element {
   return (
     <Card title="Orders placed in this app">
       {inApp.n === 0 ? (
-        <p data-empty="in-app" className="text-sm text-neutral-700">
+        <p data-empty="in-app" className="text-sm text-navy">
           No completed in-app orders yet. Place an order, then tap Ready on the vendor board, and
           the real numbers will appear here.
         </p>
       ) : (
         <dl className="grid max-w-md grid-cols-3 gap-3 text-sm" data-panel="in-app">
           <div>
-            <dt className="text-xs text-neutral-600">Orders</dt>
+            <dt className="text-xs text-muted">Orders</dt>
             <dd className="font-semibold" data-value={inApp.n}>
               {inApp.n}
             </dd>
           </div>
           <div>
-            <dt className="text-xs text-neutral-600">Mean error (min)</dt>
+            <dt className="text-xs text-muted">Mean error (min)</dt>
             <dd className="font-semibold" data-value={inApp.maeMinutes ?? ''}>
               {minutes(inApp.maeMinutes)}
             </dd>
           </div>
           <div>
-            <dt className="text-xs text-neutral-600">Inside the range</dt>
+            <dt className="text-xs text-muted">Inside the range</dt>
             <dd className="font-semibold" data-value={inApp.onTimeRate ?? ''}>
               {percent(inApp.onTimeRate)}
             </dd>

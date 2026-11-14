@@ -23,11 +23,11 @@ export function BoardColumns({
             {column.title} ({column.orders.length})
           </h2>
           {column.orders.map((order) => (
-            <article key={order.id} className="rounded-md border border-neutral-200 bg-white p-3">
+            <article key={order.id} className="rounded-md border border-navy/15 bg-white p-3">
               <p className="text-sm font-medium">
                 {order.items.map((item) => `${item.qty} × ${item.name}`).join(', ')}
               </p>
-              <p className="mt-1 text-xs text-neutral-600" data-order-timing>
+              <p className="mt-1 text-xs text-muted" data-order-timing>
                 {order.slotStart === null
                   ? `ASAP, placed ${formatHktTime(order.placedAt)}`
                   : `Scheduled for ${formatHktTime(order.slotStart)}${

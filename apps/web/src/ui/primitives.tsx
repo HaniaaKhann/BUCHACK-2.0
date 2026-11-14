@@ -9,14 +9,18 @@ export function Button({
   tone = 'primary',
   className = '',
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & { tone?: 'primary' | 'quiet' }): React.JSX.Element {
+}: ButtonHTMLAttributes<HTMLButtonElement> & {
+  tone?: 'primary' | 'strong' | 'quiet';
+}): React.JSX.Element {
   const palette =
     tone === 'primary'
-      ? 'bg-neutral-900 text-white hover:bg-neutral-700'
-      : 'border border-neutral-300 bg-white text-neutral-900 hover:bg-neutral-100';
+      ? 'bg-berry text-white hover:bg-berry/90'
+      : tone === 'strong'
+        ? 'bg-navy text-cream hover:bg-navy/90'
+        : 'border border-navy/60 bg-white text-navy hover:bg-navy/10';
   return (
     <button
-      className={`rounded-md px-4 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50 ${palette} ${className}`}
+      className={`rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${palette} ${className}`}
       {...props}
     />
   );
@@ -38,8 +42,8 @@ export function ToggleChip({
       onClick={onToggle}
       className={`rounded-full border px-3 py-1 text-sm ${
         selected
-          ? 'border-neutral-900 bg-neutral-900 text-white'
-          : 'border-neutral-300 bg-white text-neutral-800 hover:bg-neutral-100'
+          ? 'border-navy bg-navy text-cream'
+          : 'border-navy/60 bg-white text-navy hover:bg-navy/10'
       }`}
     >
       {children}
@@ -60,13 +64,12 @@ export function Field({
     <label className="flex flex-col gap-1 text-sm">
       <span className="font-medium">{label}</span>
       {children}
-      {hint ? <span className="text-xs text-neutral-600">{hint}</span> : null}
+      {hint ? <span className="text-xs text-muted">{hint}</span> : null}
     </label>
   );
 }
 
-const inputClass =
-  'w-full min-w-0 max-w-full rounded-md border border-neutral-300 px-3 py-2 text-sm';
+const inputClass = 'w-full min-w-0 max-w-full rounded-md border border-navy/60 px-3 py-2 text-sm';
 
 export function TextInput(props: InputHTMLAttributes<HTMLInputElement>): React.JSX.Element {
   return <input className={inputClass} {...props} />;
@@ -84,7 +87,7 @@ export function Card({
   children: ReactNode;
 }): React.JSX.Element {
   return (
-    <section className="flex flex-col gap-3 rounded-lg border border-neutral-200 p-4">
+    <section className="flex flex-col gap-3 rounded-lg border border-navy/15 p-4">
       {title ? <h2 className="text-base font-semibold">{title}</h2> : null}
       {children}
     </section>
@@ -94,7 +97,7 @@ export function Card({
 export function ErrorNote({ message }: { message: string | null }): React.JSX.Element | null {
   if (message === null) return null;
   return (
-    <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-800">
+    <p role="alert" className="rounded-md bg-white px-3 py-2 text-sm text-berry">
       {message}
     </p>
   );
@@ -117,14 +120,39 @@ export function Switch({
       aria-label={label}
       onClick={() => onChange(!checked)}
       className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
-        checked ? 'bg-neutral-900' : 'bg-neutral-300'
+        checked ? 'bg-navy' : 'border border-navy/60 bg-white'
       }`}
     >
       <span
-        className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${
-          checked ? 'left-[22px]' : 'left-0.5'
+        className={`absolute top-0.5 h-5 w-5 rounded-full transition-all ${
+          checked ? 'left-[22px] bg-cream' : 'left-0.5 bg-navy'
         }`}
       />
     </button>
+  );
+}
+
+export function AppHeader({
+  left,
+  right,
+}: {
+  left: ReactNode;
+  right?: ReactNode;
+}): React.JSX.Element {
+  return (
+    <header className="bg-navy text-cream">
+      <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
+        <div className="flex min-w-0 items-center gap-3">
+          <span
+            data-logo-slot
+            aria-hidden="true"
+            className="block h-8 w-8 shrink-0 sm:h-9 sm:w-9"
+          />
+          {left}
+        </div>
+        {right ? <div className="flex flex-wrap items-center gap-2 sm:gap-3">{right}</div> : null}
+      </div>
+      <div className="h-1 bg-sky" />
+    </header>
   );
 }

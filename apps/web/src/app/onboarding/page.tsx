@@ -39,7 +39,7 @@ export default async function OnboardingPage(): Promise<React.JSX.Element> {
         <h1 className="text-2xl font-semibold tracking-tight">
           {profile === null ? `Welcome to ${APP_NAME}` : 'Your profile'}
         </h1>
-        <p className="text-sm text-neutral-700">
+        <p className="text-sm text-navy">
           {profile === null
             ? 'Only the building is needed. Everything else can be changed later.'
             : 'Change your settings, or delete your account at the bottom of this page.'}

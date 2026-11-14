@@ -97,11 +97,11 @@ export function ClockPanel({ initial }: { initial: ClockView }): React.JSX.Eleme
         <p className="text-2xl font-semibold tabular-nums" data-clock-time>
           {formatHongKong(shownMs)}
         </p>
-        <p className="mt-1 text-sm text-neutral-700" data-clock-speed>
+        <p className="mt-1 text-sm text-navy" data-clock-speed>
           Hong Kong time. Speed: {speedLabel(clock.speed)}. Mode: {clock.mode}.
         </p>
         {locked ? (
-          <p className="mt-3 text-sm text-neutral-700" data-clock-locked>
+          <p className="mt-3 text-sm text-navy" data-clock-locked>
             Demo mode is off, so the clock cannot be changed here.
           </p>
         ) : null}
@@ -155,7 +155,7 @@ export function ClockPanel({ initial }: { initial: ClockView }): React.JSX.Eleme
                 data-set-time
                 value={typed}
                 onChange={(event) => setTyped(event.target.value)}
-                className="rounded-md border border-neutral-300 px-3 py-2 text-sm"
+                className="rounded-md border border-navy/60 px-3 py-2 text-sm"
               />
               <Button type="button" tone="quiet" disabled={locked} onClick={() => void setExact()}>
                 Set time

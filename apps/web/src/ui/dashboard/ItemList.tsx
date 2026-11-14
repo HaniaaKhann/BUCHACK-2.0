@@ -23,10 +23,10 @@ export function ItemList({
     return (
       <section
         data-empty-state={menu.meta.emptyState ?? (menu.meta.needsBuilding ? 'building' : 'none')}
-        className="rounded-xl border border-dashed border-neutral-300 bg-white p-6 text-center"
+        className="rounded-xl border border-dashed border-navy/60 bg-white p-6 text-center"
       >
         <h2 className="text-base font-semibold">{message.title}</h2>
-        <p className="mx-auto mt-1 max-w-prose text-sm text-neutral-700">{message.body}</p>
+        <p className="mx-auto mt-1 max-w-prose text-sm text-navy">{message.body}</p>
       </section>
     );
   }
@@ -39,9 +39,9 @@ export function ItemList({
     <div className="flex flex-col gap-6">
       {groupByFit(shown).map((group) => (
         <section key={group.status} data-group={group.status} className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-600">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
             {groupHeading(group.status, hasNextClass)}
-            <span className="ml-2 font-normal normal-case text-neutral-500">
+            <span className="ml-2 font-normal normal-case text-muted">
               {totals.get(group.status)}
             </span>
           </h2>
@@ -59,7 +59,7 @@ export function ItemList({
           type="button"
           data-show-more
           onClick={onShowMore}
-          className="self-center rounded-md border border-neutral-300 bg-white px-5 py-2.5 text-sm font-medium hover:bg-neutral-100"
+          className="self-center rounded-md border border-navy/60 bg-white px-5 py-2.5 text-sm font-medium hover:bg-navy/10"
         >
           Show {Math.min(PAGE_SIZE, hidden)} more ({hidden} left)
         </button>

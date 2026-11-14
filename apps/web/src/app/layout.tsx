@@ -12,13 +12,13 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#ffffff',
+  themeColor: '#384671',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }): React.JSX.Element {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-white text-neutral-900 antialiased">
+      <body className="min-h-screen bg-cream text-navy antialiased">
         <DemoBanner />
         {children}
       </body>

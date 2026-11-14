@@ -14,7 +14,7 @@ export default async function AccuracyPage(): Promise<React.JSX.Element> {
   const [simulated, inApp] = await Promise.all([loadSimulatedAccuracy(), loadInAppAccuracy()]);
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-cream">
       <AdminHeader current="accuracy" />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:py-6">
         <h1 className="text-xl font-semibold">Wait time accuracy</h1>

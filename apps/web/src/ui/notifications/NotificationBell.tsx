@@ -39,7 +39,7 @@ export function NotificationBell(): React.JSX.Element {
         aria-label={`Notifications, ${data.unread} unread`}
         aria-expanded={open}
         onClick={() => setOpen(!open)}
-        className="relative rounded-md border border-neutral-300 bg-white p-2 text-neutral-900 hover:bg-neutral-100"
+        className="relative rounded-md border border-navy/60 bg-white p-2 text-navy hover:bg-navy/10"
       >
         <svg
           viewBox="0 0 24 24"
@@ -58,14 +58,14 @@ export function NotificationBell(): React.JSX.Element {
         {data.unread > 0 ? (
           <span
             data-bell-count
-            className="absolute -right-1.5 -top-1.5 min-w-[1.25rem] rounded-full bg-red-600 px-1 text-center text-xs font-semibold leading-5 text-white"
+            className="absolute -right-1.5 -top-1.5 min-w-[1.25rem] rounded-full bg-berry px-1 text-center text-xs font-semibold leading-5 text-white"
           >
             {data.unread}
           </span>
         ) : null}
       </button>
       {open ? (
-        <div className="fixed inset-x-3 top-20 z-40 max-h-[70vh] overflow-y-auto rounded-xl border border-neutral-200 bg-white p-3 shadow-xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96">
+        <div className="fixed inset-x-3 top-20 z-40 max-h-[70vh] overflow-y-auto rounded-xl border border-navy/15 bg-white p-3 shadow-xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96">
           <NotificationList
             notifications={data.notifications}
             unread={data.unread}

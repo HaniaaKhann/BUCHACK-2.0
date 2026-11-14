@@ -9,17 +9,14 @@ export function AuthShell({
   children: ReactNode;
 }): React.JSX.Element {
   return (
-    <main className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-8 sm:px-6 lg:min-h-[70vh] lg:grid-cols-2 lg:items-center lg:gap-16 lg:py-16">
-      <header className="flex flex-col gap-3">
-        <h1 className="text-3xl font-semibold tracking-tight lg:text-5xl">{APP_NAME}</h1>
-        <p className="text-base text-neutral-700 lg:text-lg">{APP_TAGLINE}</p>
-        <ul className="mt-4 hidden flex-col gap-2 text-sm text-neutral-700 lg:flex">
-          <li>See what is ready before your next class, not just what is nearby.</li>
-          <li>Wait ranges come from simulated demo data and say so.</li>
-          <li>A diet tag only counts once the vendor has confirmed it.</li>
-        </ul>
+    <main className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-8 sm:px-6 lg:min-h-[70vh] lg:grid-cols-2 lg:items-center lg:gap-14 lg:py-16">
+      <header className="flex flex-col gap-4 rounded-2xl bg-navy p-6 text-cream lg:p-12">
+        <span data-logo-slot aria-hidden="true" className="block h-10 w-10 shrink-0" />
+        <h1 className="text-4xl font-bold tracking-tight lg:text-6xl">{APP_NAME}</h1>
+        <p className="text-base lg:text-xl">{APP_TAGLINE}</p>
+        <div className="mt-2 h-1.5 w-20 rounded-full bg-sky" />
       </header>
-      <section className="flex w-full max-w-md flex-col gap-5 lg:justify-self-end">
+      <section className="flex w-full max-w-md flex-col gap-5 rounded-2xl border border-navy/15 bg-white p-6 shadow-sm lg:justify-self-end">
         <h2 className="text-lg font-semibold">{title}</h2>
         {children}
       </section>

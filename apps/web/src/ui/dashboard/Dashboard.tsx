@@ -11,6 +11,7 @@ import { ChatPanel } from '../chat/ChatPanel';
 import { NotificationBell } from '../notifications/NotificationBell';
 import { useCart } from '../cart/CartProvider';
 import { cartCount, conflictsWithCart } from '../cart/cartReducer';
+import { AppHeader } from '../primitives';
 import { SignOutButton } from '../SignOutButton';
 import { FilterPanel, type BuildingChoice, type ProfileSummary } from './FilterPanel';
 import { ItemList, PAGE_SIZE } from './ItemList';
@@ -107,11 +108,11 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
   const filterCount = activeFilterCount(filters);
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <header className="border-b border-neutral-200 bg-white">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-          <h1 className="text-lg font-semibold tracking-tight">{APP_NAME}</h1>
-          <div className="flex items-center gap-2 sm:gap-3">
+    <div className="min-h-screen bg-cream">
+      <AppHeader
+        left={<h1 className="text-lg font-semibold tracking-tight">{APP_NAME}</h1>}
+        right={
+          <>
             <Link href="/onboarding" className="text-sm font-medium underline">
               Profile
             </Link>
@@ -123,23 +124,23 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
               type="button"
               data-cart-button
               onClick={() => setCartOpen(true)}
-              className="rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white"
+              className="rounded-md bg-cream px-3 py-2 text-sm font-semibold text-navy hover:bg-white"
             >
               Cart ({cartCount(cart.state)})
             </button>
-            <p className="hidden text-right text-xs text-neutral-600 sm:block">
-              <span className="block font-medium text-neutral-900" data-demo-clock>
+            <p className="hidden text-right text-xs sm:block">
+              <span className="block font-medium" data-demo-clock>
                 {formatDemoClock(menu.meta.now)}
               </span>
               demo time
             </p>
             <SignOutButton />
-          </div>
-        </div>
-      </header>
+          </>
+        }
+      />
 
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:py-6">
-        <p className="text-sm text-neutral-700" data-schedule>
+        <p className="text-sm text-navy" data-schedule>
           {scheduleSummary(menu.meta.schedule)}
         </p>
 
@@ -147,12 +148,10 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
           type="button"
           aria-expanded={panelOpen}
           onClick={() => setPanelOpen((open) => !open)}
-          className="flex items-center justify-between rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm font-medium lg:hidden"
+          className="flex items-center justify-between rounded-xl border border-navy/60 bg-white px-4 py-3 text-sm font-medium lg:hidden"
         >
           <span>Filters and sorting</span>
-          <span className="rounded-full bg-neutral-900 px-2 py-0.5 text-xs text-white">
-            {filterCount}
-          </span>
+          <span className="rounded-full bg-navy px-2 py-0.5 text-xs text-cream">{filterCount}</span>
         </button>
 
         <div className="grid gap-4 lg:grid-cols-[19rem_minmax(0,1fr)] lg:items-start lg:gap-6">
@@ -169,7 +168,7 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
 
           <div className="flex min-w-0 flex-col gap-6">
             {notice ? (
-              <p role="status" className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
+              <p role="status" className="rounded-lg bg-cream px-3 py-2 text-sm text-cocoa">
                 {notice}
               </p>
             ) : null}

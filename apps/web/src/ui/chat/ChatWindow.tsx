@@ -45,9 +45,9 @@ export function ChatWindow(props: ChatWindowProps): React.JSX.Element {
       role="dialog"
       aria-label={text.title}
       data-chat-window
-      className="fixed inset-x-0 bottom-0 z-40 flex max-h-[80vh] flex-col rounded-t-2xl border border-neutral-200 bg-white shadow-2xl sm:inset-x-auto sm:bottom-4 sm:right-4 sm:w-[26rem] sm:rounded-2xl"
+      className="fixed inset-x-0 bottom-0 z-40 flex max-h-[80vh] flex-col rounded-t-2xl border border-navy/15 bg-white shadow-2xl sm:inset-x-auto sm:bottom-4 sm:right-4 sm:w-[26rem] sm:rounded-2xl"
     >
-      <header className="flex items-center justify-between gap-2 border-b border-neutral-200 px-4 py-2.5">
+      <header className="flex items-center justify-between gap-2 border-b border-navy/15 px-4 py-2.5">
         <h2 className="text-sm font-semibold">{text.title}</h2>
         <div className="flex items-center gap-1" role="group" aria-label="Language">
           {CHAT_LANGUAGES.map((language) => (
@@ -59,8 +59,8 @@ export function ChatWindow(props: ChatWindowProps): React.JSX.Element {
               onClick={() => props.onLanguage(language)}
               className={`rounded-md px-2 py-1 text-xs font-medium ${
                 props.language === language
-                  ? 'bg-neutral-900 text-white'
-                  : 'border border-neutral-300 text-neutral-800'
+                  ? 'bg-navy text-cream'
+                  : 'border border-navy/60 text-navy'
               }`}
             >
               {LANGUAGE_LABELS[language]}
@@ -71,7 +71,7 @@ export function ChatWindow(props: ChatWindowProps): React.JSX.Element {
             data-chat-close
             aria-label={text.close}
             onClick={props.onClose}
-            className="ml-1 rounded-md px-2 py-1 text-sm text-neutral-700 hover:bg-neutral-100"
+            className="ml-1 rounded-md px-2 py-1 text-sm text-navy hover:bg-navy/10"
           >
             ×
           </button>
@@ -84,7 +84,7 @@ export function ChatWindow(props: ChatWindowProps): React.JSX.Element {
             <p
               key={message.id}
               data-chat-message="user"
-              className="ml-auto w-fit max-w-[85%] rounded-xl bg-neutral-900 px-3 py-2 text-white"
+              className="ml-auto w-fit max-w-[85%] rounded-xl bg-navy px-3 py-2 text-cream"
             >
               {message.text}
             </p>
@@ -92,7 +92,7 @@ export function ChatWindow(props: ChatWindowProps): React.JSX.Element {
             <div
               key={message.id}
               data-chat-message="bot"
-              className="max-w-[92%] space-y-2 rounded-xl bg-neutral-100 px-3 py-2"
+              className="max-w-[92%] space-y-2 rounded-xl bg-cream px-3 py-2"
             >
               {message.reply.lines.map((line, index) => (
                 <p key={index}>{line}</p>
@@ -120,7 +120,7 @@ export function ChatWindow(props: ChatWindowProps): React.JSX.Element {
               data-chat-suggestion
               disabled={props.busy}
               onClick={() => props.onSuggestion(suggestion)}
-              className="rounded-full border border-neutral-300 bg-white px-3 py-1.5 text-left text-xs font-medium hover:bg-neutral-100 disabled:opacity-50"
+              className="rounded-full border border-navy/60 bg-white px-3 py-1.5 text-left text-xs font-medium hover:bg-navy/10 disabled:opacity-50"
             >
               {suggestion.label}
             </button>
@@ -128,12 +128,12 @@ export function ChatWindow(props: ChatWindowProps): React.JSX.Element {
         </div>
       ) : null}
 
-      <p className="px-4 pb-2 text-[11px] leading-snug text-neutral-600" data-chat-privacy>
+      <p className="px-4 pb-2 text-[11px] leading-snug text-muted" data-chat-privacy>
         {text.privacy}
       </p>
 
       <form
-        className="flex gap-2 border-t border-neutral-200 p-3"
+        className="flex gap-2 border-t border-navy/15 p-3"
         onSubmit={(event) => {
           event.preventDefault();
           props.onSend();
@@ -146,7 +146,7 @@ export function ChatWindow(props: ChatWindowProps): React.JSX.Element {
           placeholder={text.placeholder}
           aria-label={text.placeholder}
           maxLength={300}
-          className="min-w-0 flex-1 rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="min-w-0 flex-1 rounded-md border border-navy/60 px-3 py-2 text-sm"
         />
         <Button type="submit" data-chat-send disabled={props.busy || props.input.trim() === ''}>
           {text.send}

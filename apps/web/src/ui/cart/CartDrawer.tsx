@@ -97,7 +97,7 @@ export function CartDrawer({
         type="button"
         aria-label="Close cart"
         onClick={onClose}
-        className="absolute inset-0 bg-neutral-900/40"
+        className="absolute inset-0 bg-navy/50"
       />
       <aside
         role="dialog"
@@ -107,9 +107,7 @@ export function CartDrawer({
         <header className="flex items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold">Your cart</h2>
-            {state.vendorName ? (
-              <p className="text-sm text-neutral-600">{state.vendorName}</p>
-            ) : null}
+            {state.vendorName ? <p className="text-sm text-muted">{state.vendorName}</p> : null}
           </div>
           <Button tone="quiet" type="button" onClick={onClose}>
             Close
@@ -117,17 +115,15 @@ export function CartDrawer({
         </header>
 
         {state.lines.length === 0 ? (
-          <p className="text-sm text-neutral-700">
-            Your cart is empty. Add something from the list.
-          </p>
+          <p className="text-sm text-navy">Your cart is empty. Add something from the list.</p>
         ) : (
           <>
-            <ul className="flex flex-col divide-y divide-neutral-200">
+            <ul className="flex flex-col divide-y divide-navy/15">
               {state.lines.map((line) => (
                 <li key={line.menuItemId} className="flex items-center justify-between gap-3 py-3">
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium">{line.name}</p>
-                    <p className="text-xs text-neutral-600">{formatHkd(line.priceHkd)} each</p>
+                    <p className="text-xs text-muted">{formatHkd(line.priceHkd)} each</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <button
@@ -136,7 +132,7 @@ export function CartDrawer({
                       onClick={() =>
                         dispatch({ type: 'setQty', menuItemId: line.menuItemId, qty: line.qty - 1 })
                       }
-                      className="h-9 w-9 rounded-full border border-neutral-300 text-lg"
+                      className="h-9 w-9 rounded-full border border-navy/60 text-lg"
                     >
                       −
                     </button>
@@ -149,7 +145,7 @@ export function CartDrawer({
                       onClick={() =>
                         dispatch({ type: 'setQty', menuItemId: line.menuItemId, qty: line.qty + 1 })
                       }
-                      className="h-9 w-9 rounded-full border border-neutral-300 text-lg"
+                      className="h-9 w-9 rounded-full border border-navy/60 text-lg"
                     >
                       +
                     </button>
@@ -159,9 +155,7 @@ export function CartDrawer({
             </ul>
 
             <section className="flex flex-col gap-2">
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-neutral-600">
-                Pickup
-              </h3>
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">Pickup</h3>
               <div className="flex flex-wrap gap-2">
                 <ToggleChip selected={mode === 'asap'} onToggle={() => setMode('asap')}>
                   As soon as ready
@@ -171,13 +165,13 @@ export function CartDrawer({
                 </ToggleChip>
               </div>
               {mode === 'asap' ? (
-                <p className="text-sm text-neutral-700">
+                <p className="text-sm text-navy">
                   The kitchen starts right away. Your ready time appears on the next screen.
                 </p>
               ) : (
                 <div className="grid grid-cols-3 gap-2" data-slots>
                   {slots === null ? (
-                    <p className="col-span-3 text-sm text-neutral-700">Loading slots…</p>
+                    <p className="col-span-3 text-sm text-navy">Loading slots…</p>
                   ) : (
                     slots.slots.map((slot) => (
                       <button
@@ -186,10 +180,10 @@ export function CartDrawer({
                         disabled={!slot.free}
                         aria-pressed={slotStart === slot.slotStart}
                         onClick={() => setSlotStart(slot.slotStart)}
-                        className={`rounded-md border px-2 py-2 text-sm disabled:cursor-not-allowed disabled:text-neutral-400 disabled:line-through ${
+                        className={`rounded-md border px-2 py-2 text-sm disabled:cursor-not-allowed disabled:text-muted disabled:line-through ${
                           slotStart === slot.slotStart
-                            ? 'border-neutral-900 bg-neutral-900 text-white'
-                            : 'border-neutral-300 bg-white'
+                            ? 'border-navy bg-navy text-cream'
+                            : 'border-navy/60 bg-white'
                         }`}
                       >
                         {formatHktTime(slot.slotStart)}
@@ -200,12 +194,12 @@ export function CartDrawer({
               )}
             </section>
 
-            <section className="flex flex-col gap-1 border-t border-neutral-200 pt-3 text-sm">
+            <section className="flex flex-col gap-1 border-t border-navy/15 pt-3 text-sm">
               <p className="flex justify-between">
                 <span>{cartCount(state)} items</span>
                 <span className="font-semibold">{formatHkd(total)}</span>
               </p>
-              <p className="flex justify-between text-neutral-600">
+              <p className="flex justify-between text-muted">
                 <span>Wallet balance (demo money)</span>
                 <span data-balance>{balance === null ? '…' : formatHkd(balance)}</span>
               </p>
@@ -218,7 +212,7 @@ export function CartDrawer({
             <button
               type="button"
               onClick={() => dispatch({ type: 'clear' })}
-              className="self-start text-sm text-neutral-600 underline"
+              className="self-start text-sm text-muted underline"
             >
               Empty cart
             </button>

@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { OrderView } from '@/server/orderViews';
 import { useLiveRefresh } from '../dashboard/useLiveRefresh';
 import { NotificationBell } from '../notifications/NotificationBell';
-import { Button, Card, ErrorNote } from '../primitives';
+import { AppHeader, Button, Card, ErrorNote } from '../primitives';
 import {
   STATUS_LABELS,
   STATUS_STEPS,
@@ -64,20 +64,22 @@ export function OrderTracker({ initial }: { initial: OrderView }): React.JSX.Ele
   const cancelled = order.status === 'cancelled';
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <header className="border-b border-neutral-200 bg-white">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+    <div className="min-h-screen bg-cream">
+      <AppHeader
+        left={
           <Link href="/" className="text-sm font-medium underline">
             Back to food
           </Link>
-          <div className="flex items-center gap-3">
+        }
+        right={
+          <>
             <Link href="/orders" className="text-sm font-medium underline">
               My orders
             </Link>
             <NotificationBell />
-          </div>
-        </div>
-      </header>
+          </>
+        }
+      />
 
       <main className="mx-auto grid w-full max-w-7xl gap-4 px-4 py-4 sm:px-6 lg:grid-cols-2 lg:gap-6 lg:py-6">
         <section className="flex flex-col gap-4" data-order-status={order.status}>
@@ -85,7 +87,7 @@ export function OrderTracker({ initial }: { initial: OrderView }): React.JSX.Ele
             <p className="text-2xl font-semibold" data-status-label>
               {STATUS_LABELS[order.status]}
             </p>
-            <p className="text-sm text-neutral-700" data-status-message>
+            <p className="text-sm text-navy" data-status-message>
               {statusMessage(live)}
             </p>
 
@@ -97,16 +99,16 @@ export function OrderTracker({ initial }: { initial: OrderView }): React.JSX.Ele
                     data-step={step}
                     data-done={index <= current}
                     className={`flex items-center gap-3 text-sm ${
-                      index <= current ? 'font-medium text-neutral-900' : 'text-neutral-500'
+                      index <= current ? 'font-medium text-navy' : 'text-muted'
                     }`}
                   >
                     <span
                       className={`h-3 w-3 rounded-full ${
                         index < current
-                          ? 'bg-emerald-600'
+                          ? 'bg-navy'
                           : index === current
-                            ? 'bg-neutral-900'
-                            : 'bg-neutral-300'
+                            ? 'bg-berry ring-2 ring-berry/30'
+                            : 'border border-navy/60 bg-white'
                       }`}
                     />
                     {STATUS_LABELS[step]}
@@ -140,13 +142,13 @@ export function OrderTracker({ initial }: { initial: OrderView }): React.JSX.Ele
           <Card title="Details">
             <dl className="grid grid-cols-2 gap-3 text-sm">
               <div>
-                <dt className="text-xs uppercase tracking-wide text-neutral-500">Expected ready</dt>
+                <dt className="text-xs uppercase tracking-wide text-muted">Expected ready</dt>
                 <dd className="font-medium" data-ready-range>
                   {readyRange(order)}
                 </dd>
               </div>
               <div>
-                <dt className="text-xs uppercase tracking-wide text-neutral-500">Pickup</dt>
+                <dt className="text-xs uppercase tracking-wide text-muted">Pickup</dt>
                 <dd className="font-medium">
                   {order.slotStart === null
                     ? 'As soon as ready'
@@ -154,19 +156,17 @@ export function OrderTracker({ initial }: { initial: OrderView }): React.JSX.Ele
                 </dd>
               </div>
               <div>
-                <dt className="text-xs uppercase tracking-wide text-neutral-500">Placed</dt>
+                <dt className="text-xs uppercase tracking-wide text-muted">Placed</dt>
                 <dd className="font-medium">{formatHktTime(order.placedAt)}</dd>
               </div>
               {order.fireAt === null ? null : (
                 <div>
-                  <dt className="text-xs uppercase tracking-wide text-neutral-500">
-                    Kitchen starts
-                  </dt>
+                  <dt className="text-xs uppercase tracking-wide text-muted">Kitchen starts</dt>
                   <dd className="font-medium">{formatHktTime(order.fireAt)}</dd>
                 </div>
               )}
             </dl>
-            <ul className="flex flex-col divide-y divide-neutral-200 text-sm">
+            <ul className="flex flex-col divide-y divide-navy/15 text-sm">
               {order.items.map((item) => (
                 <li key={item.name} className="flex justify-between py-2">
                   <span>
@@ -176,7 +176,7 @@ export function OrderTracker({ initial }: { initial: OrderView }): React.JSX.Ele
                 </li>
               ))}
             </ul>
-            <p className="flex justify-between border-t border-neutral-200 pt-3 text-base font-semibold">
+            <p className="flex justify-between border-t border-navy/15 pt-3 text-base font-semibold">
               <span>Total (demo wallet)</span>
               <span>{formatHkd(order.totalHkd)}</span>
             </p>

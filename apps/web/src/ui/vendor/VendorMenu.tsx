@@ -4,7 +4,7 @@ import { DATA_ALLERGENS, DATA_DIET_TAGS } from '@app/core';
 import Link from 'next/link';
 import { useCallback, useState } from 'react';
 import type { VendorMenuItemView } from '@/server/vendorControls';
-import { Button, Card, ErrorNote, Switch } from '../primitives';
+import { AppHeader, Button, Card, ErrorNote, Switch } from '../primitives';
 import { DishForm, type DishValues } from './DishForm';
 
 interface VendorMenuProps {
@@ -34,7 +34,7 @@ function TagEditor({
   };
 
   return (
-    <div className="mt-3 space-y-3 rounded-md bg-neutral-50 p-3 text-sm">
+    <div className="mt-3 space-y-3 rounded-md bg-cream p-3 text-sm">
       <fieldset>
         <legend className="font-medium">Diet tags this dish really meets</legend>
         <div className="mt-1 flex flex-wrap gap-3">
@@ -140,18 +140,18 @@ export function VendorMenu({
   const categories = [...new Set(items.map((item) => item.category))].sort();
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <header className="border-b border-neutral-200 bg-white">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+    <div className="min-h-screen bg-cream">
+      <AppHeader
+        left={
           <Link href="/vendor" className="text-sm font-medium underline">
             Back to orders
           </Link>
-          <h1 className="text-lg font-semibold">Menu and stock</h1>
-        </div>
-      </header>
+        }
+        right={<h1 className="text-lg font-semibold">Menu and stock</h1>}
+      />
 
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:py-6">
-        <p className="text-sm text-neutral-700">
+        <p className="text-sm text-navy">
           {isOwner
             ? 'Imported tags are not verified. Only you can confirm them, and students see a tick only for confirmed dishes. New dishes start with Not verified tags.'
             : 'Staff can change stock. Only the owner can confirm diet and allergen tags.'}
@@ -173,12 +173,12 @@ export function VendorMenu({
             <li
               key={item.id}
               data-item={item.name}
-              className="rounded-xl border border-neutral-200 bg-white p-4"
+              className="rounded-xl border border-navy/15 bg-white p-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="font-semibold">{item.name}</p>
-                  <p className="text-sm text-neutral-600">
+                  <p className="text-sm text-muted">
                     HK${item.priceHkd} · {item.category}
                   </p>
                 </div>

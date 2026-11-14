@@ -7,7 +7,7 @@ import type { VendorStatusView } from '@/server/vendorControls';
 import type { VendorOrderView } from '@/server/vendorService';
 import type { VendorAction } from '@/server/vendorTransitions';
 import { useLiveRefresh } from '../dashboard/useLiveRefresh';
-import { Button, Card, ErrorNote, Switch } from '../primitives';
+import { AppHeader, Button, Card, ErrorNote, Switch } from '../primitives';
 import { SignOutButton } from '../SignOutButton';
 import { BoardColumns } from './BoardColumns';
 import { newOrderIds } from './boardModel';
@@ -93,19 +93,21 @@ export function VendorBoard({
       : '';
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <header className="border-b border-neutral-200 bg-white">
-        <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
-          <h1 className="text-lg font-semibold">{status.name}</h1>
-          <nav className="flex items-center gap-4 text-sm">
-            <span data-clock>Demo time {formatHktTime(status.now)}</span>
-            <Link href="/vendor/menu" className="font-medium underline">
+    <div className="min-h-screen bg-cream">
+      <AppHeader
+        left={<h1 className="text-lg font-semibold">{status.name}</h1>}
+        right={
+          <>
+            <span className="text-sm" data-clock>
+              Demo time {formatHktTime(status.now)}
+            </span>
+            <Link href="/vendor/menu" className="text-sm font-medium underline">
               Menu and stock
             </Link>
             <SignOutButton />
-          </nav>
-        </div>
-      </header>
+          </>
+        }
+      />
 
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:py-6">
         <Card title="Kitchen status">
@@ -123,7 +125,7 @@ export function VendorBoard({
                   {choice.label}
                 </Button>
               ))}
-              <span className="text-sm text-neutral-700" data-busy-note>
+              <span className="text-sm text-navy" data-busy-note>
                 {status.busyState}
                 {rushUntil}
               </span>
@@ -142,14 +144,14 @@ export function VendorBoard({
               {status.paused ? (
                 <span
                   data-paused-badge
-                  className="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-800"
+                  className="rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold text-berry"
                 >
                   Paused
                 </span>
               ) : null}
             </label>
           </div>
-          {isOwner ? null : <p className="mt-2 text-xs text-neutral-600">Signed in as staff.</p>}
+          {isOwner ? null : <p className="mt-2 text-xs text-muted">Signed in as staff.</p>}
         </Card>
         <ErrorNote message={error} />
         <BoardColumns orders={orders} pendingId={pendingId} onAction={onAction} />

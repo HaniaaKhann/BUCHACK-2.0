@@ -22,10 +22,10 @@ export function DeleteAccountView(props: DeleteAccountViewProps): React.JSX.Elem
   return (
     <section
       aria-label="Delete my account"
-      className="flex flex-col gap-3 rounded-xl border border-red-200 bg-white p-4"
+      className="flex flex-col gap-3 rounded-xl border border-berry bg-white p-4"
     >
-      <h2 className="text-base font-semibold text-red-800">Delete my account</h2>
-      <p className="text-sm text-neutral-700">
+      <h2 className="text-base font-semibold text-berry">Delete my account</h2>
+      <p className="text-sm text-navy">
         This permanently deletes your profile, free windows, notifications, wallet and all of your
         orders, past and present. It cannot be undone.
       </p>
@@ -58,7 +58,7 @@ export function DeleteAccountView(props: DeleteAccountViewProps): React.JSX.Elem
               data-delete-submit
               disabled={props.busy || props.password === '' || !props.understood}
               onClick={props.onSubmit}
-              className="bg-red-700 hover:bg-red-800"
+              className="bg-berry hover:bg-berry"
             >
               {props.busy ? 'Deleting…' : 'Yes, delete everything'}
             </Button>

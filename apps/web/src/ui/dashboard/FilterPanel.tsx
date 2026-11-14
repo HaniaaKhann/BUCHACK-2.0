@@ -51,10 +51,10 @@ function ProfileRow({
     <div className="flex items-center justify-between gap-3">
       <div className="min-w-0">
         <p className="text-sm font-medium">{title}</p>
-        <p className="truncate text-xs text-neutral-600">{summary}</p>
+        <p className="truncate text-xs text-muted">{summary}</p>
       </div>
       {disabled ? (
-        <span className="text-xs text-neutral-500">Off</span>
+        <span className="text-xs text-muted">Off</span>
       ) : (
         <Switch checked={on} onChange={onToggle} label={`${title} filter`} />
       )}
@@ -83,11 +83,9 @@ export function FilterPanel({
   const goalSet = profile.goal !== null && profile.goal !== 'none';
 
   return (
-    <div className="flex flex-col gap-5 rounded-xl border border-neutral-200 bg-white p-4">
+    <div className="flex flex-col gap-5 rounded-xl border border-navy/15 bg-white p-4">
       <section className="flex flex-col gap-2">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-600">
-          Where you are
-        </h2>
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">Where you are</h2>
         <Select
           aria-label="Building you are in"
           value={currentBuildingId ?? ''}
@@ -105,9 +103,7 @@ export function FilterPanel({
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-600">
-          Your profile
-        </h2>
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">Your profile</h2>
         <ProfileRow
           title="Diet"
           summary={labels(profile.dietTags, DIET_OPTIONS)}
@@ -140,15 +136,13 @@ export function FilterPanel({
             Only items that match my goal
           </label>
         ) : null}
-        <p className="text-xs text-neutral-500">
+        <p className="text-xs text-muted">
           Switches turn a profile filter off for this visit only.
         </p>
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-600">
-          Narrow down
-        </h2>
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">Narrow down</h2>
         <label className="flex flex-col gap-1 text-sm">
           <span className="font-medium">Max price</span>
           <Select
@@ -230,7 +224,7 @@ export function FilterPanel({
         <button
           type="button"
           onClick={() => onChange(DEFAULT_FILTERS)}
-          className="self-start text-sm text-neutral-600 underline"
+          className="self-start text-sm text-muted underline"
         >
           Reset all
         </button>

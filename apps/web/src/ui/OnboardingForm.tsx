@@ -189,7 +189,7 @@ export function OnboardingForm({
             </ToggleChip>
           ))}
         </div>
-        <p className="text-xs text-neutral-600">
+        <p className="text-xs text-muted">
           Only items a vendor has confirmed are treated as safe. Halal shows items only once a
           vendor confirms them, and we never guess.
         </p>
@@ -249,7 +249,7 @@ export function OnboardingForm({
 
       <div className="lg:col-span-2">
         <Card title="Timetable (optional)">
-          <p className="text-xs text-neutral-600">
+          <p className="text-xs text-muted">
             Add your classes to see what fits before your next one. Only your free gaps and the
             buildings around them are saved. Course names and class times are never stored.
           </p>

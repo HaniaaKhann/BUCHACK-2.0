@@ -81,7 +81,7 @@ export function ChatPanel({
           type="button"
           data-chat-open
           onClick={toggle}
-          className="fixed bottom-4 right-4 z-30 rounded-full bg-neutral-900 px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-neutral-700"
+          className="fixed bottom-4 right-4 z-30 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-cream shadow-lg hover:bg-navy/90"
         >
           {label}
         </button>
