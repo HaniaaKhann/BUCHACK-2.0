@@ -6,7 +6,7 @@ const REFRESH_EVENTS = ['snapshot', 'queue', 'order', 'resync'] as const;
 const DEBOUNCE_MS = 500;
 const FALLBACK_REFRESH_MS = 60_000;
 
-export function useLiveRefresh(onRefresh: () => void): void {
+export function useLiveRefresh(onRefresh: () => void, url = '/api/sse/me'): void {
   const latest = useRef(onRefresh);
   latest.current = onRefresh;
 
@@ -17,7 +17,7 @@ export function useLiveRefresh(onRefresh: () => void): void {
       timer = setTimeout(() => latest.current(), DEBOUNCE_MS);
     };
 
-    const source = new EventSource('/api/sse/me');
+    const source = new EventSource(url);
     for (const name of REFRESH_EVENTS) source.addEventListener(name, refreshSoon);
 
     const onVisible = (): void => {
@@ -34,5 +34,5 @@ export function useLiveRefresh(onRefresh: () => void): void {
       document.removeEventListener('visibilitychange', onVisible);
       source.close();
     };
-  }, []);
+  }, [url]);
 }

@@ -30,6 +30,8 @@ export default async function HomePage(): Promise<React.JSX.Element> {
     );
   }
 
+  if (actor.role === 'vendor_owner' || actor.role === 'vendor_staff') redirect('/vendor');
+
   if (actor.role === 'student') {
     const [menu, vendors, buildings, profile] = await Promise.all([
       loadMenu(actor.userId, new URLSearchParams()),
