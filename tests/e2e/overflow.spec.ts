@@ -117,6 +117,18 @@ test.describe('no horizontal overflow, with the longest outlet name', () => {
         await expect(student.locator('[data-bell-panel]')).toContainText(LONGEST);
       }
       problems.push(...(await findViolations(student, at('/ with the bell open'))));
+      await student.goto('/', { waitUntil: 'networkidle' });
+      if (width < 1024) {
+        await student.locator('[data-filter-toggle]').click();
+        await expect(student.locator('[data-filter-panel]')).toBeVisible();
+        problems.push(...(await findViolations(student, at('/ with the filter sheet open'))));
+        await student.locator('[data-filter-close]').click();
+      } else {
+        await student.locator('[data-filter-toggle]').click();
+        await expect(student.locator('[data-filter-panel]')).toBeHidden();
+        problems.push(...(await findViolations(student, at('/ with the filters collapsed'))));
+        await student.locator('[data-filter-toggle]').click();
+      }
       problems.push(...(await visit(student, '/orders', at('/orders'), LONGEST)));
       await student.locator('[data-bell]').click();
       await expect(student.locator('[data-bell-panel]')).toBeVisible();

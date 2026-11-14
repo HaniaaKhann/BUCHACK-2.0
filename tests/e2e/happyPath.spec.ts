@@ -24,6 +24,12 @@ test('a student filters, orders, the vendor takes the order to Ready, and the st
   await expect(page.locator('article[data-item]').first()).toBeVisible();
   const before = await total();
 
+  const panel = page.locator('[data-filter-panel]');
+  await expect(panel).toHaveAttribute('data-open', 'true');
+  await page.locator('[data-filter-toggle]').click();
+  await expect(panel).toHaveAttribute('inert', '');
+  await page.locator('[data-filter-toggle]').click();
+  await expect(panel).not.toHaveAttribute('inert', '');
   await page.getByLabel('Max price').selectOption('20');
   await expect.poll(total).toBeLessThan(before);
 
@@ -49,6 +55,7 @@ test('a student filters, orders, the vendor takes the order to Ready, and the st
   await cards.first().locator('[data-add]').click();
   await expect(page.locator('[data-toast]')).toContainText(`Added to cart: ${dishName}`);
   await expect(page.locator('[data-cart-button]')).toContainText('Cart (1)');
+  await expect(page.locator('[data-cart-button] span').first()).toHaveClass(/animate-bump/);
   await page.locator('[data-toast-view]').click();
   const drawer = page.getByRole('dialog', { name: 'Your cart' });
   await expect(drawer).toBeVisible();
