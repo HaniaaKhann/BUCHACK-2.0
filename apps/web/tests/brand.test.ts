@@ -15,16 +15,16 @@ function sourceFiles(directory: string): string[] {
 }
 
 describe('brand constants', () => {
-  it('keeps the placeholder name and a tagline', () => {
-    expect(APP_NAME).toBe('[APP_NAME]');
-    expect(APP_TAGLINE.length).toBeGreaterThan(10);
+  it('has the product name and tagline', () => {
+    expect(APP_NAME).toBe('ReadyBy');
+    expect(APP_TAGLINE).toBe('Food that fits your diet, ready before your next class');
   });
 
   it('is the only place that spells the name or the tagline, so a rename is one line', () => {
     const offenders = sourceFiles(srcRoot).filter((file) => {
       if (file.endsWith('brand.ts')) return false;
       const text = readFileSync(file, 'utf8');
-      return text.includes('[APP_NAME]') || text.includes(APP_TAGLINE);
+      return text.includes(`'${APP_NAME}'`) || text.includes(APP_TAGLINE);
     });
     expect(offenders).toEqual([]);
   });
