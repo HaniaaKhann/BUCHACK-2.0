@@ -9,10 +9,12 @@ async function main(): Promise<void> {
   }
   const db = new PrismaClient();
   try {
-    const result = await runDemoReset(db);
+    const result = await runDemoReset(db, { ready: process.argv.includes('--ready') });
     process.stdout.write(`clock fixed at ${formatHktTime(result.startMs)} HKT, speed 0\n`);
     for (const line of result.lines) process.stdout.write(`${line}\n`);
+    process.stdout.write(`student: ${result.student}\n`);
     process.stdout.write(`fingerprint ${result.fingerprint}\n`);
+    process.stdout.write(`state fingerprint ${result.stateFingerprint}\n`);
   } finally {
     await db.$disconnect();
   }

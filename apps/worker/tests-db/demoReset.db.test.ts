@@ -60,7 +60,15 @@ let first: DemoResetResult;
 let second: DemoResetResult;
 let dirtyVendors = new Map<string, VendorState>();
 let dirtyItems = new Map<string, ItemState>();
-let dirtyCounts = { orders: 0, slots: 0, events: 0, walletRows: 0, profiles: 0, windows: 0 };
+let dirtyCounts = {
+  orders: 0,
+  slots: 0,
+  events: 0,
+  walletRows: 0,
+  profiles: 0,
+  windows: 0,
+  notifications: 0,
+};
 let pausedVendorId = '';
 let rushVendorId = '';
 let outOfStockItemId = '';
@@ -158,6 +166,16 @@ beforeAll(async () => {
   await db.freeWindow.create({
     data: { userId: student.id, weekday: 2, startMinute: 720, endMinute: 780 },
   });
+  await db.notification.create({
+    data: {
+      userId: student.id,
+      kind: 'order_ready',
+      title: 'Order ready',
+      body: 'A leftover notification',
+      link: null,
+      createdAt: new Date(),
+    },
+  });
   await db.systemClock.update({ where: { id: 1 }, data: { mode: 'real', speed: 1 } });
 
   dirtyVendors = await vendorStates();
@@ -169,6 +187,7 @@ beforeAll(async () => {
     walletRows: await db.walletLedger.count({ where: { userId: student.id } }),
     profiles: await db.studentProfile.count({ where: { userId: student.id } }),
     windows: await db.freeWindow.count({ where: { userId: student.id } }),
+    notifications: await db.notification.count({ where: { userId: student.id } }),
   };
 
   second = await runDemoReset(db);
@@ -191,6 +210,7 @@ describe('demo reset after every kind of change', () => {
       walletRows: 2,
       profiles: 1,
       windows: 1,
+      notifications: 1,
     });
   });
 
@@ -221,6 +241,10 @@ describe('demo reset after every kind of change', () => {
   it('puts the student back to a fresh demo account that must onboard again', async () => {
     expect(await db.studentProfile.count({ where: { userId: student?.id ?? '' } })).toBe(0);
     expect(await db.freeWindow.count({ where: { userId: student?.id ?? '' } })).toBe(0);
+  });
+
+  it('removes notifications left over from an earlier run', async () => {
+    expect(await db.notification.count()).toBe(0);
   });
 
   it('fixes the clock at the demo start with speed 0', async () => {
@@ -256,5 +280,29 @@ describe('demo reset after every kind of change', () => {
     const clock = await db.systemClock.findUniqueOrThrow({ where: { id: 1 } });
     expect([clock.speed, clock.currentTime.getTime()]).toEqual([0, Date.parse(DEMO_CLOCK_START)]);
     expect(third.fingerprint).toBe(second.fingerprint);
+  });
+  it('has a ready mode that also leaves the demo student onboarded, with the same waits', async () => {
+    const ready = await runDemoReset(db, { ready: true });
+    const profile = await db.studentProfile.findUniqueOrThrow({
+      where: { userId: student?.id ?? '' },
+      include: { currentBuilding: true },
+    });
+    const bistro = await db.vendor.findUniqueOrThrow({ where: { name: 'Bistro NTT' } });
+    expect(profile).toMatchObject({
+      dietTags: [],
+      allergens: [],
+      eatMinutes: 15,
+      chatLanguage: 'en',
+      currentBuildingId: bistro.buildingId,
+    });
+    expect(ready.student).toContain('onboarded');
+    expect(ready.fingerprint).toBe(second.fingerprint);
+    expect(ready.stateFingerprint).not.toBe(second.stateFingerprint);
+    expect(second.student).toBe('not onboarded');
+    expect(await db.walletLedger.count({ where: { userId: student?.id ?? '' } })).toBe(1);
+
+    const plain = await runDemoReset(db);
+    expect(await db.studentProfile.count({ where: { userId: student?.id ?? '' } })).toBe(0);
+    expect(plain.stateFingerprint).toBe(second.stateFingerprint);
   });
 });

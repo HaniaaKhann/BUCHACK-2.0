@@ -7,6 +7,7 @@
     "dev": "tsx watch src/main.ts",
     "start": "tsx src/main.ts",
     "demo:reset": "tsx src/demoResetCli.ts",
+    "demo:reset:ready": "tsx src/demoResetCli.ts --ready",
     "test": "vitest run",
     "test:db": "vitest run --config vitest.db.config.ts",
     "typecheck": "tsc --noEmit"

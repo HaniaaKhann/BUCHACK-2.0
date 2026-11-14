@@ -30,6 +30,7 @@ async function resetData(db: PrismaClient, startMs: number): Promise<void> {
     db.busyEvent.deleteMany({}),
     db.engineSnapshot.deleteMany({}),
     db.walletLedger.deleteMany({ where: { userId: { in: accountIds } } }),
+    db.notification.deleteMany({}),
     db.freeWindow.deleteMany({ where: { userId: { in: accountIds } } }),
     db.studentProfile.deleteMany({ where: { userId: { in: accountIds } } }),
     db.vendor.updateMany({ data: { paused: false, busyState: 'normal', busyUntil: null } }),
@@ -90,17 +91,53 @@ async function report(db: PrismaClient, nowMs: number): Promise<string[]> {
   return lines;
 }
 
+const ONBOARDING_VENDOR = 'Bistro NTT';
+
+async function onboardDemoStudent(db: PrismaClient): Promise<string> {
+  const student = DEMO_ACCOUNTS.find((account) => account.role === 'student');
+  if (student === undefined) throw new Error('the demo student is missing');
+  const vendor = await db.vendor.findUniqueOrThrow({
+    where: { name: ONBOARDING_VENDOR },
+    select: { buildingId: true, building: { select: { name: true } } },
+  });
+  await db.studentProfile.create({
+    data: {
+      userId: student.id,
+      dietTags: [],
+      allergens: [],
+      eatMinutes: 15,
+      chatLanguage: 'en',
+      currentBuildingId: vendor.buildingId,
+    },
+  });
+  return `onboarded, English chat, at ${vendor.building.name}`;
+}
+
 export interface DemoResetResult {
   startMs: number;
   lines: string[];
   fingerprint: string;
+  student: string;
+  stateFingerprint: string;
 }
 
-export async function runDemoReset(db: PrismaClient): Promise<DemoResetResult> {
+export interface DemoResetOptions {
+  ready?: boolean;
+}
+
+export async function runDemoReset(
+  db: PrismaClient,
+  options: DemoResetOptions = {},
+): Promise<DemoResetResult> {
   const startMs = Date.parse(DEMO_CLOCK_START);
   await resetData(db, startMs);
+  const student = options.ready === true ? await onboardDemoStudent(db) : 'not onboarded';
   await runEngineSnapshots(db, [boundaryAtOrBefore(startMs, SNAPSHOT_STEP_MS)]);
   const lines = await report(db, startMs);
   const fingerprint = createHash('sha256').update(lines.join('\n')).digest('hex').slice(0, 12);
-  return { startMs, lines, fingerprint };
+  const stateFingerprint = createHash('sha256')
+    .update([...lines, `student: ${student}`].join('\n'))
+    .digest('hex')
+    .slice(0, 12);
+  return { startMs, lines, fingerprint, student, stateFingerprint };
 }

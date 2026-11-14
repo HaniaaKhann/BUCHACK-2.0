@@ -18,6 +18,7 @@
     "data:map": "pnpm --filter @app/simulator data:map",
     "data:import": "pnpm --filter @app/simulator data:import",
     "demo:reset": "pnpm --filter @app/worker demo:reset",
+    "demo:reset:ready": "pnpm --filter @app/worker demo:reset:ready",
     "docker:up": "docker compose up",
     "docker:down": "docker compose down -v"
   },
