@@ -24,15 +24,31 @@ describe('landing hero', () => {
   });
 
   it('shows the tagline in bold italic navy and has no blue line under it', () => {
-    expect(html).toMatch(/<p[^>]*text-xl font-bold italic text-navy[^>]*>/);
+    expect(html).toMatch(/<p[^>]*text-lg font-bold italic text-navy[^>]*>/);
     expect(html).not.toContain('bg-sky');
   });
 
-  it('has a hero logo slot of 208 pixels on a phone, 256 on a tablet and 288 on a laptop, hidden from screen readers', () => {
+  it('puts everything on one white card of at most 420 pixels over a navy-covered backdrop, with a divider above the form', () => {
+    expect(html).toContain('data-auth-card');
+    expect(html).toContain('max-w-[420px]');
+    expect(html).toMatch(/data-auth-card[^>]*bg-white|bg-white[^>]*data-auth-card/);
+    expect(html).toContain('bg-navy/60');
+    expect(html).toContain('<hr');
+    expect(html.indexOf('<hr')).toBeLessThan(html.indexOf('Get started'));
+    expect(html.indexOf('Get started')).toBeLessThan(html.indexOf('content'));
+  });
+
+  it('loads the campus photo as a priority, compressed, cover image', () => {
+    expect(html).toContain('campus%2Fhkbu-landing.jpg');
+    expect(html).toContain('q=70');
+    expect(html).toContain('object-cover');
+    expect(html).toMatch(/rel="preload" as="image"/);
+  });
+
+  it('has a hero logo slot of 208 pixels on a phone and 240 from tablet up, hidden from screen readers', () => {
     expect(html).toContain('data-logo-hero');
     expect(html).toContain('h-52 w-52');
-    expect(html).toContain('sm:h-64 sm:w-64');
-    expect(html).toContain('lg:h-72 lg:w-72');
+    expect(html).toContain('sm:h-60 sm:w-60');
     expect(html).toMatch(
       /data-logo-hero[^>]*aria-hidden="true"|aria-hidden="true"[^>]*data-logo-hero/,
     );

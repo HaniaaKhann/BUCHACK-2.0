@@ -14,3 +14,7 @@ export function listOutletPhotoSlugs(directory: string = publicDirectory()): str
 export function logoExists(directory: string = publicDirectory()): boolean {
   return existsSync(join(directory, 'logo.svg'));
 }
+
+export function campusPhotoExists(directory: string = publicDirectory()): boolean {
+  return existsSync(join(directory, 'campus', 'hkbu-landing.jpg'));
+}

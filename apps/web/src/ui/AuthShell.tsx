@@ -1,5 +1,7 @@
+import Image from 'next/image';
 import type { ReactNode } from 'react';
 import { APP_NAME, APP_TAGLINE } from '@/brand';
+import { campusPhotoExists } from '@/server/assets';
 
 export function AuthShell({
   title,
@@ -9,26 +11,47 @@ export function AuthShell({
   children: ReactNode;
 }): React.JSX.Element {
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-col items-center gap-8 px-4 py-10 sm:px-6 lg:py-14">
-      <header className="flex animate-fade-up flex-col items-center gap-4 text-center">
-        <span
-          data-logo-slot
-          data-logo-hero
-          aria-hidden="true"
-          className="h-52 w-52 shrink-0 sm:h-64 sm:w-64 lg:h-72 lg:w-72"
-        />
-        <h1 data-hero-name className="text-5xl font-bold tracking-tight text-navy lg:text-6xl">
-          {APP_NAME}
-        </h1>
-        <p className="max-w-md text-xl font-bold italic text-navy lg:text-2xl">{APP_TAGLINE}</p>
-      </header>
-      <section
-        className="flex w-full max-w-md animate-fade-up flex-col gap-5 rounded-2xl border border-navy/10 bg-white p-6 shadow-[0_8px_30px_rgba(56,70,113,0.10)]"
-        style={{ animationDelay: '150ms' }}
+    <main className="flex min-h-[80vh] items-center justify-center px-3 py-6 sm:px-6 sm:py-10">
+      <div
+        aria-hidden="true"
+        data-auth-backdrop
+        className="fixed inset-0 -z-10 bg-gradient-to-b from-navy to-navy/80"
       >
-        <h2 className="text-lg font-semibold">{title}</h2>
-        {children}
-      </section>
+        {campusPhotoExists() ? (
+          <Image
+            src="/campus/hkbu-landing.jpg"
+            alt=""
+            fill
+            priority
+            quality={70}
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+        ) : null}
+        <div className="absolute inset-0 bg-navy/60" />
+      </div>
+      <div
+        data-auth-card
+        className="flex w-full max-w-[420px] animate-fade-up flex-col gap-5 rounded-2xl bg-white p-5 shadow-[0_24px_64px_-12px_rgba(0,0,0,0.5),0_4px_16px_rgba(0,0,0,0.25)] sm:p-7"
+      >
+        <header className="flex flex-col items-center gap-3 text-center">
+          <span
+            data-logo-slot
+            data-logo-hero
+            aria-hidden="true"
+            className="h-52 w-52 shrink-0 sm:h-60 sm:w-60"
+          />
+          <h1 data-hero-name className="text-4xl font-bold tracking-tight text-navy">
+            {APP_NAME}
+          </h1>
+          <p className="text-lg font-bold italic text-navy sm:text-xl">{APP_TAGLINE}</p>
+        </header>
+        <hr className="border-navy/10" />
+        <section className="flex flex-col gap-5 [&>p]:text-center">
+          <h2 className="text-lg font-semibold">{title}</h2>
+          {children}
+        </section>
+      </div>
     </main>
   );
 }
