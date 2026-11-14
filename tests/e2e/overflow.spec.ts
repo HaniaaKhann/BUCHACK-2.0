@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { findViolations } from './layout';
 import {
   BASE_URL,
   longestOutletName,
@@ -14,49 +15,6 @@ const LONGEST = longestOutletName();
 const SWAP_VENDOR = process.env['E2E_VENDOR_SWAP'] !== '0';
 
 let orderId = '';
-
-async function findViolations(page: Page, label: string): Promise<string[]> {
-  return page.evaluate((where) => {
-    const found: string[] = [];
-    const width = window.innerWidth;
-    const root = document.documentElement;
-    if (root.scrollWidth > width + 1) {
-      found.push(`${where}: the page is ${root.scrollWidth}px wide in a ${width}px window`);
-    }
-    const insideScroller = (element: Element): boolean => {
-      for (let parent = element.parentElement; parent; parent = parent.parentElement) {
-        const overflow = getComputedStyle(parent).overflowX;
-        if (overflow === 'auto' || overflow === 'scroll' || overflow === 'hidden') return true;
-      }
-      return false;
-    };
-    for (const element of document.querySelectorAll('body *')) {
-      const style = getComputedStyle(element);
-      if (style.display === 'none') continue;
-      const box = element.getBoundingClientRect();
-      if (box.width === 0) continue;
-      const name = `<${element.tagName.toLowerCase()} class="${String(element.className).slice(0, 60)}">`;
-      if (style.position === 'fixed') {
-        if (box.left < -1 || box.right > width + 1)
-          found.push(`${where}: fixed ${name} leaves the window`);
-      } else if (box.right > width + 1 && !insideScroller(element)) {
-        found.push(`${where}: ${name} ends at ${Math.round(box.right)}px`);
-      }
-      if (found.length >= 6) break;
-    }
-    const banner = document.querySelector('[role="note"]');
-    if (banner === null) {
-      found.push(`${where}: the yellow banner is missing`);
-    } else {
-      const box = banner.getBoundingClientRect();
-      if (banner.scrollWidth > banner.clientWidth + 1)
-        found.push(`${where}: the banner text is clipped`);
-      if (box.left < -1 || box.right > width + 1)
-        found.push(`${where}: the banner leaves the window`);
-    }
-    return found;
-  }, label);
-}
 
 async function visit(page: Page, path: string, label: string, name?: string): Promise<string[]> {
   await page.goto(path, { waitUntil: 'networkidle' });
@@ -146,6 +104,11 @@ test.describe('no horizontal overflow, with the longest outlet name', () => {
       await signIn(student, 'student');
       problems.push(...(await visit(student, '/', at('/'), LONGEST)));
       problems.push(...(await visit(student, '/onboarding', at('/onboarding'))));
+      await student.locator('[data-delete-start]').click();
+      await expect(student.locator('[data-delete-confirm]')).toBeVisible();
+      problems.push(
+        ...(await findViolations(student, at('/onboarding with the delete panel open'))),
+      );
       await student.goto('/', { waitUntil: 'networkidle' });
       await expect(student.locator('[data-bell]')).toBeVisible();
       await student.locator('[data-bell]').click();
@@ -185,6 +148,9 @@ test.describe('no horizontal overflow, with the longest outlet name', () => {
       await signIn(owner, 'owner');
       problems.push(...(await visit(owner, '/vendor', at('/vendor'))));
       problems.push(...(await visit(owner, '/vendor/menu', at('/vendor/menu'))));
+      await owner.locator('[data-edit-dish]').first().click();
+      await expect(owner.locator('[data-dish-form]')).toHaveCount(2);
+      problems.push(...(await findViolations(owner, at('/vendor/menu with an edit form open'))));
       if (SWAP_VENDOR) {
         swapOwnerToLongestVendor();
         problems.push(...(await visit(owner, '/vendor', at('/vendor (long name)'), LONGEST)));
