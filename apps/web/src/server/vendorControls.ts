@@ -1,7 +1,8 @@
-import { MS_PER_MINUTE, type BusyState } from '@app/core';
+import { MS_PER_MINUTE, median, type BusyState } from '@app/core';
 import { getClockNowMs } from './clock';
 import { prisma } from './db';
 import { notifyVendorChanged } from './notify';
+import type { MenuItemEdit, NewMenuItem } from './menuInput';
 import { OrderError } from './orderErrors';
 
 export const RUSH_MINUTES = 30;
@@ -61,22 +62,30 @@ export interface VendorMenuItemView {
   tagsVerified: boolean;
 }
 
-export async function listVendorMenu(vendorId: string): Promise<VendorMenuItemView[]> {
-  const rows = await prisma.menuItem.findMany({
-    where: { vendorId, deletedAt: null },
-    orderBy: [{ category: 'asc' }, { name: 'asc' }],
-    select: {
-      id: true,
-      name: true,
-      priceHkd: true,
-      category: true,
-      stockStatus: true,
-      dietTags: true,
-      allergens: true,
-      tagsStatus: true,
-    },
-  });
-  return rows.map((row) => ({
+const menuSelect = {
+  id: true,
+  name: true,
+  priceHkd: true,
+  category: true,
+  stockStatus: true,
+  dietTags: true,
+  allergens: true,
+  tagsStatus: true,
+} as const;
+
+interface MenuRow {
+  id: string;
+  name: string;
+  priceHkd: number;
+  category: string;
+  stockStatus: 'in_stock' | 'out_of_stock';
+  dietTags: string[];
+  allergens: string[];
+  tagsStatus: 'verified' | 'unverified';
+}
+
+function toMenuView(row: MenuRow): VendorMenuItemView {
+  return {
     id: row.id,
     name: row.name,
     priceHkd: row.priceHkd,
@@ -85,7 +94,88 @@ export async function listVendorMenu(vendorId: string): Promise<VendorMenuItemVi
     dietTags: row.dietTags,
     allergens: row.allergens,
     tagsVerified: row.tagsStatus === 'verified',
-  }));
+  };
+}
+
+export async function listVendorMenu(vendorId: string): Promise<VendorMenuItemView[]> {
+  const rows = await prisma.menuItem.findMany({
+    where: { vendorId, deletedAt: null },
+    orderBy: [{ category: 'asc' }, { name: 'asc' }],
+    select: menuSelect,
+  });
+  return rows.map(toMenuView);
+}
+
+const DEFAULT_PREP_MINUTES = 5;
+
+function isUniqueViolation(error: unknown): boolean {
+  return typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2002';
+}
+
+export async function createMenuItem(
+  vendorId: string,
+  input: NewMenuItem,
+): Promise<VendorMenuItemView> {
+  const existing = await prisma.menuItem.findMany({
+    where: { vendorId, deletedAt: null },
+    select: { prepPriorMin: true },
+  });
+  const prepPriorMin =
+    existing.length > 0 ? median(existing.map((item) => item.prepPriorMin)) : DEFAULT_PREP_MINUTES;
+  try {
+    const row = await prisma.menuItem.create({
+      data: {
+        vendorId,
+        name: input.name,
+        priceHkd: input.priceHkd,
+        category: input.category,
+        dietTags: [],
+        allergens: [],
+        tagsStatus: 'unverified',
+        prepPriorMin,
+        stockStatus: 'in_stock',
+        isDemo: false,
+      },
+      select: menuSelect,
+    });
+    await notifyVendorChanged(vendorId);
+    return toMenuView(row);
+  } catch (error) {
+    if (isUniqueViolation(error)) throw new OrderError(409, 'name_taken');
+    throw error;
+  }
+}
+
+export async function updateMenuItem(
+  vendorId: string,
+  itemId: string,
+  edit: MenuItemEdit,
+): Promise<VendorMenuItemView> {
+  const current = await prisma.menuItem.findFirst({
+    where: { id: itemId, vendorId, deletedAt: null },
+    select: { name: true },
+  });
+  if (current === null) throw new OrderError(404, 'not_found');
+  const renamed = edit.name !== undefined && edit.name !== current.name;
+  try {
+    const row = await prisma.menuItem.update({
+      where: { id: itemId },
+      data: {
+        ...(edit.name === undefined ? {} : { name: edit.name }),
+        ...(edit.priceHkd === undefined ? {} : { priceHkd: edit.priceHkd }),
+        ...(edit.category === undefined ? {} : { category: edit.category }),
+        ...(renamed
+          ? { tagsStatus: 'unverified', tagsVerifiedBy: null, tagsVerifiedAt: null }
+          : {}),
+      },
+      select: menuSelect,
+    });
+    await notifyVendorChanged(vendorId);
+    return toMenuView(row);
+  } catch (error) {
+    if (isUniqueViolation(error)) throw new OrderError(409, 'name_taken');
+    throw error;
+  }
 }
 
 export async function setStock(vendorId: string, itemId: string, inStock: boolean): Promise<void> {

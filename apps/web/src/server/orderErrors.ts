@@ -12,6 +12,7 @@ export type OrderErrorCode =
   | 'not_cancellable'
   | 'not_ready'
   | 'wrong_state'
+  | 'name_taken'
   | 'rate_limited';
 
 export class OrderError extends Error {

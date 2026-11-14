@@ -4,7 +4,8 @@ import { DATA_ALLERGENS, DATA_DIET_TAGS } from '@app/core';
 import Link from 'next/link';
 import { useCallback, useState } from 'react';
 import type { VendorMenuItemView } from '@/server/vendorControls';
-import { Button, ErrorNote, Switch } from '../primitives';
+import { Button, Card, ErrorNote, Switch } from '../primitives';
+import { DishForm, type DishValues } from './DishForm';
 
 interface VendorMenuProps {
   vendorId: string;
@@ -84,6 +85,7 @@ export function VendorMenu({
 }: VendorMenuProps): React.JSX.Element {
   const [items, setItems] = useState(initialItems);
   const [editing, setEditing] = useState<string | null>(null);
+  const [dishEditing, setDishEditing] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async (): Promise<void> => {
@@ -114,6 +116,29 @@ export function VendorMenu({
     await refresh();
   }
 
+  async function sendDish(
+    path: string,
+    method: 'POST' | 'PATCH',
+    values: DishValues | Partial<DishValues>,
+  ): Promise<string | null> {
+    setError(null);
+    const response = await fetch(path, {
+      method,
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(values),
+    });
+    if (response.ok) {
+      await refresh();
+      return null;
+    }
+    const data = (await response.json().catch(() => ({}))) as { error?: string };
+    return data.error === 'name_taken'
+      ? 'A dish with that name already exists.'
+      : 'That was not accepted. Check the name, price and category.';
+  }
+
+  const categories = [...new Set(items.map((item) => item.category))].sort();
+
   return (
     <div className="min-h-screen bg-neutral-50">
       <header className="border-b border-neutral-200 bg-white">
@@ -128,10 +153,21 @@ export function VendorMenu({
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:py-6">
         <p className="text-sm text-neutral-700">
           {isOwner
-            ? 'Imported tags are not verified. Only you can confirm them, and students see a tick only for confirmed dishes.'
+            ? 'Imported tags are not verified. Only you can confirm them, and students see a tick only for confirmed dishes. New dishes start with Not verified tags.'
             : 'Staff can change stock. Only the owner can confirm diet and allergen tags.'}
         </p>
         <ErrorNote message={error} />
+        {isOwner ? (
+          <Card title="Add a dish">
+            <DishForm
+              initial={{ name: '', priceHkd: null, category: '' }}
+              submitLabel="Add dish"
+              categories={categories}
+              clearOnSuccess
+              onSubmit={(values) => sendDish(`/api/vendor/${vendorId}/menu`, 'POST', values)}
+            />
+          </Card>
+        ) : null}
         <ul className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {items.map((item) => (
             <li
@@ -166,6 +202,42 @@ export function VendorMenu({
                     }`
                   : 'Not verified'}
               </p>
+              {isOwner ? (
+                dishEditing === item.id ? (
+                  <div className="mt-3">
+                    <DishForm
+                      initial={{
+                        name: item.name,
+                        priceHkd: item.priceHkd,
+                        category: item.category,
+                      }}
+                      submitLabel="Save dish"
+                      stacked
+                      categories={categories}
+                      onSubmit={async (values) => {
+                        const message = await sendDish(
+                          `/api/vendor/${vendorId}/menu/${item.id}`,
+                          'PATCH',
+                          values,
+                        );
+                        if (message === null) setDishEditing(null);
+                        return message;
+                      }}
+                      onCancel={() => setDishEditing(null)}
+                    />
+                  </div>
+                ) : (
+                  <Button
+                    type="button"
+                    tone="quiet"
+                    className="mr-2 mt-3"
+                    data-edit-dish
+                    onClick={() => setDishEditing(item.id)}
+                  >
+                    Edit dish
+                  </Button>
+                )
+              ) : null}
               {isOwner ? (
                 editing === item.id ? (
                   <TagEditor
