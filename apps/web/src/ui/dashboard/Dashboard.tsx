@@ -15,8 +15,10 @@ import { cartCount, conflictsWithCart } from '../cart/cartReducer';
 import { AppHeader } from '../primitives';
 import { SignOutButton } from '../SignOutButton';
 import { FilterPanel, type BuildingChoice, type ProfileSummary } from './FilterPanel';
+import { focusableIn, nextFocusIndex } from './focusTrap';
 import { ItemList, PAGE_SIZE } from './ItemList';
 import { VendorStrip } from './VendorStrip';
+import { useIsDesktop } from './useIsDesktop';
 import { useLiveRefresh } from './useLiveRefresh';
 import {
   DEFAULT_FILTERS,
@@ -49,9 +51,15 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
   const [vendors, setVendors] = useState(props.initialVendors);
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [buildingId, setBuildingId] = useState(props.currentBuildingId);
-  const [panelOpen, setPanelOpen] = useState(false);
+  const isDesktop = useIsDesktop();
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
+  const panelOpen = isDesktop ? !collapsed : sheetOpen;
   const [cartOpen, setCartOpen] = useState(false);
   const cart = useCart();
+  const cartTotal = cartCount(cart.state);
   const [limit, setLimit] = useState(PAGE_SIZE);
   const [notice, setNotice] = useState<string | null>(null);
   const [toast, setToast] = useState<ToastMessage | null>(null);
@@ -116,6 +124,56 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
 
   const filterCount = activeFilterCount(filters);
 
+  const closeSheet = useCallback((): void => {
+    setSheetOpen(false);
+    triggerRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    if (isDesktop && sheetOpen) setSheetOpen(false);
+  }, [isDesktop, sheetOpen]);
+
+  useEffect(() => {
+    if (!sheetOpen || isDesktop) return;
+    const panel = panelRef.current;
+    if (panel === null) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    function focusFirst(attempt: number): void {
+      if (panel === null) return;
+      focusableIn(panel)[0]?.focus();
+      if (!panel.contains(document.activeElement) && attempt < 8) {
+        timer = setTimeout(() => focusFirst(attempt + 1), 40);
+      }
+    }
+    focusFirst(0);
+    function onKey(event: KeyboardEvent): void {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeSheet();
+        return;
+      }
+      if (event.key !== 'Tab' || panel === null) return;
+      const items = focusableIn(panel);
+      if (items.length === 0) return;
+      event.preventDefault();
+      const current = items.indexOf(document.activeElement as HTMLElement);
+      items[nextFocusIndex(current, items.length, event.shiftKey)]?.focus();
+    }
+    document.addEventListener('keydown', onKey);
+    return () => {
+      if (timer !== undefined) clearTimeout(timer);
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [sheetOpen, isDesktop, closeSheet]);
+
+  function togglePanel(): void {
+    if (isDesktop) setCollapsed((current) => !current);
+    else setSheetOpen(true);
+  }
+
   return (
     <div className="min-h-screen bg-cream">
       <AppHeader
@@ -135,7 +193,14 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
               onClick={() => setCartOpen(true)}
               className="rounded-md bg-cream px-3 py-2 text-sm font-semibold text-navy hover:bg-white"
             >
-              Cart ({cartCount(cart.state)})
+              Cart (
+              <span
+                key={cartTotal}
+                className={cartTotal > 0 ? 'inline-block animate-bump' : 'inline-block'}
+              >
+                {cartTotal}
+              </span>
+              )
             </button>
             <p className="hidden text-right text-xs sm:block">
               <span className="block font-medium" data-demo-clock>
@@ -159,26 +224,67 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
         </p>
 
         <button
+          ref={triggerRef}
           type="button"
+          data-filter-toggle
           aria-expanded={panelOpen}
-          onClick={() => setPanelOpen((open) => !open)}
-          className="flex items-center justify-between rounded-xl border border-navy/60 bg-white px-4 py-3 text-sm font-medium lg:hidden"
+          aria-controls="filter-panel"
+          onClick={togglePanel}
+          className="flex items-center justify-between rounded-xl border border-navy/60 bg-white px-4 py-3 text-sm font-medium transition-transform active:scale-[0.99] lg:self-start lg:gap-3"
         >
           <span>Filters and sorting</span>
           <span className="rounded-full bg-navy px-2 py-0.5 text-xs text-cream">{filterCount}</span>
         </button>
 
-        <div className="grid gap-4 lg:grid-cols-[19rem_minmax(0,1fr)] lg:items-start lg:gap-6">
-          <aside className={`${panelOpen ? 'block' : 'hidden'} lg:sticky lg:top-4 lg:block`}>
-            <FilterPanel
-              filters={filters}
-              onChange={setFilters}
-              profile={props.profile}
-              buildings={props.buildings}
-              currentBuildingId={buildingId}
-              onBuildingChange={(next) => void changeBuilding(next)}
-              fitsAvailable={!menu.meta.needsBuilding}
-            />
+        <div
+          className={`grid gap-4 transition-[grid-template-columns] duration-300 ease-out lg:items-start lg:gap-0 ${
+            collapsed ? 'lg:grid-cols-[0px_minmax(0,1fr)]' : 'lg:grid-cols-[19rem_minmax(0,1fr)]'
+          }`}
+        >
+          <div
+            data-filter-backdrop
+            aria-hidden="true"
+            onClick={closeSheet}
+            className={`fixed inset-0 z-30 bg-navy/50 transition-opacity duration-300 lg:hidden ${
+              sheetOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+            }`}
+          />
+          <aside
+            id="filter-panel"
+            ref={panelRef}
+            data-filter-panel
+            data-open={panelOpen}
+            inert={!panelOpen}
+            {...(isDesktop ? {} : { role: 'dialog', 'aria-modal': sheetOpen })}
+            aria-label="Filters and sorting"
+            className={`fixed inset-x-0 bottom-0 z-40 max-h-[85vh] overflow-y-auto overscroll-contain rounded-t-2xl bg-white shadow-xl [transition-duration:300ms] [transition-property:transform,visibility] ease-out lg:sticky lg:top-4 lg:z-auto lg:max-h-none lg:translate-y-0 lg:overflow-hidden lg:rounded-none lg:bg-transparent lg:shadow-none ${
+              sheetOpen
+                ? 'translate-y-0'
+                : 'invisible translate-y-full [transition-delay:0ms,300ms]'
+            } ${collapsed ? 'lg:invisible lg:[transition-delay:0ms,300ms]' : 'lg:visible'}`}
+          >
+            <div className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-navy/15 bg-white px-4 py-3 lg:hidden">
+              <h2 className="text-base font-semibold">Filters and sorting</h2>
+              <button
+                type="button"
+                data-filter-close
+                onClick={closeSheet}
+                className="rounded-md bg-navy px-3 py-1.5 text-sm font-semibold text-cream"
+              >
+                Done
+              </button>
+            </div>
+            <div className="p-3 lg:w-[19rem] lg:p-0 lg:pr-6">
+              <FilterPanel
+                filters={filters}
+                onChange={setFilters}
+                profile={props.profile}
+                buildings={props.buildings}
+                currentBuildingId={buildingId}
+                onBuildingChange={(next) => void changeBuilding(next)}
+                fitsAvailable={!menu.meta.needsBuilding}
+              />
+            </div>
           </aside>
 
           <div className="flex min-w-0 flex-col gap-6">

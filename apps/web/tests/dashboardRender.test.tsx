@@ -220,10 +220,28 @@ describe('dashboard layout', () => {
     expect(html).not.toMatch(/max-w-(sm|md|lg|xl|2xl|3xl|4xl)\b/);
   });
 
-  it('starts mobile first: filters sit behind a button that disappears on laptops', () => {
-    expect(html).toContain('Filters and sorting');
-    expect(html).toContain('lg:hidden');
-    expect(html).toContain('hidden lg:sticky lg:top-4 lg:block');
+  it('starts mobile first: the filters are a closed bottom sheet behind a button', () => {
+    expect(html).toContain('data-filter-toggle');
+    expect(html).toContain('aria-controls="filter-panel"');
+    expect(html).toContain('aria-expanded="false"');
+    expect(html).toContain('data-filter-panel');
+    expect(html).toContain('translate-y-full');
+    expect(html).toContain('role="dialog"');
+    expect(html).toContain('data-filter-backdrop');
+    expect(html).toContain('data-filter-close');
+  });
+
+  it('keeps the closed panel out of the tab order and away from screen readers', () => {
+    const panel = html.slice(html.indexOf('<aside'), html.indexOf('</aside>'));
+    expect(panel).toContain('inert');
+    expect(panel).toContain('invisible');
+  });
+
+  it('is a column that is open by default and animates its width on a laptop', () => {
+    expect(html).toContain('lg:grid-cols-[19rem_minmax(0,1fr)]');
+    expect(html).not.toContain('lg:grid-cols-[0px_minmax(0,1fr)]');
+    expect(html).toContain('transition-[grid-template-columns]');
+    expect(html).toContain('lg:sticky');
   });
 
   it('scrolls the vendor strip sideways on a phone and turns it into a grid on a laptop', () => {
@@ -251,7 +269,7 @@ describe('dashboard layout', () => {
   it('puts an Add to cart button on every item card and a cart button with the count in the header', () => {
     expect(html).toContain('data-add="item-1"');
     expect(html).toContain('Add to cart');
-    expect(html).toContain('Cart (0)');
+    expect(html).toMatch(/Cart \(\s*<span[^>]*>0<\/span>\s*\)/);
     expect(html).toContain('href="/orders"');
   });
 
