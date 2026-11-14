@@ -192,3 +192,48 @@ describe('computeLiveWait', () => {
     expect(result.backlog).toBe(6);
   });
 });
+
+describe('computeLiveWait with the busy state', () => {
+  const base: WaitSnapshot = {
+    computedAt: START,
+    backlog: 4,
+    muPerMinute: 1,
+    bias: null,
+    biasSamples: 0,
+    residuals: [],
+    forecast: [{ slotStart: START, lambdaPerMinute: 2 }],
+  };
+  const at = (busyState?: 'quiet' | 'normal' | 'rush') =>
+    computeLiveWait({
+      snapshot: base,
+      now: minutes(5),
+      appArrivalTimes: [],
+      prepMinutes: 4,
+      ...(busyState ? { busyState } : {}),
+    });
+
+  it('scales the walk-in rate after the snapshot by 0.6, 1.0 or 1.6', () => {
+    expect(at('normal').backlog).toBeCloseTo(4 + 5 * (2 - 1), 10);
+    expect(at('rush').backlog).toBeCloseTo(4 + 5 * (3.2 - 1), 10);
+    expect(at('quiet').backlog).toBeCloseTo(4 + 5 * (1.2 - 1), 10);
+  });
+
+  it('is the same as normal when no state is given', () => {
+    expect(at().backlog).toBe(at('normal').backlog);
+  });
+
+  it('leaves the stored backlog alone at the moment of the snapshot', () => {
+    const now = computeLiveWait({
+      snapshot: base,
+      now: START,
+      appArrivalTimes: [],
+      prepMinutes: 4,
+      busyState: 'rush',
+    });
+    expect(now.backlog).toBe(4);
+  });
+
+  it('makes a rush wait longer than a quiet wait', () => {
+    expect(at('rush').prediction.pointMinutes).toBeGreaterThan(at('quiet').prediction.pointMinutes);
+  });
+});

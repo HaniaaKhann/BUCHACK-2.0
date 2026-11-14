@@ -1,4 +1,5 @@
-import { MS_PER_MINUTE, SLOT_MINUTES } from '../config.js';
+import { BUSY_MULTIPLIER, MS_PER_MINUTE, SLOT_MINUTES } from '../config.js';
+import type { BusyState } from '../types.js';
 import { stepBacklog } from './backlog.js';
 import { predictWait, type Prediction } from './predict.js';
 
@@ -54,6 +55,10 @@ export function lambdaFromForecast(forecast: readonly ForecastSlot[]): (ms: numb
   };
 }
 
+function scaled(lambdaAt: (ms: number) => number, factor: number): (ms: number) => number {
+  return (ms) => lambdaAt(ms) * factor;
+}
+
 export interface WaitSnapshot {
   computedAt: number;
   backlog: number | null;
@@ -69,6 +74,7 @@ export interface LiveWaitInput {
   now: number;
   appArrivalTimes: readonly number[];
   prepMinutes: number;
+  busyState?: BusyState;
 }
 
 export interface LiveWaitResult {
@@ -88,7 +94,10 @@ export function computeLiveWait(input: LiveWaitInput): LiveWaitResult {
           startAt: snapshot.computedAt,
           until: Math.max(input.now, snapshot.computedAt),
           muPerMinute: snapshot.muPerMinute,
-          lambdaAt: lambdaFromForecast(snapshot.forecast),
+          lambdaAt: scaled(
+            lambdaFromForecast(snapshot.forecast),
+            BUSY_MULTIPLIER[input.busyState ?? 'normal'],
+          ),
           appArrivalTimes: input.appArrivalTimes,
         });
   const prediction = predictWait({

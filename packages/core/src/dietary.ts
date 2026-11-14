@@ -35,6 +35,34 @@ export const ALLERGEN_OPTIONS: readonly AllergenOption[] = [
   { id: 'gluten', label: 'Gluten', dataIds: ['gluten'] },
 ];
 
+export const DATA_DIET_TAGS: readonly { id: string; label: string }[] = [
+  { id: 'vegetarian', label: 'Vegetarian' },
+  { id: 'vegan', label: 'Vegan' },
+  { id: 'halal', label: 'Halal' },
+  { id: 'no_pork', label: 'No pork' },
+  { id: 'no_beef', label: 'No beef' },
+];
+
+export const DATA_ALLERGENS: readonly { id: string; label: string }[] = [
+  { id: 'tree_nut', label: 'Tree nuts' },
+  { id: 'peanut', label: 'Peanuts' },
+  { id: 'fish', label: 'Fish' },
+  { id: 'shellfish', label: 'Shellfish' },
+  { id: 'egg', label: 'Egg' },
+  { id: 'soy', label: 'Soy' },
+  { id: 'sesame', label: 'Sesame' },
+  { id: 'dairy', label: 'Dairy' },
+  { id: 'gluten', label: 'Gluten' },
+];
+
+export function isDataDietTag(value: string): boolean {
+  return DATA_DIET_TAGS.some((tag) => tag.id === value);
+}
+
+export function isDataAllergen(value: string): boolean {
+  return DATA_ALLERGENS.some((allergen) => allergen.id === value);
+}
+
 export const GOAL_OPTIONS = ['more_protein', 'more_carbs', 'balanced', 'none'] as const;
 export type Goal = (typeof GOAL_OPTIONS)[number];
 

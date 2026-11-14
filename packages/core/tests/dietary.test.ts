@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
   ALLERGEN_OPTIONS,
+  DATA_ALLERGENS,
+  DATA_DIET_TAGS,
   DIET_OPTIONS,
   isAllergenId,
+  isDataAllergen,
+  isDataDietTag,
   isDietId,
   resolveHardFilters,
 } from '../src/dietary.js';
@@ -71,5 +75,35 @@ describe('resolveHardFilters', () => {
       requiredDietTags: [],
       excludedAllergens: [],
     });
+  });
+});
+
+describe('vendor tag vocabulary', () => {
+  it('lists the five diet tags a vendor can confirm, including halal', () => {
+    expect(DATA_DIET_TAGS.map((tag) => tag.id)).toEqual([
+      'vegetarian',
+      'vegan',
+      'halal',
+      'no_pork',
+      'no_beef',
+    ]);
+    expect(isDataDietTag('halal')).toBe(true);
+    expect(isDataDietTag('gluten_free')).toBe(false);
+  });
+
+  it('lists the nine allergen ids used in menu data', () => {
+    expect(DATA_ALLERGENS.map((allergen) => allergen.id).sort()).toEqual([
+      'dairy',
+      'egg',
+      'fish',
+      'gluten',
+      'peanut',
+      'sesame',
+      'shellfish',
+      'soy',
+      'tree_nut',
+    ]);
+    expect(isDataAllergen('tree_nut')).toBe(true);
+    expect(isDataAllergen('nuts')).toBe(false);
   });
 });
