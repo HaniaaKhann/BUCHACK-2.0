@@ -147,7 +147,7 @@ The four demo accounts cannot be deleted. Create your own account to try deletin
 
 The admin page at `/admin` has the demo clock (speed, jump forward, set a time) and `/admin/accuracy` has the backtest. The student home screen has the bell and the chat assistant.
 
-To return a running demo to its starting state (fixed clock at 12:15 on Tuesday 17 November 2026, no orders, seeded stock and tags, wallet back to HK$300), run `pnpm demo:reset` with `DEMO_MODE=true` and `DATABASE_URL` set. It leaves the demo student not onboarded, so the first sign-in shows onboarding.
+To return a running demo to its starting state (fixed clock at 12:15 on Tuesday 17 November 2026, no orders, seeded stock and tags, wallet back to HK$300), run `pnpm demo:reset` with `DEMO_MODE=true` and `DATABASE_URL` set. On a fresh clone, run `pnpm install` and `pnpm --filter @app/db prisma:generate` first, or the command fails because the Prisma client does not exist yet. It leaves the demo student not onboarded, so the first sign-in shows onboarding.
 
 For quick retakes, run `pnpm demo:reset:ready` instead. It does the same reset and also leaves the demo student onboarded with a profile: English chat, standing at the Bistro NTT building, no diet or allergen filters. The waits are identical in both modes; each run prints the same wait fingerprint and a state fingerprint that also covers the student.
 
@@ -159,6 +159,7 @@ Prerequisites: Node 22+, pnpm 9+, Docker (for Postgres).
 
 ```
 pnpm install
+pnpm --filter @app/db prisma:generate
 pnpm lint
 pnpm typecheck
 pnpm test
