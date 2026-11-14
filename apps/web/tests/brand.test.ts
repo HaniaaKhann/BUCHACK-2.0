@@ -16,7 +16,7 @@ function sourceFiles(directory: string): string[] {
 
 describe('brand constants', () => {
   it('has the product name and tagline', () => {
-    expect(APP_NAME).toBe('ReadyBy');
+    expect(APP_NAME).toBe('UniBowl');
     expect(APP_TAGLINE).toBe('Food that fits your diet, ready before your next class');
   });
 

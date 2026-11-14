@@ -1,8 +1,8 @@
-# ReadyBy
+# UniBowl
 
 [![CI](https://github.com/HaniaaKhann/BUCHACK-2.0/actions/workflows/ci.yml/badge.svg)](https://github.com/HaniaaKhann/BUCHACK-2.0/actions/workflows/ci.yml)
 
-**Food that fits your diet, ready before your next class.** ReadyBy shows every HKBU canteen in one place, filters by diet and allergen using only tags an outlet owner has confirmed, and gives a wait range instead of one fixed promise, so students with a short break can pick something that will be ready in time. Pickup only, no delivery.
+**Food that fits your diet, ready before your next class.** UniBowl shows every HKBU canteen in one place, filters by diet and allergen using only tags an outlet owner has confirmed, and gives a wait range instead of one fixed promise, so students with a short break can pick something that will be ready in time. Pickup only, no delivery.
 
 Demo video: `[DEMO_VIDEO_LINK]` (placeholder: not recorded yet)
 
@@ -49,7 +49,7 @@ These are reports from other campuses, not measurements of HKBU.
 
 ## How it differs
 
-|                                                         | Grubhub                                             | Transact                                                                                                               | Plain campus ordering (example: HKBU's QR pre-order) | ReadyBy                                                    |
+|                                                         | Grubhub                                             | Transact                                                                                                               | Plain campus ordering (example: HKBU's QR pre-order) | UniBowl                                                    |
 | ------------------------------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
 | Ready-time problems reported by students in our sources | Yes: NYU, waits of up to two hours reported at peak | Yes: UCLA, a pickup time fell during a student's class and UCLA Dining blamed the app's algorithm, volume and staffing | Not reported                                         | Not measured on real students yet                          |
 | How the ready time is shown                             | Not reported                                        | Not reported                                                                                                           | A fixed promise: "ready in just 5-10 minutes"        | A range, from the queue state and learned outcomes         |

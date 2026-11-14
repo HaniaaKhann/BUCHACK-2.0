@@ -4,7 +4,7 @@ Short, current repo rules.
 
 ## Overview
 
-ReadyBy is a campus pickup-food web app for HKBU. It has student timetable-aware ranking, a vendor order board and a hybrid wait-time engine that learns from in-app outcomes. It is a pnpm monorepo.
+UniBowl is a campus pickup-food web app for HKBU. It has student timetable-aware ranking, a vendor order board and a hybrid wait-time engine that learns from in-app outcomes. It is a pnpm monorepo.
 
 ```
 apps/
