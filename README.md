@@ -32,7 +32,7 @@ We have not run a student survey yet, so no student numbers are claimed.
 - Diet and allergen filters use only tags an outlet owner has confirmed, so with a filter on, unconfirmed dishes are left out, and halal is never assumed. Tiles show ticks and **Not verified** only while a diet or allergen filter is active.
 - Order as soon as ready or for a 15-minute pickup slot, pay from a demo wallet (the checkout shows the credit before and after the order), follow the order live, cancel while the order is still waiting to be accepted (at most the first minute), and tap **I picked it up** when they have it. An order nobody taps completes by itself 30 minutes after it was ready, on the demo clock.
 - A bell with an unread count for order updates and a leave-now reminder, and a short "Added to cart" message with a View cart button when a dish is added.
-- A chat assistant in English, Traditional Chinese and Simplified Chinese. It answers only from the app's own data (open outlets, waits, what fits before class, diet and allergen filters, order status, wallet, when to leave, how to order). It cannot filter by spice, it never calls a dish halal unless an owner confirmed it, and nothing a student types is stored or sent anywhere.
+- A chat assistant in English, Traditional Chinese and Simplified Chinese. It answers only from the app's own data (open outlets, waits, what fits before class, diet and allergen filters, order status, wallet, when to leave, how to order). It follows simple rules (no model, no network call, no key) and copes with typos and many ways of asking, for example "wallt", "noodels" or "hallal food". When it fixes a diet or allergen word it says "I read this as halal" first and never calls a dish safe on a loose match, and when it is unsure which allergen is meant it asks instead of guessing. When it cannot match a question it says so and shows four example questions to tap. It cannot filter by spice, it never calls a dish halal unless an owner confirmed it, and nothing a student types is stored or sent anywhere. See [`docs/CHATBOT.md`](docs/CHATBOT.md).
 - Delete their own account, with a confirm step.
 
 **Vendors**
@@ -198,7 +198,7 @@ The app stores a student's building choice, diet and allergen filters, goal, cha
 
 ## Documentation
 
-[`ARCHITECTURE`](docs/ARCHITECTURE.md), [`WAIT_TIME_ENGINE`](docs/WAIT_TIME_ENGINE.md), [`PRIVACY`](docs/PRIVACY.md), [`API`](docs/API.md), [`AUTH`](docs/AUTH.md), [`DATA`](docs/DATA.md), [`VENDOR_ONBOARDING`](docs/VENDOR_ONBOARDING.md), [`THEME`](docs/THEME.md).
+[`ARCHITECTURE`](docs/ARCHITECTURE.md), [`WAIT_TIME_ENGINE`](docs/WAIT_TIME_ENGINE.md), [`PRIVACY`](docs/PRIVACY.md), [`API`](docs/API.md), [`AUTH`](docs/AUTH.md), [`DATA`](docs/DATA.md), [`VENDOR_ONBOARDING`](docs/VENDOR_ONBOARDING.md), [`THEME`](docs/THEME.md), [`CHATBOT`](docs/CHATBOT.md).
 
 ## Theme
 

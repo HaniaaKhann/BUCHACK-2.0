@@ -42,7 +42,7 @@ One web process, one worker and one database. There is no Redis, no queue and no
 ```
 apps/web         Next.js app: student, vendor and admin screens, API, SSE
 apps/worker      Background worker, plus the demo reset command
-packages/core    Pure functions: engine, ranking, fit, leave-at, slots, chat matcher. No I/O
+packages/core    Pure functions: engine, ranking, fit, leave-at, slots, chat matcher and typo handling. No I/O
 packages/db      Prisma schema, migrations, seed and seed data, shared queries
 packages/integrations  PaymentProvider (mock wallet) and the PlatformAdapter interface
 packages/simulator     History generator and the backtest
