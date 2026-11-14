@@ -1,5 +1,6 @@
 import type { MenuResponse } from '@/server/menuService';
 import type { MenuItemView } from '@/server/menuView';
+import { staggerDelay } from '../motion';
 import { ItemCard } from './ItemCard';
 import { emptyMessage, groupByFit, groupHeading } from './viewModel';
 
@@ -46,8 +47,12 @@ export function ItemList({
             </span>
           </h2>
           <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
-            {group.items.map((item) => (
-              <li key={item.id}>
+            {group.items.map((item, index) => (
+              <li
+                key={item.id}
+                className="animate-fade-up"
+                style={{ animationDelay: staggerDelay(index) }}
+              >
                 <ItemCard item={item} schedule={menu.meta.schedule} {...(onAdd ? { onAdd } : {})} />
               </li>
             ))}

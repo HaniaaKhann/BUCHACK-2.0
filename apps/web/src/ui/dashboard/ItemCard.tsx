@@ -26,7 +26,7 @@ export function ItemCard({
       data-item={item.id}
       data-verified={item.tagsStatus}
       data-fit={item.fit.status}
-      className={`flex flex-col gap-3 rounded-xl border border-navy/15 bg-white p-4 shadow-sm ${
+      className={`flex flex-col gap-3 rounded-xl border border-navy/15 bg-white p-4 shadow-sm transition-[transform,box-shadow] duration-150 hover:-translate-y-0.5 hover:shadow-md ${
         muted ? 'opacity-75' : ''
       }`}
     >
@@ -84,7 +84,7 @@ export function ItemCard({
           type="button"
           data-add={item.id}
           onClick={() => onAdd(item)}
-          className="rounded-md bg-berry px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-berry/90"
+          className="rounded-md bg-berry px-4 py-2.5 text-sm font-semibold text-white transition-[background-color,transform] hover:bg-berry/90 active:scale-95"
         >
           Add to cart
         </button>

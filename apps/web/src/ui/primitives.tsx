@@ -20,7 +20,7 @@ export function Button({
         : 'border border-navy/60 bg-white text-navy hover:bg-navy/10';
   return (
     <button
-      className={`rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${palette} ${className}`}
+      className={`rounded-md px-4 py-2 text-sm font-medium transition-[background-color,transform] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 ${palette} ${className}`}
       {...props}
     />
   );
