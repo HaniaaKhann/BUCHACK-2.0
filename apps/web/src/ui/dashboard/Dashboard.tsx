@@ -36,6 +36,7 @@ export interface DashboardProps {
   profile: ProfileSummary;
   buildings: readonly BuildingChoice[];
   currentBuildingId: string | null;
+  outletPhotos?: readonly string[];
 }
 
 async function getJson<T>(url: string): Promise<T | null> {
@@ -187,6 +188,7 @@ export function Dashboard(props: DashboardProps): React.JSX.Element {
               </p>
             ) : null}
             <VendorStrip
+              photos={props.outletPhotos ?? []}
               vendors={vendors.vendors}
               selected={filters.vendor}
               onToggle={(id) =>

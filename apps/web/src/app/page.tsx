@@ -2,6 +2,7 @@ import { GOAL_OPTIONS } from '@app/core';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { APP_NAME } from '@/brand';
+import { listOutletPhotoSlugs } from '@/server/assets';
 import { prisma } from '@/server/db';
 import { loadMenu, loadVendorList } from '@/server/menuService';
 import { getPageActor } from '@/server/session';
@@ -52,6 +53,7 @@ export default async function HomePage(): Promise<React.JSX.Element> {
           initialVendors={vendors}
           buildings={buildings}
           currentBuildingId={profile.currentBuildingId}
+          outletPhotos={listOutletPhotoSlugs()}
           profile={{
             dietTags: profile.dietTags,
             allergens: profile.allergens,

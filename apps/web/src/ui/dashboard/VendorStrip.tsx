@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import type { VendorListItem } from '@/server/menuService';
+import { outletPhotoPath, outletSlug } from '../outletSlug';
 import { BUSY_LABELS, formatWaitRange, waitNote } from './viewModel';
 
 const BUSY_CLASSES = {
@@ -20,10 +22,32 @@ function tileClass(vendorId: string): string {
   return TILE_CLASSES[sum % TILE_CLASSES.length] ?? TILE_CLASSES[0];
 }
 
-function OutletImageSlot({ vendor }: { vendor: VendorListItem }): React.JSX.Element {
+function OutletImageSlot({
+  vendor,
+  hasPhoto,
+}: {
+  vendor: VendorListItem;
+  hasPhoto: boolean;
+}): React.JSX.Element {
+  const [failed, setFailed] = useState(false);
+  if (hasPhoto && !failed) {
+    return (
+      <span data-image-slot="photo" className="block h-12 w-12 shrink-0 overflow-hidden rounded-lg">
+        <img
+          src={outletPhotoPath(vendor.name)}
+          alt={vendor.name}
+          width={48}
+          height={48}
+          loading="lazy"
+          onError={() => setFailed(true)}
+          className="h-12 w-12 object-cover"
+        />
+      </span>
+    );
+  }
   return (
     <span
-      data-image-slot
+      data-image-slot="tile"
       aria-hidden="true"
       className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg text-xl font-bold ${tileClass(vendor.id)}`}
     >
@@ -36,10 +60,12 @@ export function VendorStrip({
   vendors,
   selected,
   onToggle,
+  photos = [],
 }: {
   vendors: readonly VendorListItem[];
   selected: readonly string[];
   onToggle: (vendorId: string) => void;
+  photos?: readonly string[];
 }): React.JSX.Element {
   return (
     <section aria-label="Vendors" className="flex flex-col gap-2">
@@ -64,7 +90,10 @@ export function VendorStrip({
                     : 'border-navy/15 bg-white hover:border-navy/60'
                 }`}
               >
-                <OutletImageSlot vendor={vendor} />
+                <OutletImageSlot
+                  vendor={vendor}
+                  hasPhoto={photos.includes(outletSlug(vendor.name))}
+                />
                 <span className="flex min-w-0 flex-1 flex-col gap-1.5">
                   <span className="flex items-start justify-between gap-2">
                     <span className="text-sm font-semibold leading-snug">{vendor.name}</span>

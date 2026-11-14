@@ -21,6 +21,10 @@ header :focus-visible,
   outline-color: #e9f4c9;
 }
 
+[data-logo] [data-logo-slot] {
+  background: url('/logo.svg') center / contain no-repeat;
+}
+
 ::selection {
   background: #3eadff;
   color: #384671;

@@ -208,3 +208,21 @@ for (const width of [1280, 390] as const) {
     await context.close();
   });
 }
+
+test('outlet cards fall back to palette tiles and the header keeps an empty logo slot, without errors', async ({
+  page,
+  request,
+}) => {
+  const problems: string[] = [];
+  page.on('pageerror', (error) => problems.push(error.message));
+  page.on('console', (message) => {
+    if (message.type() === 'error') problems.push(message.text());
+  });
+  await prepareStudent(request);
+  await signIn(page, 'student');
+  await expect(page.locator('article[data-item]').first()).toBeVisible();
+  await expect(page.locator('[data-image-slot="tile"]').first()).toBeVisible();
+  await expect(page.locator('[data-image-slot="photo"]')).toHaveCount(0);
+  await expect(page.locator('[data-logo-slot]').first()).toBeAttached();
+  expect(problems).toEqual([]);
+});
