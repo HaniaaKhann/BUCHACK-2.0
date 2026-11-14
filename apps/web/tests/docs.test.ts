@@ -232,6 +232,7 @@ describe('docs/PRIVACY.md', () => {
       'Account',
       'Session',
       'StudentProfile',
+      'ClassEntry',
       'FreeWindow',
       'Order',
       'OrderItem',
@@ -260,6 +261,7 @@ describe('docs/PRIVACY.md', () => {
             'notifications',
             'walletLedger',
             'freeWindows',
+            'classEntries',
             'profile',
           ].includes(field)
         )

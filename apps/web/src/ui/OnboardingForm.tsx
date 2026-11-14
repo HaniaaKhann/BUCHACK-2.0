@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  ALLERGEN_OPTIONS,
-  DIET_OPTIONS,
-  freeWindowsFromClasses,
-  type ClassEntry,
-  type Goal,
-} from '@app/core';
+import { ALLERGEN_OPTIONS, DIET_OPTIONS, type ClassEntry, type Goal } from '@app/core';
 import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
 import { Button, Card, ErrorNote, Field, Select, TextInput, ToggleChip } from './primitives';
@@ -23,12 +17,17 @@ export interface OnboardingInitial {
   goal: Goal;
   eatMinutes: number;
   chatLanguage: 'en' | 'zh_HK' | 'zh_CN';
-  currentBuildingId: string | null;
+}
+
+export interface SavedClass {
+  weekday: number;
+  startMinute: number;
+  endMinute: number;
+  buildingId: string;
 }
 
 interface ClassRow {
   key: number;
-  course: string;
   weekday: number;
   buildingId: string;
   start: string;
@@ -63,6 +62,11 @@ function toMinutes(clock: string): number {
   return (hours ?? 0) * 60 + (minutes ?? 0);
 }
 
+function toClock(minute: number): string {
+  const hours = Math.floor(minute / 60);
+  return `${String(hours).padStart(2, '0')}:${String(minute % 60).padStart(2, '0')}`;
+}
+
 function toggled(values: readonly string[], value: string): string[] {
   return values.includes(value) ? values.filter((entry) => entry !== value) : [...values, value];
 }
@@ -81,9 +85,13 @@ async function send(path: string, method: string, body: unknown): Promise<string
 export function OnboardingForm({
   buildings,
   initial,
+  savedClasses,
+  gapsWithoutClasses,
 }: {
   buildings: readonly BuildingOption[];
   initial: OnboardingInitial;
+  savedClasses: readonly SavedClass[];
+  gapsWithoutClasses: boolean;
 }): React.JSX.Element {
   const router = useRouter();
   const [dietTags, setDietTags] = useState<string[]>(initial.dietTags);
@@ -91,25 +99,40 @@ export function OnboardingForm({
   const [goal, setGoal] = useState<Goal>(initial.goal);
   const [eatMinutes, setEatMinutes] = useState(initial.eatMinutes);
   const [language, setLanguage] = useState(initial.chatLanguage);
-  const [buildingId, setBuildingId] = useState(initial.currentBuildingId ?? '');
-  const [rows, setRows] = useState<ClassRow[]>([]);
+  const [rows, setRows] = useState<ClassRow[]>(() =>
+    savedClasses.map((entry, index) => ({
+      key: index,
+      weekday: entry.weekday,
+      buildingId: entry.buildingId,
+      start: toClock(entry.startMinute),
+      end: toClock(entry.endMinute),
+    })),
+  );
+  const [classesTouched, setClassesTouched] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const addRow = (): void =>
+  const addRow = (): void => {
+    setClassesTouched(true);
     setRows((current) => [
       ...current,
       {
-        key: Date.now() + current.length,
-        course: '',
+        key: Math.max(-1, ...current.map((row) => row.key)) + 1,
         weekday: 1,
         buildingId: '',
         start: '',
         end: '',
       },
     ]);
-  const updateRow = (key: number, change: Partial<ClassRow>): void =>
+  };
+  const updateRow = (key: number, change: Partial<ClassRow>): void => {
+    setClassesTouched(true);
     setRows((current) => current.map((row) => (row.key === key ? { ...row, ...change } : row)));
+  };
+  const removeRow = (key: number): void => {
+    setClassesTouched(true);
+    setRows((current) => current.filter((entry) => entry.key !== key));
+  };
 
   function classEntries(): ClassEntry[] | string {
     const entries: ClassEntry[] = [];
@@ -131,10 +154,6 @@ export function OnboardingForm({
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     setError(null);
-    if (buildingId === '') {
-      setError('Pick the building you are in right now.');
-      return;
-    }
     const entries = classEntries();
     if (typeof entries === 'string') {
       setError(entries);
@@ -148,14 +167,13 @@ export function OnboardingForm({
       goal,
       eatMinutes,
       chatLanguage: language,
-      currentBuildingId: buildingId,
     });
-    const windowsError =
+    const classesError =
       profileError ??
-      (await send('/api/free-windows', 'PUT', { windows: freeWindowsFromClasses(entries) }));
+      (classesTouched ? await send('/api/classes', 'PUT', { classes: entries }) : null);
     setBusy(false);
-    if (windowsError !== null) {
-      setError(windowsError);
+    if (classesError !== null) {
+      setError(classesError);
       return;
     }
     router.push('/');
@@ -164,19 +182,6 @@ export function OnboardingForm({
 
   return (
     <form onSubmit={submit} className="grid gap-5 lg:grid-cols-2 lg:items-start">
-      <Card title="Where are you now?">
-        <Field label="Building" hint="Used for walk times. No GPS is ever used.">
-          <Select value={buildingId} onChange={(event) => setBuildingId(event.target.value)}>
-            <option value="">Choose a building</option>
-            {buildings.map((building) => (
-              <option key={building.id} value={building.id}>
-                {building.campus} · {building.name}
-              </option>
-            ))}
-          </Select>
-        </Field>
-      </Card>
-
       <Card title="Diet">
         <div className="flex flex-wrap gap-2">
           {DIET_OPTIONS.map((option) => (
@@ -250,17 +255,18 @@ export function OnboardingForm({
       <div className="lg:col-span-2">
         <Card title="Timetable (optional)">
           <p className="text-xs text-muted">
-            Add your classes to see what fits before your next one. Only your free gaps and the
-            buildings around them are saved. Course names and class times are never stored.
+            Add your classes to see what fits before your next one. Your classes (day, start, end
+            and building) stay on your profile until you change or delete them. Course names are
+            never stored.
           </p>
+          {gapsWithoutClasses && !classesTouched ? (
+            <p className="text-xs text-muted" data-legacy-gaps>
+              Your free gaps from an earlier timetable are still in use. Add your classes here to
+              replace them.
+            </p>
+          ) : null}
           {rows.map((row) => (
-            <div key={row.key} className="grid grid-cols-2 gap-2 sm:grid-cols-6">
-              <TextInput
-                aria-label="Course (not saved)"
-                placeholder="Course (not saved)"
-                value={row.course}
-                onChange={(event) => updateRow(row.key, { course: event.target.value })}
-              />
+            <div key={row.key} data-class-row className="grid grid-cols-2 gap-2 sm:grid-cols-5">
               <Select
                 aria-label="Day"
                 value={row.weekday}
@@ -296,13 +302,7 @@ export function OnboardingForm({
                 value={row.end}
                 onChange={(event) => updateRow(row.key, { end: event.target.value })}
               />
-              <Button
-                tone="quiet"
-                type="button"
-                onClick={() =>
-                  setRows((current) => current.filter((entry) => entry.key !== row.key))
-                }
-              >
+              <Button tone="quiet" type="button" onClick={() => removeRow(row.key)}>
                 Remove
               </Button>
             </div>

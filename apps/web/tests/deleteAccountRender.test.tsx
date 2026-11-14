@@ -32,7 +32,14 @@ describe('DeleteAccountView', () => {
     expect(html).toContain('data-delete-start');
     expect(html).not.toContain('data-delete-confirm');
     expect(html).not.toContain('data-delete-password');
-    for (const word of ['profile', 'free windows', 'notifications', 'wallet', 'orders']) {
+    for (const word of [
+      'profile',
+      'classes',
+      'free windows',
+      'notifications',
+      'wallet',
+      'orders',
+    ]) {
       expect(html).toContain(word);
     }
     expect(html).toContain('cannot be undone');

@@ -67,6 +67,7 @@ let dirtyCounts = {
   walletRows: 0,
   profiles: 0,
   windows: 0,
+  classes: 0,
   notifications: 0,
   addedDishes: 0,
 };
@@ -167,6 +168,15 @@ beforeAll(async () => {
   await db.freeWindow.create({
     data: { userId: student.id, weekday: 2, startMinute: 720, endMinute: 780 },
   });
+  await db.classEntry.create({
+    data: {
+      userId: student.id,
+      weekday: 2,
+      startMinute: 780,
+      endMinute: 840,
+      buildingId: (await db.building.findFirstOrThrow()).id,
+    },
+  });
   await db.menuItem.create({
     data: {
       vendorId: rushVendorId,
@@ -200,6 +210,7 @@ beforeAll(async () => {
     walletRows: await db.walletLedger.count({ where: { userId: student.id } }),
     profiles: await db.studentProfile.count({ where: { userId: student.id } }),
     windows: await db.freeWindow.count({ where: { userId: student.id } }),
+    classes: await db.classEntry.count({ where: { userId: student.id } }),
     notifications: await db.notification.count({ where: { userId: student.id } }),
     addedDishes: await db.menuItem.count({ where: { isDemo: false } }),
   };
@@ -224,6 +235,7 @@ describe('demo reset after every kind of change', () => {
       walletRows: 2,
       profiles: 1,
       windows: 1,
+      classes: 1,
       notifications: 1,
       addedDishes: 1,
     });
@@ -256,6 +268,7 @@ describe('demo reset after every kind of change', () => {
   it('puts the student back to a fresh demo account that must onboard again', async () => {
     expect(await db.studentProfile.count({ where: { userId: student?.id ?? '' } })).toBe(0);
     expect(await db.freeWindow.count({ where: { userId: student?.id ?? '' } })).toBe(0);
+    expect(await db.classEntry.count({ where: { userId: student?.id ?? '' } })).toBe(0);
   });
 
   it('removes dishes an owner added, and leaves the seeded dishes', async () => {

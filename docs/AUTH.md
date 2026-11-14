@@ -24,7 +24,7 @@ Responses: `401` with no valid session, `403` for the wrong role, the wrong vend
 
 | Area    | Gate                                                                                                                                            |
 | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| Student | `student` only: profile, free gaps, vendors, menu, slots, wallet, orders, notifications, and the student stream.                                |
+| Student | `student` only: profile, classes, free gaps, vendors, menu, slots, wallet, orders, notifications, and the student stream.                       |
 | Vendor  | A member of that vendor. Adding or editing a dish and confirming tags need the owner. Stock, busy, pause and order steps are open to staff too. |
 | Admin   | `admin` only: the demo clock and the accuracy page. Clock changes also need `DEMO_MODE=true`.                                                   |
 
@@ -47,7 +47,7 @@ Password hashes are produced by Better Auth's own `hashPassword`, so a seeded ac
 
 A student deletes their own account from the profile page (the **Profile** link in the dashboard header). The page shows what will be deleted, asks for the current password and an explicit tick, then calls Better Auth's `POST /api/auth/delete-user`.
 
-- It deletes the user, the credential account and every session, the profile, free gaps, notifications, wallet rows and all orders with their items.
+- It deletes the user, the credential account and every session, the profile, classes, free gaps, notifications, wallet rows and all orders with their items.
 - **Past orders are deleted, not anonymised.** See `PRIVACY.md` for why.
 - An account with an active order (placed, accepted, preparing or ready) is refused with 409 until the order is finished or cancelled.
 - The four demo accounts are refused with 403, so a visitor cannot break the demo.

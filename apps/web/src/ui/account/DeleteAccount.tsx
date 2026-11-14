@@ -26,8 +26,8 @@ export function DeleteAccountView(props: DeleteAccountViewProps): React.JSX.Elem
     >
       <h2 className="text-base font-semibold text-berry">Delete my account</h2>
       <p className="text-sm text-navy">
-        This permanently deletes your profile, free windows, notifications, wallet and all of your
-        orders, past and present. It cannot be undone.
+        This permanently deletes your profile, classes, free windows, notifications, wallet and all
+        of your orders, past and present. It cannot be undone.
       </p>
       {props.confirming ? (
         <div className="flex flex-col gap-3" data-delete-confirm>

@@ -17,12 +17,18 @@ export default async function OnboardingPage(): Promise<React.JSX.Element> {
   if (!actor) redirect('/sign-in');
   if (actor.role !== 'student') redirect('/');
 
-  const [buildings, profile] = await Promise.all([
+  const [buildings, profile, savedClasses, gapCount] = await Promise.all([
     prisma.building.findMany({
       orderBy: [{ campus: 'asc' }, { name: 'asc' }],
       select: { id: true, campus: true, name: true },
     }),
     prisma.studentProfile.findUnique({ where: { userId: actor.userId } }),
+    prisma.classEntry.findMany({
+      where: { userId: actor.userId },
+      orderBy: [{ weekday: 'asc' }, { startMinute: 'asc' }],
+      select: { weekday: true, startMinute: true, endMinute: true, buildingId: true },
+    }),
+    prisma.freeWindow.count({ where: { userId: actor.userId } }),
   ]);
   const initial: OnboardingInitial = {
     dietTags: profile?.dietTags ?? [],
@@ -30,7 +36,6 @@ export default async function OnboardingPage(): Promise<React.JSX.Element> {
     goal: asGoal(profile?.goal ?? null),
     eatMinutes: profile?.eatMinutes ?? 15,
     chatLanguage: profile?.chatLanguage ?? 'en',
-    currentBuildingId: profile?.currentBuildingId ?? null,
   };
 
   return (
@@ -41,11 +46,16 @@ export default async function OnboardingPage(): Promise<React.JSX.Element> {
         </h1>
         <p className="text-sm text-navy">
           {profile === null
-            ? 'Only the building is needed. Everything else can be changed later.'
+            ? 'Everything here is optional and can be changed later.'
             : 'Change your settings, or delete your account at the bottom of this page.'}
         </p>
       </header>
-      <OnboardingForm buildings={buildings} initial={initial} />
+      <OnboardingForm
+        buildings={buildings}
+        initial={initial}
+        savedClasses={savedClasses}
+        gapsWithoutClasses={savedClasses.length === 0 && gapCount > 0}
+      />
       <DeleteAccount />
     </main>
   );

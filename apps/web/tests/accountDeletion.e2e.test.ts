@@ -48,6 +48,15 @@ async function fillAccount(person: Person, status: 'picked_up' | 'placed'): Prom
   await db.freeWindow.create({
     data: { userId: person.id, weekday: 2, startMinute: 720, endMinute: 780 },
   });
+  await db.classEntry.create({
+    data: {
+      userId: person.id,
+      weekday: 2,
+      startMinute: 780,
+      endMinute: 840,
+      buildingId: (await db.building.findFirstOrThrow()).id,
+    },
+  });
   await db.notification.create({
     data: {
       userId: person.id,
@@ -102,6 +111,7 @@ interface AccountCounts {
   sessions: number;
   profile: number;
   windows: number;
+  classes: number;
   notifications: number;
   wallet: number;
   orders: number;
@@ -116,6 +126,7 @@ async function counts(userId: string): Promise<AccountCounts> {
     sessions: await db.session.count({ where: { userId } }),
     profile: await db.studentProfile.count({ where: { userId } }),
     windows: await db.freeWindow.count({ where: { userId } }),
+    classes: await db.classEntry.count({ where: { userId } }),
     notifications: await db.notification.count({ where: { userId } }),
     wallet: await db.walletLedger.count({ where: { userId } }),
     orders: orders.length,
@@ -169,7 +180,7 @@ describe('deleting an account', () => {
     expect(before.orders).toBe(1);
   });
 
-  it('deletes the profile, free windows, notifications, wallet, orders and sessions of that user only', async () => {
+  it('deletes the profile, classes, free windows, notifications, wallet, orders and sessions of that user only', async () => {
     const aliceBefore = await counts(people.alice.id);
     const bobBefore = await counts(people.bob.id);
     expect(aliceBefore).toMatchObject({
@@ -177,6 +188,7 @@ describe('deleting an account', () => {
       accounts: 1,
       profile: 1,
       windows: 1,
+      classes: 1,
       notifications: 1,
       wallet: 2,
       orders: 1,
@@ -197,6 +209,7 @@ describe('deleting an account', () => {
       sessions: 0,
       profile: 0,
       windows: 0,
+      classes: 0,
       notifications: 0,
       wallet: 0,
       orders: 0,

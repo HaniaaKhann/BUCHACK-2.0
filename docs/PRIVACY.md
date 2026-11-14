@@ -4,10 +4,10 @@ This page lists what the app stores, why, who can see it and how long it stays. 
 
 ## In short
 
-- The app stores a student's building choice, diet and allergen filters, goal, language and free gaps between classes. It never stores GPS, camera data, course names or class times.
+- The app stores a student's building choice, diet and allergen filters, goal, language, optional classes (day, start, end and building) and the free gaps worked out from them. It never stores GPS, camera data or course names.
 - The chat assistant stores nothing. Its history lives in the page and disappears on reload, and no question text is sent to the server.
 - The web app makes no calls to third parties: no analytics, no advertising, no external fonts or scripts.
-- A student can delete their account in the app. That deletes their profile, free gaps, notifications, wallet and all of their orders, past and present.
+- A student can delete their account in the app. That deletes their profile, classes, free gaps, notifications, wallet and all of their orders, past and present.
 - Vendors see the items, totals and times of orders for their own outlet. They do not see which student placed an order.
 
 ## What is stored, field by field
@@ -25,18 +25,19 @@ This page lists what the app stores, why, who can see it and how long it stays. 
 
 The session cookie is `httpOnly` with `SameSite=Lax`.
 
-### Student profile and timetable (`student_profiles`, `free_windows`)
+### Student profile and timetable (`student_profiles`, `class_entries`, `free_windows`)
 
-| Table              | Field                                                                           | Why                                                                                                              | How long                      |
-| ------------------ | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| `student_profiles` | `diet_tags`, `allergens`                                                        | Filter and rank the menu. They are never shown to vendors.                                                       | Until the account is deleted. |
-| `student_profiles` | `goal`                                                                          | Optional health goal used only as one ranking input.                                                             | Until the account is deleted. |
-| `student_profiles` | `eat_minutes`                                                                   | How long the student wants to eat, used by the "leave at" time.                                                  | Until the account is deleted. |
-| `student_profiles` | `chat_language`                                                                 | The language of the chat assistant. The rest of the app is English.                                              | Until the account is deleted. |
-| `student_profiles` | `current_building_id`                                                           | A building picked from a list, used for walking times. It is not a location reading.                             | Until the account is deleted. |
-| `free_windows`     | `weekday`, `start_minute`, `end_minute`, `prev_building_id`, `next_building_id` | Work out what fits before the next class. Only the free gaps and the buildings on either side of them are saved. | Until the account is deleted. |
+| Table              | Field                                                                           | Why                                                                                                                                        | How long                                                         |
+| ------------------ | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| `student_profiles` | `diet_tags`, `allergens`                                                        | Filter and rank the menu. They are never shown to vendors.                                                                                 | Until the account is deleted.                                    |
+| `student_profiles` | `goal`                                                                          | Optional health goal used only as one ranking input.                                                                                       | Until the account is deleted.                                    |
+| `student_profiles` | `eat_minutes`                                                                   | How long the student wants to eat, used by the "leave at" time.                                                                            | Until the account is deleted.                                    |
+| `student_profiles` | `chat_language`                                                                 | The language of the chat assistant. The rest of the app is English.                                                                        | Until the account is deleted.                                    |
+| `student_profiles` | `current_building_id`                                                           | The building chosen in the From selector of the filter panel, used for walking times. It is not a location reading, and it may be empty.   | Until the account is deleted.                                    |
+| `class_entries`    | `weekday`, `start_minute`, `end_minute`, `building_id`, `user_id`               | Let a student see and edit their timetable on every visit. Only the day, time and building of each class are saved, never the course name. | Until the student edits or deletes them, or deletes the account. |
+| `free_windows`     | `weekday`, `start_minute`, `end_minute`, `prev_building_id`, `next_building_id` | Work out what fits before the next class. Only the free gaps and the buildings on either side of them are saved.                           | Until the account is deleted.                                    |
 
-When a student adds classes in onboarding, the app turns them into free gaps in the browser and sends only the gaps. Course names and class times are not sent and not stored.
+Classes are saved with the Save button on the profile page and stay there for every later visit, until the student changes or removes them. The server works out the free gaps from the classes in the same transaction, so the two cannot disagree. Saving the rest of the profile never changes the classes. Students who entered a timetable before classes were saved keep their old gaps until they enter classes again. The course name is not a field anywhere: it is not sent and not stored.
 
 ### Orders and money (`orders`, `order_items`, `wallet_ledger`)
 
@@ -76,7 +77,7 @@ The demo history contains 220 simulated students with fictional `@sim.invalid` a
 Students delete their account from the profile page. The page asks for the current password and an explicit tick before it sends the request to Better Auth's delete route. The server then removes, in one go:
 
 - the user, the credential account and every session
-- the student profile and free gaps
+- the student profile, classes and free gaps
 - all notifications
 - all wallet rows
 - all orders and their items, past and present

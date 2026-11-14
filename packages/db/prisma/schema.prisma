@@ -108,6 +108,7 @@ model User {
   accounts      Account[]
   profile       StudentProfile?
   freeWindows   FreeWindow[]
+  classEntries  ClassEntry[]
   memberships   VendorMember[]
   orders        Order[]
   notifications Notification[]
@@ -196,6 +197,21 @@ model FreeWindow {
   @@map("free_windows")
 }
 
+model ClassEntry {
+  id          String @id @default(uuid())
+  userId      String
+  weekday     Int
+  startMinute Int
+  endMinute   Int
+  buildingId  String
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  building Building @relation(fields: [buildingId], references: [id])
+
+  @@index([userId, weekday])
+  @@map("class_entries")
+}
+
 model Building {
   id     String  @id @default(uuid())
   campus String
@@ -207,6 +223,7 @@ model Building {
   profiles        StudentProfile[]
   windowsAsPrev   FreeWindow[]     @relation("FreeWindowPrev")
   windowsAsNext   FreeWindow[]     @relation("FreeWindowNext")
+  classEntries    ClassEntry[]
   walkTimesFrom   WalkTime[]       @relation("WalkTimeFrom")
   walkTimesToThis WalkTime[]       @relation("WalkTimeToBuilding")
 
