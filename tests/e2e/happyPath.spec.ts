@@ -46,9 +46,19 @@ test('a student filters, orders, and the vendor takes the order from Accepted to
     }
   ).balanceHkd;
   const price = Number(/HK\$(\d+)/.exec(await cards.first().innerText())?.[1]);
+  const dishName = (await cards.first().locator('h3').innerText()).trim();
   await cards.first().locator('[data-add]').click();
-  await page.locator('[data-cart-button]').click();
-  await expect(page.getByRole('dialog', { name: 'Your cart' })).toBeVisible();
+  await expect(page.locator('[data-toast]')).toContainText(`Added to cart: ${dishName}`);
+  await expect(page.locator('[data-cart-button]')).toContainText('Cart (1)');
+  await page.locator('[data-toast-view]').click();
+  const drawer = page.getByRole('dialog', { name: 'Your cart' });
+  await expect(drawer).toBeVisible();
+  await expect(drawer.locator('[data-wallet-line]')).toContainText(
+    `Wallet (demo credit): HK$${balanceBefore}`,
+  );
+  await expect(drawer.locator('[data-wallet-after]')).toContainText(
+    `After this order: HK$${balanceBefore - price}`,
+  );
   await page.getByRole('button', { name: `Pay HK$${price} from demo wallet` }).click();
   await page.waitForURL(/\/orders\/[0-9a-f-]{36}$/);
 
