@@ -62,5 +62,8 @@ jobs:
       - name: Test
         run: pnpm test
 
+      - name: Worker database tests
+        run: pnpm --filter @app/worker test:db
+
       - name: Build
         run: pnpm build
