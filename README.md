@@ -27,11 +27,11 @@ We have not run a student survey yet, so no student numbers are claimed.
 
 **Students**
 
-- Sign up, then choose a building. Diet and allergen filters, a health goal and the chat language are optional. Adding classes is optional too: only the free gaps between them are saved, never course names or class times.
+- Sign up with nothing required. Diet and allergen filters, a health goal and the chat language are optional. Adding classes is optional too: the day, start, end and building of each class stay on the profile until the student edits or deletes them, and never the course name. Choosing where you are ("From") is a selector in the filter panel; without it the list still shows, with the class start time and a hint instead of a leave time.
 - One ranked list of dishes from all HKBU outlets, with a wait **range**, whether it fits before the next class, and when to leave. Filters for price, wait, "fits before my next class", open now, outlet and sort order.
-- Diet and allergen filters use only tags an outlet owner has confirmed. Unconfirmed dishes are labelled **Not verified**, and halal is never assumed.
-- Order as soon as ready or for a 15-minute pickup slot, pay from a demo wallet, follow the order live, cancel while the order is still waiting to be accepted (at most the first minute), and mark it picked up.
-- A bell with an unread count for order updates and a leave-now reminder.
+- Diet and allergen filters use only tags an outlet owner has confirmed, so with a filter on, unconfirmed dishes are left out, and halal is never assumed. Tiles show ticks and **Not verified** only while a diet or allergen filter is active.
+- Order as soon as ready or for a 15-minute pickup slot, pay from a demo wallet (the checkout shows the credit before and after the order), follow the order live, cancel while the order is still waiting to be accepted (at most the first minute), and mark it picked up.
+- A bell with an unread count for order updates and a leave-now reminder, and a short "Added to cart" message with a View cart button when a dish is added.
 - A chat assistant in English, Traditional Chinese and Simplified Chinese. It answers only from the app's own data (open outlets, waits, what fits before class, diet and allergen filters, order status, wallet, when to leave, how to order). It cannot filter by spice, it never calls a dish halal unless an owner confirmed it, and nothing a student types is stored or sent anywhere.
 - Delete their own account, with a confirm step.
 
@@ -193,7 +193,7 @@ pnpm --filter @app/worker test:db
 
 ## Privacy
 
-The app stores a student's building choice, diet and allergen filters, goal, chat language and free gaps between classes, plus orders, a demo wallet and notifications. It stores no GPS, camera data, course names or class times. The chat stores nothing. Vendors see items, totals and times for their own outlet but not which student ordered. There are no third-party calls. Students can delete their account, which deletes their profile, free gaps, notifications, wallet and all of their orders. Every stored field, why it is kept and for how long is in [`docs/PRIVACY.md`](docs/PRIVACY.md).
+The app stores a student's building choice, diet and allergen filters, goal, chat language, optional classes (day, start, end and building, never the course name) and the free gaps worked out from them, plus orders, a demo wallet and notifications. It stores no GPS, camera data or course names. The chat stores nothing. Vendors see items, totals and times for their own outlet but not which student ordered. There are no third-party calls. Students can delete their account, which deletes their profile, classes, free gaps, notifications, wallet and all of their orders. Every stored field, why it is kept and for how long is in [`docs/PRIVACY.md`](docs/PRIVACY.md).
 
 ## Documentation
 
