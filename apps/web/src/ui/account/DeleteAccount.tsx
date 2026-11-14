@@ -22,7 +22,7 @@ export function DeleteAccountView(props: DeleteAccountViewProps): React.JSX.Elem
   return (
     <section
       aria-label="Delete my account"
-      className="flex flex-col gap-3 rounded-xl border border-berry bg-white p-4"
+      className="flex flex-col gap-3 border-t border-navy/10 pt-8"
     >
       <h2 className="text-base font-semibold text-berry">Delete my account</h2>
       <p className="text-sm text-navy">

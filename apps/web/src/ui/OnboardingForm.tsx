@@ -3,7 +3,17 @@
 import { ALLERGEN_OPTIONS, DIET_OPTIONS, type ClassEntry, type Goal } from '@app/core';
 import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
-import { Button, Card, ErrorNote, Field, Select, TextInput, ToggleChip } from './primitives';
+import type { ReactNode } from 'react';
+import { Button, ErrorNote, Field, Select, TextInput, ToggleChip } from './primitives';
+
+function Section({ title, children }: { title: string; children: ReactNode }): React.JSX.Element {
+  return (
+    <section className="flex flex-col gap-3 border-t border-navy/10 pt-8 first:border-t-0 first:pt-0">
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">{title}</h2>
+      {children}
+    </section>
+  );
+}
 
 export interface BuildingOption {
   id: string;
@@ -181,8 +191,8 @@ export function OnboardingForm({
   }
 
   return (
-    <form onSubmit={submit} className="grid gap-5 lg:grid-cols-2 lg:items-start">
-      <Card title="Diet">
+    <form onSubmit={submit} className="flex flex-col gap-8">
+      <Section title="Diet">
         <div className="flex flex-wrap gap-2">
           {DIET_OPTIONS.map((option) => (
             <ToggleChip
@@ -198,9 +208,9 @@ export function OnboardingForm({
           Only items a vendor has confirmed are treated as safe. Halal shows items only once a
           vendor confirms them, and we never guess.
         </p>
-      </Card>
+      </Section>
 
-      <Card title="Allergens to avoid">
+      <Section title="Allergens to avoid">
         <div className="flex flex-wrap gap-2">
           {ALLERGEN_OPTIONS.map((option) => (
             <ToggleChip
@@ -212,9 +222,9 @@ export function OnboardingForm({
             </ToggleChip>
           ))}
         </div>
-      </Card>
+      </Section>
 
-      <Card title="Goal and eating style">
+      <Section title="Goal and eating style">
         <Field label="Health goal">
           <Select value={goal} onChange={(event) => setGoal(event.target.value as Goal)}>
             {GOALS.map((option) => (
@@ -250,10 +260,10 @@ export function OnboardingForm({
             ))}
           </Select>
         </Field>
-      </Card>
+      </Section>
 
-      <div className="lg:col-span-2">
-        <Card title="Timetable (optional)">
+      <div>
+        <Section title="Timetable (optional)">
           <p className="text-xs text-muted">
             Add your classes to see what fits before your next one. Your classes (day, start, end
             and building) stay on your profile until you change or delete them. Course names are
@@ -312,12 +322,12 @@ export function OnboardingForm({
               Add a class
             </Button>
           </div>
-        </Card>
+        </Section>
       </div>
 
-      <div className="flex flex-col gap-3 lg:col-span-2">
+      <div className="flex flex-col gap-3">
         <ErrorNote message={error} />
-        <Button type="submit" disabled={busy} className="lg:w-60 lg:self-end">
+        <Button type="submit" disabled={busy} className="sm:self-start">
           {busy ? 'Saving…' : 'Save and continue'}
         </Button>
       </div>

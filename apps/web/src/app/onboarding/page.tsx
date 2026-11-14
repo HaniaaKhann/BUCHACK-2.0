@@ -1,6 +1,5 @@
 import { GOAL_OPTIONS, type Goal } from '@app/core';
 import { redirect } from 'next/navigation';
-import { APP_NAME } from '@/brand';
 import { prisma } from '@/server/db';
 import { getPageActor } from '@/server/session';
 import { DeleteAccount } from '@/ui/account/DeleteAccount';
@@ -39,24 +38,26 @@ export default async function OnboardingPage(): Promise<React.JSX.Element> {
   };
 
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-6 sm:px-6 lg:py-10">
-      <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {profile === null ? `Welcome to ${APP_NAME}` : 'Your profile'}
-        </h1>
-        <p className="text-sm text-navy">
-          {profile === null
-            ? 'Everything here is optional and can be changed later.'
-            : 'Change your settings, or delete your account at the bottom of this page.'}
-        </p>
-      </header>
-      <OnboardingForm
-        buildings={buildings}
-        initial={initial}
-        savedClasses={savedClasses}
-        gapsWithoutClasses={savedClasses.length === 0 && gapCount > 0}
-      />
-      <DeleteAccount />
-    </main>
+    <div className="min-h-screen bg-white">
+      <main className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-10 sm:px-6 lg:py-14">
+        <header className="flex flex-col gap-1">
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {profile === null ? 'Set up your profile' : 'Your profile'}
+          </h1>
+          <p className="text-sm text-navy">
+            {profile === null
+              ? 'Everything here is optional and can be changed later.'
+              : 'Change your settings, or delete your account at the bottom of this page.'}
+          </p>
+        </header>
+        <OnboardingForm
+          buildings={buildings}
+          initial={initial}
+          savedClasses={savedClasses}
+          gapsWithoutClasses={savedClasses.length === 0 && gapCount > 0}
+        />
+        {profile === null ? null : <DeleteAccount />}
+      </main>
+    </div>
   );
 }
