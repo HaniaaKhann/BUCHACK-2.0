@@ -4,7 +4,7 @@
 
 **Food that fits your diet, ready before your next class.** UniBowl shows every HKBU canteen in one place, filters by diet and allergen using only tags an outlet owner has confirmed, and gives a wait range instead of one fixed promise, so students with a short break can pick something that will be ready in time. Pickup only, no delivery.
 
-Demo video: `[DEMO_VIDEO_LINK]` (placeholder: not recorded yet)
+Demo video: `https://youtu.be/yOGazbse6U8` 
 
 > **Demo data.** Outlet names and hours are from HKBU's public pages. Menus, prices and wait times are simulated, and wallet money is demo money. Not affiliated with HKBU Estates Office or its caterers.
 
@@ -19,9 +19,6 @@ These are reports from other campuses, not measurements of HKBU.
 
 We have not run a student survey yet, so no student numbers are claimed.
 
-## Demo
-
-`[DEMO_GIF]` (placeholder: not recorded yet)
 
 ## What it does today
 
